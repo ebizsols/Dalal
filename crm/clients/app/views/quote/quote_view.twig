@@ -1,0 +1,179 @@
+{{ include('common/header.twig') }}
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-calculator panel-head-icon"></i>
+			<span class="panel-title-text">{{ page_title }}</span>
+		</div>
+		<div class="panel-action">
+			{% if result.invoice is empty or result.invoice == '0' %}
+				<a class="btn btn-primary btn-outline btn-sm btn-pill" data-toggle="modal" data-target="#acceptQuote"><i class="las la-file-invoice mr-1"></i> {{ lang.text_accept }}</a>
+			{% else %}
+				<a href="{{ common.url_route }}invoice/view&id={{ result.invoice }}" class="btn btn-primary btn-outline btn-pill btn-gradient btn-sm"><i class="las la-file-invoice mr-1"></i> {{ lang.text_quotation_invoiced }}</a>
+			{% endif %}
+			<a href="{{ common.url_route }}quote/pdf&id={{ result.id }}" class="btn btn-danger btn-sm btn-outline btn-pill btn-gradient" target="_blank"><i class="las la-file-pdf mr-1"></i> {{ lang.text_pdf }}</a>
+		</div>
+	</div>
+	<div class="panel-wrapper">
+		<div class="inv-template">
+			<div class="inv-template-bdy p-4">
+				<div class="company table-responsive">
+					<table>
+						<tbody>
+							<tr>
+								<td class="info">
+									<div class="logo"><img src="{{ common.info.logo }}" alt="logo"></div>
+									<div class="name">{{ common.info.legal_name }}</div>
+									<div class="text">{{ common.info.address|join(', ') }}</div>
+								</td>
+								<td class="text-right">
+									<div class="title">{{ lang.text_quotation }}</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="meta table-responsive">
+					<table>
+						<tbody>
+							<tr>
+								<td class="bill-to v-aling-bottom">
+									<div class="heading">{{ lang.text_quote_to }}</div>
+									<div class="title">{{ result.company }}</div>
+									<div class="text">{{ result.email }}</div>
+									<div class="text">{{ result.address|join(', ') }}</div>
+								</td>
+								<td class="info v-aling-bottom">
+									<table class="text-right">
+										<tbody>
+											<tr>
+												<td class="text">#</td>
+												<td class="text w-min-130">{{ common.info.quote.prefix~"%05d"|format(result.id) }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_quote_date }}</td>
+												<td class="text w-min-130">{{ result.date|date(common.info.date_format) }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_expiry_date }}</td>
+												<td class="text w-min-130">{{ result.expiry|date(common.info.date_format) }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_payment_method }}</td>
+												<td class="text w-min-130">{{ result.payment_method }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_status }}</td>
+												<td class="text w-min-130">
+													{% if result.status == '0' %}
+														{{ lang.text_draft }}
+													{% elseif result.status == '1' %}
+														{{ lang.text_published }}
+													{% elseif result.status == '2' %}
+														{{ lang.text_accepted }}
+													{% elseif result.status == '3' %}
+														{{ lang.text_dead }}
+													{% endif %}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="proposal">
+						<span class="subject">{{ result.project_name }}</span>
+						{% if result.proposal %}
+							<div class="proposal-content">{{ result.proposal|html_entity_decode }}</div>
+						{% endif %}
+				</div>
+				<div class="item table-responsive">
+					<table>
+						<thead>
+							<tr>
+								<th>{{ lang.text_item_and_description }}</th>
+								<th>{{ lang.text_quantity }}</th>
+								<th>{{ lang.text_unit_cost }}</th>
+								<th>{{ lang.text_tax }}</th>
+								<th>{{ lang.text_price }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for value in result.items %}
+								<tr>
+									<td class="title"><p>{{ value.name }}</p><span>{{ value.descr }}</span></td>
+									<td>{{ value.quantity }}</td>
+									<td>{{ result.currency_abbr~value.cost }}</td>
+									<td class="tax">
+										{% for tax in value.tax %}
+											<div><span>{{ result.currency_abbr~tax.tax_price }}</span><span>{{ tax.name }}</span></div>
+										{% endfor %}
+									</td>
+									<td>{{ result.currency_abbr~value.price }}</td>
+								</tr>
+							{% endfor %}
+							<tr class="total">
+								<td rowspan="4" colspan="3" class="blank"></td>
+								<td class="title">{{ lang.text_sub_total }}</td>
+								<td class="value">{{ result.currency_abbr~result.subtotal }}</td>
+							</tr>
+							<tr class="total">
+								<td class="title">{{ lang.text_tax }}</td>
+								<td class="value">{{ result.currency_abbr~result.tax }}</td>
+							</tr>
+							<tr class="total">
+								<td class="title">{{ lang.text_discount }}</td>
+								<td class="value">{{ result.currency_abbr~result.discount_value }}</td>
+							</tr>
+							<tr class="total">
+								<td class="title">{{ lang.text_total }}</td>
+								<td class="value">{{ result.currency_abbr~result.amount }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="note table-responsive">
+					<table>
+						<tbody>
+							<tr>
+								<td class="block v-align-top">
+									<span>{{ lang.text_customer_note }}</span>
+									<p>{{ result.note }}</p>
+								</td>
+								<td class="block v-align-top">
+									<span>{{ lang.text_terms_conditions }}</span>
+									<p>{{ result.tc }}</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="acceptQuote">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ lang.text_confirmation }}</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<p>{{ lang.text_are_you_sure_you_want_to_accept_this_quotation }}</p>
+			</div>
+			<div class="modal-footer">
+				<form action="{{ common.url_route }}convertquote" method="post">
+					<input type="hidden" name="id" value="{{ result.id }}">
+					<input type="hidden" name="_token" value="{{ common.token }}">
+					<button type="submit" name="submit" class="btn btn-primary btn-pill btn-gradient">{{ lang.text_yes }}</button>
+				</form>
+				<button type="button" class="btn btn-default btn-pill btn-gradient" data-dismiss="modal">{{ lang.text_no }}</button>
+			</div>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

@@ -1,0 +1,405 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+	<input type="hidden" name="_token" value="{{ common.token }}">
+	<div class="panel panel-default">
+		<div class="panel-head">
+			<div class="panel-title">
+				<i class="las la-info-circle panel-head-icon"></i>
+				<span class="panel-title-text">{{ page_title }}</span>
+			</div>
+			<div class="panel-action">
+				<button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" data-placement="left" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+			</div>  
+		</div>
+		<div class="panel-body">
+			<ul class="nav nav-tabs nav-tabs-line nav-tabs-line-primary">
+				<li class="nav-item">
+					<a class="nav-link active" href="#system-info" data-toggle="tab"><i class="las la-address-book mr-2"></i>{{ lang.text_basic_info }}</a>
+				</li>
+				<li class="nav-item dropdown">  
+					<a class="nav-link" href="#system-address" data-toggle="tab"><i class="las la-map mr-2"></i>{{ lang.text_address }}</a>
+				</li>
+				<li class="nav-item dropdown">  
+					<a class="nav-link" href="#system-invoice" data-toggle="tab"><i class="las la-cog mr-2"></i>{{ lang.text_invoice_and_quotation_settings }}</a>
+				</li>
+				<li class="nav-item dropdown">  
+					<a class="nav-link" href="#system-account" data-toggle="tab"><i class="las la-landmark mr-2"></i>{{ lang.text_account_info }}</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="system-info">
+					<div class="form-group info-logo">
+						<label class="d-block col-form-label">{{ lang.text_logo }} <span class="form-required">*</span></label>
+						<div class="image-upload"{% if result.logo %} style="display:none"{% endif %}>
+							<a>{{ lang.text_upload }}</a>
+						</div>
+						<div class="saved-picture ml-0"{% if result.logo is empty %} style="display:none"{% endif %}>
+							{% if result.logo %}
+								<img class="img-thumbnail" src="public/uploads/{{ result.logo }}" alt="logo">
+							{% endif %}
+							<input type="hidden" name="info[logo]" value="{{ result.logo }}">
+						</div>
+						<div class="saved-picture-delete" data-toggle="tooltip" data-placement="right" title="Remove" {% if result.logo is empty %}style="display:none"{% endif %}><a class="las la-trash-alt"></a></div>
+						<div class="form-text text-muted pt-1">{{ lang.text_size_max_height_35px }} {{ lang.text_official_logo }}</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-6">
+							<div class="row">
+								<div class="col-md-12">
+									
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-form-label">{{ lang.text_organization_name }} <span class="form-required">*</span></label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-building"></i></span>
+											</div>
+											<input type="text" name="info[name]" class="form-control" value="{{ result.name }}" placeholder="{{ lang.text_organization_name }}" required>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-form-label">{{ lang.text_legal_organization_name }} <span class="form-required">*</span></label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-building"></i></span>
+											</div>
+											<input type="text" name="info[legal_name]" class="form-control" value="{{ result.legal_name }}" placeholder="{{ lang.text_legal_organization_name }}" required>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-form-label">{{ lang.text_email_address }}</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-envelope"></i></span>
+											</div>
+											<input type="text" name="info[email]" class="form-control" value="{{ result.email }}" placeholder="{{ lang.text_email_address }}">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-form-label">{{ lang.text_phone_number }}</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-mobile"></i></span>
+											</div>
+											<input type="text" name="info[phone]" class="form-control" value="{{ result.phone }}" placeholder="{{ lang.text_phone_number }}">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="col-form-label">{{ lang.text_fax_number }}</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-phone-volume"></i></span>
+											</div>
+											<input type="text" name="info[fax]" class="form-control" value="{{ result.fax }}" placeholder="{{ lang.text_fax_number }}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_language }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-language"></i></span>
+									</div>
+									<select name="info[language]" class="custom-select">
+										<option value="en-US"{% if result.language == "en-US" %} selected{% endif %}>English</option>
+										<option value="pt-BR"{% if result.language == "pt-BR" %} selected{% endif %}>Portuguese (Brazil)</option>
+										<option value="custom"{% if result.language == "custom" %} selected{% endif %}>Custom Language</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_timezone }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-globe"></i></span>
+									</div>
+									<select name="info[timezone]" class="custom-select">
+										{% for key,value in timezone %}
+											<option value="{{ key }}"{% if result.timezone == key %} selected{% endif %}>{{ value }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_date_format }}</label>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-calendar"></i></span>
+											</div>
+											<select name="info[date_format]" class="custom-select">
+												<option value="d/m/Y" {{ result.date_format == 'd/m/Y' ? 'selected' : false }}>d/m/Y => {{ '2020-01-31'|date('d/m/Y') }}</option>
+												<option value="d.m.Y" {{ result.date_format == 'd.m.Y' ? 'selected' : false }}>d.m.Y => {{ '2020-01-31'|date('d.m.Y') }}</option>
+												<option value="d-m-Y" {{ result.date_format == 'd-m-Y' ? 'selected' : false }}>d-m-Y => {{ '2020-01-31'|date(common.info.date_format) }}</option>
+												<option value="m/d/Y" {{ result.date_format == 'm/d/Y' ? 'selected' : false }}>m/d/Y => {{ '2020-01-31'|date('m/d/Y') }}</option>
+												<option value="m-d-Y" {{ result.date_format == 'm-d-Y' ? 'selected' : false }}>m-d-Y => {{ '2020-01-31'|date('m-d-Y') }}</option>
+												<option value="Y/m/d" {{ result.date_format == 'Y/m/d' ? 'selected' : false }}>Y/m/d => {{ '2020-01-31'|date('Y/m/d') }}</option>
+												<option value="Y-m-d" {{ result.date_format == 'Y-m-d' ? 'selected' : false }}>Y-m-d => {{ '2020-01-31'|date(common.info.date_format) }}</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-calendar"></i></span>
+											</div>
+											<select name="info[date_my_format]" class="custom-select">
+												<option value="m-Y" {{ result.date_my_format == 'm-Y' ? 'selected' : false }}>m-Y => {{ '2020-01-31'|date('m-Y') }}</option>
+												<option value="m/Y" {{ result.date_my_format == 'm/Y' ? 'selected' : false }}>m/Y => {{ '2020-01-31'|date('m/Y') }}</option>
+												<option value="Y/m" {{ result.date_my_format == 'Y/m' ? 'selected' : false }}>Y/m => {{ '2020-01-31'|date('Y/m') }}</option>
+												<option value="Y-m" {{ result.date_my_format == 'Y-m' ? 'selected' : false }}>Y-m => {{ '2020-01-31'|date('Y-m') }}</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="system-address">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_address_line_1 }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-map-signs"></i></span>
+									</div>
+									<input type="text" name="info[address][address1]" class="form-control" value="{{ result.address.address1 }}" placeholder="{{ lang.text_address_line_1 }}">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_address_line_2 }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-map-signs"></i></span>
+									</div>
+									<input type="text" name="info[address][address2]" class="form-control" value="{{ result.address.address2 }}" placeholder="{{ lang.text_address_line_2 }}">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_address_city }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-address-book"></i></span>
+									</div>
+									<input type="text" name="info[address][city]" class="form-control" value="{{ result.address.city }}" placeholder="{{ lang.text_address_city }}">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_address_country }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-address-book"></i></span>
+									</div>
+									<input type="text" name="info[address][country]" class="form-control" value="{{ result.address.country }}" placeholder="{{ lang.text_address_country }}">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_address_postal }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-map-pin"></i></span>
+									</div>
+									<input type="text" name="info[address][pincode]" class="form-control" value="{{ result.address.pincode }}" placeholder="{{ lang.text_address_postal }}">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="system-invoice">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group invoice-template-img">
+								<label class="col-form-label">{{ lang.text_select_invoice_template }}</label>
+								<div>
+									<div class="custom-control custom-radio custom-radio-1 d-inline-block mb-3">
+										<input type="radio" name="info[invoice][template]" class="custom-control-input" value="1" id="invoice-template-1"{% if result.invoice.template == '1' %} checked{% endif %}>
+										<label class="custom-control-label" for="invoice-template-1"><img src="public/images/invoice-1.png" alt="Invoice Template 1"></label>
+									</div>
+									<div class="custom-control custom-radio custom-radio-1 d-inline-block mb-3">
+										<input type="radio" name="info[invoice][template]" class="custom-control-input" value="2" id="invoice-template-2"{% if result.invoice.template == '2' %} checked{% endif %}>
+										<label class="custom-control-label" for="invoice-template-2"><img src="public/images/invoice-2.png" alt="Invoice Template 1"></label>
+									</div>
+									<div class="custom-control custom-radio custom-radio-1 d-inline-block mb-3">
+										<input type="radio" name="info[invoice][template]" class="custom-control-input" value="3" id="invoice-template-3"{% if result.invoice.template == '3' %} checked{% endif %}>
+										<label class="custom-control-label" for="invoice-template-3"><img src="public/images/invoice-3.png" alt="Invoice Template 3"></label>
+									</div>
+									<div class="custom-control custom-radio custom-radio-1 d-inline-block mb-3">
+										<input type="radio" name="info[invoice][template]" class="custom-control-input" value="4" id="invoice-template-4"{% if result.invoice.template == '4' %} checked{% endif %}>
+										<label class="custom-control-label" for="invoice-template-4"><img src="public/images/invoice-4.png" alt="Invoice Template 4"></label>
+									</div>
+									<div class="custom-control custom-radio custom-radio-1 d-inline-block mb-3">
+										<input type="radio" name="info[invoice][template]" class="custom-control-input" value="5" id="invoice-template-5"{% if result.invoice.template == '5' %} checked{% endif %}>
+										<label class="custom-control-label" for="invoice-template-5"><img src="public/images/invoice-5.png" alt="Invoice Template 5"></label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_invoice_prefix }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-pen-nib"></i></span>
+									</div>
+									<input type="text" class="form-control" name="info[invoice][prefix]" value="{{ result.invoice.prefix }}" placeholder="{{ lang.text_account_number }}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_invoice }} {{ lang.text_predefined_customer_note }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-tag"></i></span>
+									</div>
+									<textarea name="info[invoice][customernote]" class="form-control" placeholder="{{ lang.text_predefined_customer_note }}">{{ result.invoice.customernote }}</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_invoice }} {{ lang.text_predefined_terms_conditions }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-tag"></i></span>
+									</div>
+									<textarea name="info[invoice][tc]" class="form-control" placeholder="{{ lang.text_predefined_terms_conditions }}">{{ result.invoice.tc }}</textarea>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group info-logo">
+										<label class="d-block mb-2">{{ lang.text_authorised_sign }}</label>
+										<div class="image-upload" {% if result.signature %}style="display:none"{% endif %}>
+											<a>{{ lang.text_upload }}</a>
+										</div>
+										<div class="saved-picture ml-0" {% if result.signature is empty %}style="display:none"{% endif %}>
+											{% if result.signature %}
+												<img class="img-thumbnail" src="public/uploads/{{ result.signature }}" alt="">
+											{% endif %}
+											<input type="hidden" name="info[signature]" value="{{ result.signature }}">
+										</div>
+										<div class="saved-picture-delete" data-toggle="tooltip" data-placement="right" title="Remove" {% if result.signature is empty %}style="display:none"{% endif %}>
+											<a class="las la-trash-alt"></a>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="col-form-label">{{ lang.text_authorised_sign_label }}</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="las la-user-tag"></i></span>
+											</div>
+											<input type="text" class="form-control" name="info[invoice][signature_label]" value="{{ result.invoice.signature_label }}" placeholder="{{ lang.text_authorised_sign_label }}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_quotation_prefix }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-pen-nib"></i></span>
+									</div>
+									<input type="text" class="form-control" name="info[quote][prefix]" value="{{ result.quote.prefix }}" placeholder="{{ lang.text_account_number }}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_quote }} {{ lang.text_predefined_customer_note }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-tag"></i></span>
+									</div>
+									<textarea name="info[quote][customernote]" class="form-control" placeholder="{{ lang.text_predefined_customer_note }}">{{ result.quote.customernote }}</textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_quote }} {{ lang.text_predefined_terms_conditions }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-tag"></i></span>
+									</div>
+									<textarea name="info[quote][tc]" class="form-control" placeholder="{{ lang.text_predefined_terms_conditions }}">{{ result.quote.tc }}</textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="system-account">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_account_number }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-building"></i></span>
+									</div>
+									<input type="text" class="form-control" name="info[invoice][accountnumber]" value="{{ result.invoice.accountnumber }}" placeholder="{{ lang.text_account_number }}">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_account_name }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-user"></i></span>
+									</div>
+									<input type="text" class="form-control" name="info[invoice][accountname]" value="{{ result.invoice.accountname }}" placeholder="{{ lang.text_account_name }}">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_bank_name }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-landmark"></i></span>
+									</div>
+									<input type="text" class="form-control" name="info[invoice][bankname]" value="{{ result.invoice.bankname }}" placeholder="{{ lang.text_bank_name }}">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="col-form-label">{{ lang.text_bank_details }}</label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"><i class="las la-tag"></i></span>
+									</div>
+									<textarea class="form-control" name="info[invoice][bankdetails]" placeholder="{{ lang.text_bank_details }}">{{ result.invoice.bankdetails }}</textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-footer text-center">
+			<button type="submit" class="btn btn-primary btn-gradient btn-pill" name="submit">{{ lang.text_save }}</button>
+		</div>
+	</div>
+</form>
+{{ include('common/footer.twig') }}

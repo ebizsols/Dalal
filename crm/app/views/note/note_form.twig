@@ -1,0 +1,94 @@
+{{ include('common/header.twig') }}
+{% set background = '#F39C12' %}
+{% if result.background %}
+    <input type="hidden" class="note-color" value="{{ result.background }}">
+{% else %}
+    <input type="hidden" class="note-color" value="#F39C12">
+{% endif %}
+
+<form action="{{ action }}" method="post" enctype="multipart/form-data">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-sticky-note panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                <button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}notes" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+            </div>  
+        </div>
+        <div class="panel-body">
+            <input type="hidden" name="_token" value="{{ common.token }}">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">{{ lang.text_note_title }} <span class="form-required">*</span></label>
+                        <div class="input-group col-sm-10">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-sticky-note"></i></span>
+                            </div>
+                            <input type="text" name="note[title]" class="form-control" value="{{ result.title }}" placeholder="{{ lang.text_note_title }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row align-items-start">
+                        <label class="col-form-label col-sm-2">{{ lang.text_description }} <span class="form-required">*</span></label>
+                        <div class="col-sm-10">
+                            <textarea name="note[descr]" class="summernote" required>{{ result.description }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">{{ lang.text_background_color }}</label>
+                        <div class="col-sm-10">
+                            <div class="colorPickSelector"></div>
+                            <input type="hidden" class="note-background" name="note[background]" value="{{ result.background }}">
+                            <input type="hidden" class="note-color" name="note[color]" value="{{ result.color }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">{{ lang.text_status }}</label>
+                        <div class="input-group col-sm-10">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-check-square"></i></span>
+                            </div>
+                            <select name="note[status]" class="custom-select">
+                                <option value="0"{% if result.status == '0' %} selected{% endif %}>{{ lang.text_in_process }}</option>
+                                <option value="1"{% if result.status == '1' %} selected{% endif %}>{{ lang.text_completed }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    {% if result.id %}
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">{{ lang.text_created_date }}</label>
+                            <div class="input-group col-sm-10">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-calendar"></i></span>
+                                </div>
+                                <input type="text" class="form-control" value="{{ result.date_of_joining|date(common.info.date_format) }}" placeholder="{{ lang.text_created_date }}" readonly>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <input type="hidden" name="note[id]" value="{{ result.id }}">
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<input type="hidden" name="system_lang" value="{{ common.info.language }}">
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+
+<link rel="stylesheet" href="public/css/colorPick.min.css">
+<script type="text/javascript" src="public/js/colorPick.min.js"></script>
+<!-- Footer -->
+{{ include('common/footer.twig') }}

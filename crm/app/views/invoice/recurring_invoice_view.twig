@@ -1,0 +1,272 @@
+{{ include('common/header.twig') }}
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-file-invoice-dollar panel-head-icon"></i>
+			<span class="panel-title-text">{{ page_title }}</span>
+		</div>
+		<div class="panel-action">
+			{% if page_pdf %}
+				<a href="{{ common.url_route }}recurring/pdf&id={{ result.id }}" class="btn btn-primary btn-sm btn-outline btn-gradient btn-pill btn-danger" target="_blank"><i class="las la-file-pdf mr-1"></i> <span>{{ lang.text_pdf }}</span></a>
+			{% endif %}
+			{% if page_edit %}
+				<a href="{{ common.url_route }}recurring/edit&id={{ result.id }}" class="btn btn-primary btn-sm btn-outline btn-gradient btn-pill btn-info"><i class="las la-edit mr-1"></i> <span>{{ lang.text_edit }}</span></a>
+			{% endif %}
+		</div>
+	</div>
+	<div class="panel-wrapper">
+		<div class="inv-template">
+			<div class="inv-template-bdy table-responsive p-3">
+				<div class="company">
+					<table>
+						<tbody>
+							<tr>
+								<td class="info">
+									<div class="logo"><img src="{{ common.info.logo }}" alt="logo"></div>
+									<div class="name">{{ common.info.legal_name }}</div>
+									<div class="text">{{ common.info.address|join(', ') }}</div>
+								</td>
+								<td class="text-right">
+									<div class="title">{{ lang.text_invoice }}</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="meta">
+					<table>
+						<tbody>
+							<tr>
+								<td class="bill-to v-aling-bottom">
+									<div class="heading">{{ lang.text_bill_to }}</div>
+									<div class="title">{{ result.company }}</div>
+									<div class="text">{{ result.email }}</div>
+									<div class="text">{{ result.address|join(', ') }}</div>
+								</td>
+								<td class="info v-aling-bottom">
+									<table class="text-right">
+										<tbody>
+											<tr>
+												<td class="text">#</td>
+												<td class="text w-min-130">{{ common.info.invoice.prefix~"%05d"|format(result.id) }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_invoice_date }}</td>
+												<td class="text w-min-130">{{ result.inv_date|date(common.info.date_format) }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_repeat_every }}</td>
+												<td class="text w-min-130">{{ result.repeat_every }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_payment_method }}</td>
+												<td class="text w-min-130">{{ result.payment }}</td>
+											</tr>
+											<tr>
+												<td class="text">{{ lang.text_status }}</td>
+												<td class="text w-min-130">
+													{% if result.inv_status == '0' %}{{ lang.text_draft }}{% else %}{{ lang.text_published }}{% endif %}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="item">
+					<table>
+						<thead>
+							<tr>
+								<th>{{ lang.text_item_and_description }}</th>
+								<th>{{ lang.text_quantity }}</th>
+								<th>{{ lang.text_unit_cost }}</th>
+								<th>{{ lang.text_discount }}</th>
+								<th>{{ lang.text_tax }}</th>
+								<th>{{ lang.text_price }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for value in result.items %}
+								<tr>
+									<td class="title"><p>{{ value.name }}</p><span>{{ value.descr }}</span></td>
+									<td>{{ value.quantity }}</td>
+									<td>{{ result.currency_abbr~value.cost }}</td>
+									<td class="discount">{{ result.currency_abbr }} {% if value.discountvalue %}{{ value.discountvalue }}{% else %}0{% endif %}</td>
+									<td class="tax">
+										{% for tax in value.tax %}
+											<div><span>{{ result.currency_abbr~tax.tax_price }}</span><span> ({{ tax.name }})</span></div>
+										{% endfor %}
+									</td>
+									<td>{{ result.currency_abbr~value.price }}</td>
+								</tr>
+							{% endfor %}
+							<tr class="total">
+								<td rowspan="4" colspan="4" class="blank">
+									{% if result.want_payment == '1' %}
+										<div class="payment">
+											<div class="title">{{ lang.text_payment_info }}</div>
+											<table>
+												<tbody>
+													<tr>
+														<td>{{ lang.text_account_hash }}</td>
+														<td>{{ common.info.invoice.accountnumber }}</td>
+													</tr>
+													<tr>
+														<td>{{ lang.text_account_name }}</td>
+														<td>{{ common.info.invoice.accountname }}</td>
+													</tr>
+													<tr>
+														<td>{{ lang.text_bank_name }}</td>
+														<td>{{ common.info.invoice.bankname }}</td>
+													</tr>
+													<tr>
+														<td>{{ lang.text_bank_details }}</td>
+														<td>{{ common.info.invoice.bankdetails }}.</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									{% endif %}
+								</td>
+								<td class="title">{{ lang.text_sub_total }}</td>
+								<td class="value">{{ result.currency_abbr~result.subtotal }}</td>
+							</tr>
+							<tr class="total">
+								<td class="title">{{ lang.text_discount }}</td>
+								<td class="value">{{ result.currency_abbr~result.discount_value }}</td>
+							</tr>
+							<tr class="total">
+								<td class="title">{{ lang.text_tax }}</td>
+								<td class="value">{{ result.currency_abbr~result.tax }}</td>
+							</tr>
+							<tr class="total">
+								<td class="title">{{ lang.text_total }}</td>
+								<td class="value">{{ result.currency_abbr~result.amount }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="note">
+					<table>
+						<tbody>
+							<tr>
+								<td class="block v-align-top">
+									<span>{{ lang.text_customer_note }}</span>
+									<p>{{ result.note }}</p>
+								</td>
+								<td class="block v-align-top">
+									<span>{{ lang.text_terms_Conditions }}</span>
+									<p>{{ result.tc }}</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				{% if result.want_signature == '1' %}
+					<div class="bottom pr-30">
+						<table>
+							<tbody>
+								<tr>
+									<td class="sign">
+										{% if common.info.signature and common.info.signature is ondisk %}
+											<img src="public/uploads/{{ common.info.signature }}">
+										{% else %}
+											<div class="sign_white"></div>
+										{% endif %}
+										<div class="text-right">{{ lang.text_authorised_sign }}</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<span class="panel-title-text">{{ lang.text_invoices_created_from_recurring_invoice }}</span>
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>{{ lang.text_customer }}</th>
+						<th>{{ lang.text_amount }}</th>
+						<th>{{ lang.text_due }}</th>
+						<th>{{ lang.text_status }}</th>
+						<th>{{ lang.text_invoice_date }}</th>
+						{% if page_invoice_view or page_invoice_edit or page_invoice_delete %}
+							<th></th>
+						{% endif %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for value in recurringInvoices %}
+						<tr>
+							<td><a href="{{ common.url_route }}invoice/view&id={{ value.id }}" class="text-primary">{{ common.info.invoice.prefix~"%05d"|format(value.id) }}</a></td>
+							<td><a href="{{ common.url_route }}contact/view&id={{ value.customer }}" class="text-primary" target="_blank">{{ value.company }}</a></td>
+							<td>{{ value.abbr~value.amount }}</td>
+							<td>{{ value.abbr~value.due }}</td>
+							<td>
+								{% if value.inv_status == '0' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_draft }}</span>
+                                {% else %}
+                                    {% if value.status == 'Paid' %}
+                                        <span class="badge badge-Paid badge-pill">{{ lang.text_paid }}</span>
+                                    {% elseif value.status == 'Unpaid' %}
+                                        <span class="badge badge-Unpaid badge-pill">{{ lang.text_unpaid }}</span>
+                                    {% elseif value.status == 'Pending' %}
+                                        <span class="badge badge-Pending badge-pill">{{ lang.text_pending }}</span>
+                                    {% elseif value.status == 'In Process' %}
+                                        <span class="badge badge-In-Process badge-pill">{{ lang.text_in_process }}</span>
+                                    {% elseif value.status == 'Cancelled' %}
+                                        <span class="badge badge-Cancelled badge-pill">{{ lang.text_cancelled }}</span>
+                                    {% elseif value.status == 'Other' %}
+                                        <span class="badge badge-Other badge-pill">{{ lang.text_other }}</span>
+                                    {% elseif value.status == 'Partially Paid' %}
+                                        <span class="badge badge-Partially-Paid badge-pill">{{ lang.text_partially_paid }}</span>
+                                    {% else %}
+                                        <span class="badge badge-Unknown badge-pill">{{ lang.text_unknown }}</span>
+                                    {% endif %}
+                                {% endif %}
+							</td>
+							<td>{{ value.date_of_joining|date(common.info.date_format) }}</td>
+							{% if page_invoice_view or page_invoice_edit or page_invoice_delete %}
+								<td class="table-action">
+									{% if page_invoice_view %}
+										<a href="{{ common.url_route }}invoice/view&id={{ value.id }}" class="btn btn-dark btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_view }}"><i class="las la-laptop"></i></a>
+									{% endif %}
+									{% if page_invoice_edit %}
+										<a href="{{ common.url_route }}invoice/edit&id={{ value.id }}" class="btn btn-primary btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_edit }}"><i class="las la-edit"></i></a>
+									{% endif %}
+									{% if page_invoice_delete %}
+										<a class="btn btn-danger btn-circle btn-outline btn-outline-1x table-delete" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+									{% endif %}
+								</td>
+							{% endif %}
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="6" class="text-center font-18">{{ lang.text_no_records_available }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+
+{% if page_invoice_delete %}{{ include('common/delete-modal.twig') }}{% endif %}
+	{{ include('common/footer.twig') }}

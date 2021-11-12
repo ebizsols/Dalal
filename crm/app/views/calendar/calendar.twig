@@ -1,0 +1,106 @@
+{{ include('common/header.twig') }}
+<!-- Items list page start -->
+<div class="content">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-calendar-check panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                {% if page_add %}
+                    <a class="btn btn-primary btn-outline btn-gradient btn-pill btn-sm" data-toggle="modal" data-target="#event-modal"><i class="las la-plus mr-1"></i> {{ lang.text_new_event }}</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="panel-wrapper">
+            <div class="panel-body">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Modal -->
+<div id="event-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ lang.text_calendar_event }}</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form action="{{ action }}" method="post">
+                <input type="hidden" name="_token" value="{{ common.token }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_event_title }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control event-title" name="event[title]" value="" placeholder="{{ lang.text_event_title }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_start_date }} <span class="form-required">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-calendar"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control event-start" name="event[start]" value="" placeholder="{{ lang.text_start_date }}" required readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_end_date }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-calendar"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control event-end" name="event[end]" value="" placeholder="{{ lang.text_end_date }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label class="col-form-label">{{ lang.text_all_day_event_Select_if_all_day_event }}</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-checkbox-1">
+                                <input type="checkbox" name="event[allday]" class="custom-control-input event-allday" id="allday" value="1">
+                                <label class="custom-control-label" for="allday">{{ lang.text_all_day_event }}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_description }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-paragraph"></i></span>
+                            </div>
+                            <textarea class="form-control event-descr" name="event[description]" placeholder="{{ lang.text_description }}"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-gradient btn-pill font-12" name="submit">{{ lang.text_save }}</button>
+                    {% if page_delete %}
+                        <a class="btn btn-danger btn-gradient btn-pill event-delete table-delete font-12"><input type="hidden" name="id" class="event-id">{{ lang.text_delete }}</a>
+                    {% endif %}
+                    <button type="button" class="btn btn-default btn-gradient btn-pill font-12" data-dismiss="modal">{{ lang.text_close }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<input type="hidden" class="lang_month_names" value="{{ month_names|e }}">
+<input type="hidden" class="lang_month_names_short" value="{{ month_names_short|e }}">
+<input type="hidden" class="lang_day_names" value="{{ day_names|e }}">
+<input type="hidden" class="lang_day_names_short" value="{{ day_names_short|e }}">
+<input type="hidden" class="lang_buttons" value="{{ buttons|e }}">
+<!-- Full Calendar Plugin -->
+<link rel="stylesheet" href="public/css/fullcalendar.min.css" />
+<script type="text/javascript" src="public/js/fullcalendar.min.js"></script>
+<script type="text/javascript" src="public/js/calendar.js"></script>
+{% if page_delete %}{{ include('common/delete-modal.twig') }}{% endif %}
+    {{ include('common/footer.twig') }}

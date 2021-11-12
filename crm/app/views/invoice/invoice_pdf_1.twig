@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>{{ lang.text_invoice }}</title>
+	<link rel="stylesheet" href="public/css/style-invoice.css" type="text/css">
+</head>
+<body>
+	<div class="inv-template">
+		<div class="company pl-30 pr-30">
+			<table>
+				<tbody>
+					<tr>
+						<td class="info">
+							<div class="logo"><img src="{{ common.info.logo }}" alt="logo"></div>
+							<div class="name">{{ common.info.legal_name }}</div>
+							<div class="text">{% if common.info.email %}{{ common.info.email }},{% endif %} {{ common.info.phone }}</div>
+							<div class="text">{{ common.info.address|join(', ') }}</div>
+						</td>
+						<td class="text-right">
+							<div class="title">{{ lang.text_invoice }}</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="meta pl-30 pr-30">
+			<table>
+				<tbody>
+					<tr>
+						<td class="bill-to v-aling-bottom">
+							<div class="heading">{{ lang.text_bill_to }}</div>
+							<div class="title">{{ result.company }}</div>
+							<div class="text">{{ result.email }}</div>
+							<div class="text">{{ result.address|join(', ') }}</div>
+						</td>
+						<td class="info v-aling-bottom">
+							<table class="text-right">
+								<tbody>
+									<tr>
+										<td class="text">#</td>
+										<td class="text w-min-130">{{ common.info.invoice.prefix~"%05d"|format(result.id) }}</td>
+									</tr>
+									<tr>
+										<td class="text">{{ lang.text_invoice_date }}</td>
+										<td class="text w-min-130">{{ result.invoicedate|date(common.info.date_format) }}</td>
+									</tr>
+									<tr>
+										<td class="text">{{ lang.text_due_date }}</td>
+										<td class="text w-min-130">{{ result.duedate|date(common.info.date_format) }}</td>
+									</tr>
+									<tr>
+										<td class="text">{{ lang.text_payment_method }}</td>
+										<td class="text w-min-130">{{ result.payment }}</td>
+									</tr>
+									<tr>
+										<td class="text">{{ lang.text_status }}</td>
+										<td class="text w-min-130">{{ result.status }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="item pl-30 pr-30">
+			<table>
+				<thead>
+					<tr>
+						<th>{{ lang.text_item_and_description }}</th>
+						<th>{{ lang.text_quantity }}</th>
+						<th>{{ lang.text_unit_cost }}</th>
+						<th>{{ lang.text_discount }}</th>
+						<th>{{ lang.text_tax }}</th>
+						<th>{{ lang.text_price }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for value in result.items %}
+						<tr class="item-list">
+							<td class="title"><p>{{ value.name }}</p><span>{{ value.descr }}</span></td>
+							<td class="qty">{{ value.quantity }}</td>
+							<td class="cost">{{ result.currency_abbr~' '~value.cost }}</td>
+							<td class="discount">{{ result.currency_abbr }} {% if value.discountvalue %}{{ value.discountvalue }}{% else %}0{% endif %}</td>
+							<td class="tax">
+								{% for tax in value.tax %}
+									<div><span>{{ result.currency_abbr~' '~tax.tax_price }}</span><span> ({{ tax.name }})</span></div>
+								{% endfor %}
+							</td>
+							<td class="price">{{ result.currency_abbr~' '~value.price }}</td>
+						</tr>
+					{% endfor %}
+					<tr class="total">
+						<td rowspan="6" colspan="4" class="blank">
+							{% if result.want_payment == '1' %}
+								<div class="payment">
+									<div class="title">{{ lang.text_payment_info }}</div>
+									<table>
+										<tbody>
+											<tr>
+												<td>{{ lang.text_account_hash }}</td>
+												<td>{{ common.info.invoice.accountnumber }}</td>
+											</tr>
+											<tr>
+												<td>{{ lang.text_account_name }}</td>
+												<td>{{ common.info.invoice.accountname }}</td>
+											</tr>	
+											<tr>
+												<td>{{ lang.text_bank_name }}</td>
+												<td>{{ common.info.invoice.bankname }}</td>
+											</tr>
+											<tr>
+												<td>{{ lang.text_bank_details }}</td>
+												<td>{{ common.info.invoice.bankdetails }}.</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							{% endif %}
+						</td>
+						<td class="title">{{ lang.text_sub_total }}</td>
+						<td class="value">{{ result.currency_abbr~' '~result.subtotal }}</td>
+					</tr>
+					{% if result.discount_value > '0' %}
+						<tr class="total">
+							<td class="title">{{ lang.text_discount }}</td>
+							<td class="value">{{ result.currency_abbr~' '~result.discount_value }}</td>
+						</tr>
+					{% endif %}
+					<tr class="total">
+						<td class="title">{{ lang.text_tax }}</td>
+						<td class="value">{{ result.currency_abbr~' '~result.tax }}</td>
+					</tr>
+					<tr class="total">
+						<td class="title">{{ lang.text_total }}</td>
+						<td class="value">{{ result.currency_abbr~' '~result.amount }}</td>
+					</tr>
+					<tr class="total">
+						<td class="title">{{ lang.text_paid }}</td>
+						<td class="value">{{ result.currency_abbr~' '~result.paid }}</td>
+					</tr>
+					<tr class="total">
+						<td class="title">{{ lang.text_due }}</td>
+						<td class="value">{{ result.currency_abbr~' '~result.due }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="note pl-30 pr-30">
+			<table>
+				<tbody>
+					<tr>
+						<td class="block v-align-top">
+							<span>{{ lang.text_customer_note }}</span>
+							<p>{{ result.note }}</p>
+						</td>
+						<td class="block v-align-top">
+							<span>{{ lang.text_terms_Conditions }}</span>
+							<p>{{ result.tc }}</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		{% if result.want_signature == '1' %}
+			<div class="bottom pr-30 text-right">
+				<div class="sign">
+					{% if common.info.signature and common.info.signature is ondisk %}
+						<img src="public/uploads/{{ common.info.signature }}">
+					{% else %}
+						<div class="sign_white"></div>
+					{% endif %}
+					<p class="sign-label">{% if common.info.invoice.signature_label %}{{ common.info.invoice.signature_label }}{% else %}{{ lang.text_authorised_sign }}{% endif %}</p>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+</body>
+</html>

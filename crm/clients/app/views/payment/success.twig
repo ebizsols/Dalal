@@ -1,0 +1,15 @@
+{{ include('common/header.twig') }}
+<div class="panel panel-default">
+	<div class="panel-body text-center pt-5">
+		<div class="text-center pt-3">
+			<p class="font-18">{{ lang.text_transaction_id }} - {{ txn_id }}</p>
+			<p class="font-14">{{ lang.text_thank_you_message }}</p>
+			<div class="pt-4 pb-4">
+				<a href="{{ common.url_route }}dashboard" class="btn btn-outline btn-pill btn-gradient btn-primary mr-3"><i class="las la-tv font-16 mr-2"></i>{{ lang.text_dashboard }}</a>
+				<a href="{{ common.url_route }}invoices" class="btn btn-outline btn-pill btn-gradient btn-warning"><i class="las la-file-invoice font-16 mr-2"></i>{{ lang.text_invoice }}</a>
+			</div>
+			<p>{{ lang.text_loyal_customer }}</p>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

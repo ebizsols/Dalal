@@ -1,0 +1,378 @@
+{{ include('common/header.twig') }}
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="user-details text-center">
+                    <div class="user-avtar">
+                        {% if result.picture and result.picture is ondisk %}
+                            <img class="img-fluid img-thumbnail" src="public/uploads/{{ result.picture }}">
+                        {% else %}
+                            <span>{{ result.company|split('')[0] }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="user-details pt-2  pb-2 text-center">
+                        <h2 class="font-20">{{ result.company }}</h2>
+                    </div>
+                    <ul class="nav flex-column vnav-tabs text-left">
+                        <li class="nav-item">
+                            <a href="#contact-info" class="nav-link active" data-toggle="tab"><i class="las la-address-book"></i> <span>{{ lang.text_contact }}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact-persons" class="nav-link" data-toggle="tab"><i class="las la-users"></i> <span>{{ lang.text_contact_persons }}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact-invoices" class="nav-link" data-toggle="tab"><i class="las la-file-invoice"></i> <span>{{ lang.text_invoices }}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact-quotes" class="nav-link" data-toggle="tab"><i class="las la-calculator"></i> <span>{{ lang.text_quotes }}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact-clients" class="nav-link" data-toggle="tab"><i class="las la-user"></i> <span>{{ lang.text_client~' '~lang.text_portal }}</span></a>
+                        </li>
+                        {% if page_edit %}
+                            <li class="nav-item">
+                                <a href="{{ common.url_route }}contact/edit&id={{ result.id }}"><i class="las la-edit"></i> <span>{{ lang.text_edit }}</span></a>
+                            </li>
+                        {% endif %}
+                        {% if page_sendmail %}
+                            <li class="nav-item">
+                                <a href="#contact-sentmail" class="nav-link" data-toggle="tab"><i class="las la-paper-plane"></i> <span>{{ lang.text_send_mail }}</span></a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="tab-content m-0">
+            <div id="contact-info" class="tab-pane active">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <div class="panel-title">
+                            <i class="las la-address-book panel-head-icon"></i>
+                            <span class="panel-title-text">{{ page_title }}</span>
+                        </div>
+                        <div class="panel-action"></div>  
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <tbody>
+                                {% if admin %}
+                                    <tr>
+                                        <td class="text-primary">{{ lang.text_staff }}</td>
+                                        <td>{{ result.username }}</td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_company }}</td>
+                                    <td>{{ result.company }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_primary_contact }}</td>
+                                    <td>{{ result.salutation~' '~result.firstname~' '~result.lastname }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_email_address }}</td>
+                                    <td>{{ result.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_phone_number }}</td>
+                                    <td>{{ result.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_website }}</td>
+                                    <td>{{ result.website }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_marketing }}</td>
+                                    <td>
+                                        {% for value in result.marketing %}
+                                            {% if value == 'email' %}
+                                                <span class="badge badge-primary badge-pill">{{ value }}</span>
+                                            {% elseif value == 'phone' %}
+                                                <span class="badge badge-primary badge-pill">{{ value }}</span>
+                                            {% elseif value == 'sms' %}
+                                                <span class="badge badge-primary badge-pill">{{ value }}</span>
+                                            {% elseif value == 'social' %}
+                                                <span class="badge badge-primary badge-pill">{{ value }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_expire_date }}</td>
+                                    <td>
+                                        {% if date(result.expire) > date() %}
+                                            <span class="badge badge-light badge-sm badge-pill">{{ result.expire|date(common.info.date_format) }}</span>
+                                        {% else %}
+                                            <span class="badge badge-danger badge-sm badge-pill">{{ result.expire|date(common.info.date_format) }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_address }}</td>
+                                    <td>{{ result.address|join(',') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-primary">{{ lang.text_remark }}</td>
+                                    <td>{{ result.remark|html_entity_decode }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="contact-invoices" class="tab-pane">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <div class="panel-title">
+                            <i class="las la-address-book panel-head-icon"></i>
+                            <span class="panel-title-text">{{ lang.text_invoices }}</span>
+                        </div>
+                        <div class="panel-action">
+
+                        </div>  
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{ lang.text_company }}</th>
+                                        <th>{{ lang.text_amount }}</th>
+                                        <th>{{ lang.text_balance_due }}</th>
+                                        <th>{{ lang.text_date }}</th>
+                                        <th>{{ lang.text_status }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for value in invoices %}
+                                        <tr>
+                                            <td><a href="{{ common.url_route }}invoice/view&id={{ value.id }}" class="text-primary">{{ common.info.invoice.prefix~"%05d"|format(value.id) }}</a></td>
+                                            <td>{{ result.company }}</td>
+                                            <td>{{ value.abbr~' '~value.amount }}</td>
+                                            <td>{{ value.abbr~' '~value.due }}</td>
+                                            <td><i class="far fa-clock mr-2 text-muted"></i>{{ value.invoicedate|date(common.info.date_format) }}</td>
+                                            <td>
+                                                {% if value.status == 'Paid' %}
+                                                    <span class="badge badge-Paid badge-pill badge-sm">{{ lang.text_paid }}</span>
+                                                {% elseif value.status == 'Unpaid' %}
+                                                    <span class="badge badge-Unpaid badge-pill badge-sm">{{ lang.text_unpaid }}</span>
+                                                {% elseif value.status == 'Pending' %}
+                                                    <span class="badge badge-Pending badge-pill badge-sm">{{ lang.text_pending }}</span>
+                                                {% elseif value.status == 'In Process' %}
+                                                    <span class="badge badge-In-Process badge-pill badge-sm">{{ lang.text_in_process }}</span>
+                                                {% elseif value.status == 'Cancelled' %}
+                                                    <span class="badge badge-Cancelled badge-pill badge-sm">{{ lang.text_cancelled }}</span>
+                                                {% elseif value.status == 'Other' %}
+                                                    <span class="badge badge-Other badge-pill badge-sm">{{ lang.text_other }}</span>
+                                                {% elseif value.status == 'Partially Paid' %}
+                                                    <span class="badge badge-Partially-Paid badge-pill badge-sm">{{ lang.text_partially_paid }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-Unknown badge-pill badge-sm">{{ lang.text_unknown }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                <span class="font-16">{{ lang.text_no_data_found }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="contact-quotes" class="tab-pane">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <div class="panel-title">
+                            <i class="las la-address-book panel-head-icon"></i>
+                            <span class="panel-title-text">{{ lang.text_quotes }}</span>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{ lang.text_project }}</th>
+                                        <th>{{ lang.text_company }}</th>
+                                        <th>{{ lang.text_amount }}</th>
+                                        <th>{{ lang.text_date }}</th>
+                                        <th>{{ lang.text_expiry_date }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for value in quotes %}
+                                        <tr>
+                                            <td><a href="{{ common.url_route }}quote/view&id={{ value.id }}" class="text-primary">QTN-{{ "%05d"|format(value.id) }}</a></td>
+                                            <td>{{ value.project_name }}</td>
+                                            <td>{{ result.company }}</td>
+                                            <td>{{ value.abbr~' '~value.amount }}</td>
+                                            <td><i class="far fa-clock mr-2 text-muted"></i>{{ value.date|date(common.info.date_format) }}</td>
+                                            <td><i class="far fa-clock mr-2 text-muted"></i>{{ value.expiry|date(common.info.date_format) }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                <span class="font-16">{{ lang.text_no_data_found }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="contact-persons" class="tab-pane">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <div class="panel-title">
+                            <i class="las la-address-book panel-head-icon"></i>
+                            <span class="panel-title-text">{{ lang.text_contact_persons }}</span>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>{{ lang.text_name }}</th>
+                                        <th>{{ lang.text_email_address }}</th>
+                                        <th>{{ lang.text_mobile_number }}</th>
+                                        <th>{{ lang.text_skype }}</th>
+                                        <th>{{ lang.text_designation }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for value in result.persons %}
+                                        <tr>
+                                            <td>{{ value.salutation~' '~value.name }}</td>
+                                            <td>{{ value.email }}</td>
+                                            <td>{{ value.mobile }}</td>
+                                            <td>{{ value.skype }}</td>
+                                            <td><span class="badge badge-light badge-sm badge-pill">{{ value.designation }}</span></td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center">
+                                                <span class="font-16">{{ lang.text_no_data_found }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="contact-clients" class="tab-pane">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <div class="panel-title">
+                            <i class="las la-address-book panel-head-icon"></i>
+                            <span class="panel-title-text">{{ lang.text_client }}<small class="text-muted ml-1">({{ lang.text_user_registered_on_client_portal }})</small></span>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        {% if client.id %}
+                            <ul class="timeline">
+                                {% for value in clientactivity %}
+                                    <li>
+                                        <div class="time"><small>{{ value.date_of_joining|date('d-m-Y H:i:s') }}</small></div>
+                                        <a class="timeline-container">
+                                            <div class="arrow"></div>
+                                            {% if value.name == 'login' %}
+                                                <div class="description">Client Logged in successfully.</div>
+                                            {% elseif value.name == 'register' %}
+                                                <div class="description">Client has registered successfully.</div>
+                                            {% elseif value.name == 'forgot' %}
+                                                <div class="description">Client has submitted forgot password query.</div>
+                                            {% elseif value.name == 'reset' %}
+                                                <div class="description">Client Changed password Successfully</div>
+                                            {% elseif value.name == 'profile' %}
+                                                <div class="description">Client updated their profile.</div>
+                                            {% elseif value.name == 'changepassword' %}
+                                                <div class="description">Client has changed password.</div>
+                                            {% else %}
+                                                <div class="description">Unkown</div>
+                                            {% endif %}
+                                            <div class="author">{{ value.ip }}</div>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="font-16">{{ lang.text_client_has_not_created_account_at_client_portal }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if page_sendmail %}
+                <div id="contact-sentmail" class="tab-pane">
+                    <form action="{{ common.url_route }}contact/sendmail" method="post" enctype="multipart/form-data">
+                        <div class="panel panel-default">
+                            <div class="panel-head">
+                                <div class="panel-title">{{ lang.text_send_mail }}</div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="col-form-label">{{ lang.text_to }}</label>
+                                        <input type="text" class="form-control" value="{{ result.email }}" placeholder="{{ lang.text_to }}" readonly>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="col-form-label">{{ lang.text_bcc }}</label>
+                                        <input type="email" class="form-control" name="mail[bcc]" value="" placeholder="{{ lang.text_bcc }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">{{ lang.text_subject }}</label>
+                                    <input type="text" class="form-control" name="mail[subject]" value="" placeholder="{{ lang.text_subject }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">{{ lang.text_message }}</label>
+                                    <textarea name="mail[message]" class="mail-summernote" placeholder="{{ lang.text_message }}"></textarea>
+                                </div>
+                                <input type="hidden" name="mail[contact]" value="{{ result.id }}">
+                                <input type="hidden" name="mail[to]" value="{{ result.email }}">
+                                <input type="hidden" name="mail[name]" value="{{ result.company }}">
+                                <input type="hidden" name="_token" value="{{ common.token }}">
+                            </div>
+                            <div class="panel-footer text-center">
+                                <button type="submit" class="btn btn-primary btn-gradient btn-pill" name="submit">{{ lang.text_send }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- Send Email Modal -->
+<div id="contactMail" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+{{ include('common/footer.twig') }}

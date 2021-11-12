@@ -1,0 +1,156 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+	<input type="hidden" name="_token" value="{{ common.token }}">
+	<div class="panel panel-default">
+		<div class="panel-head">
+			<div class="panel-title">
+				<i class="las la-user panel-head-icon"></i>
+				<span class="panel-title-text">{{ lang.text_email_settings }}</span>
+			</div>
+			<div class="panel-action">
+				<button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+			</div>  
+		</div>
+        <div class="panel-body">
+            <div class="tab-pane" id="email-settings">
+                <div class="form-group">
+                    <label class="col-form-label">{{ lang.text_default }}  <span class="form-required">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="las la-envelope"></i></span>
+                        </div>
+                        <select name="smtp[status]" class="custom-select mail-type">
+                            <option value="0" {{ result.status == '0' ? 'selected' : false }}>{{ lang.text_disable }}</option>
+                            <option value="1" {{ result.status == '1' ? 'selected' : false }}>{{ lang.text_default_PHP_mail }}</option>
+                            <option value="2" {{ result.status == '2' ? 'selected' : false }}>{{ lang.text_SMTP_mail }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="br-bottom-1x mt-3 mb-4"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_from_email_address }} <span class="form-required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-envelope"></i></span>
+                                </div>
+                                <input type="text" name="smtp[fromemail]" class="form-control" value="{{ result.fromemail }}" placeholder="{{ lang.text_from_email_address }} . . ." required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_from_name }} <span class="form-required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-user"></i></span>
+                                </div>
+                                <input type="text" name="smtp[fromname]" class="form-control" value="{{ result.fromname }}" placeholder="Enter {{ lang.text_from_name }} . . ." required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_reply_to_email_address }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-envelope"></i></span>
+                                </div>
+                                <input type="text" name="smtp[reply]" class="form-control" value="{{ result.reply }}" placeholder="{{ lang.text_reply_to_email_address }} . . .">
+                            </div>
+                            <div class="form-text text-muted">{{ lang.text_reply_optional }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="smtp-mail" class="row" {% if result.status == '0' or result.status == '1' %}style="display:none"{% endif %}>
+                    <div class="col-12">
+                        <div class="br-bottom-1x mt-3 mb-4"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_SMTP_host }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-layer-group"></i></span>
+                                </div>
+                                <input type="text" name="smtp[host]" class="form-control" value="{{ result.host }}" placeholder="{{ lang.text_SMTP_host }} . . .">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_SMTP_port }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-layer-group"></i></span>
+                                </div>
+                                <input type="text" name="smtp[port]" class="form-control" value="{{ result.port }}" placeholder="{{ lang.text_SMTP_port }} . . .">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_SMTP_username }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-envelope"></i></span>
+                                </div>
+                                <input type="text" name="smtp[username]" class="form-control" value="{{ result.username }}" placeholder="{{ lang.text_SMTP_username }} . . .">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_SMTP_password }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-key"></i></span>
+                                </div>
+                                <input type="text" name="smtp[password]" class="form-control" value="{{ result.password }}" placeholder="Enter {{ lang.text_SMTP_password }} . . .">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_type_of_encryption }}</label>
+                            <div class="">
+                                <div class="custom-control custom-radio custom-checkbox-1 d-inline-block mr-2">
+                                    <input type="radio" class="custom-control-input" name="smtp[encryption]" value="none" id="encryption-none" {{ result.encryption == 'none' ? 'checked' : false }}>
+                                    <label class="custom-control-label" for="encryption-none">none</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-checkbox-1 d-inline-block mr-2">
+                                    <input type="radio" class="custom-control-input" name="smtp[encryption]" value="ssl" id="encryption-ssl" {{ result.encryption == 'ssl' ? 'checked' : false }}>
+                                    <label class="custom-control-label" for="encryption-ssl">SSL</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-checkbox-1 d-inline-block">
+                                    <input type="radio" class="custom-control-input" name="smtp[encryption]" value="tls" id="encryption-tls" {{ result.encryption == 'tls' ? 'checked' : false }}>
+                                    <label class="custom-control-label" for="encryption-tls">TLS</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_SMTP_authentication }}</label>
+                            <div class="">
+                                <div class="custom-control custom-radio custom-radio-1 d-inline-block mr-2">
+                                    <input type="radio" class="custom-control-input" name="smtp[authentication]" value="0" id="authentication-no"  {{ result.authentication == '0' ? 'checked' : false }}>
+                                    <label class="custom-control-label" for="authentication-no">{{ lang.text_no }}</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-radio-1 d-inline-block">
+                                    <input type="radio" class="custom-control-input" name="smtp[authentication]" value="1" id="authentication-yes" {{ result.authentication == '1' ? 'checked' : false }}>
+                                    <label class="custom-control-label" for="authentication-yes">{{ lang.text_yes }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-center">
+            <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+        </div>
+    </div>
+</form>
+{{ include('common/footer.twig') }}

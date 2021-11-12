@@ -1,0 +1,63 @@
+{{ include('common/header.twig') }}
+<!-- Notes list page start -->
+<div class="panel panel-default">
+    <div class="panel-head">
+        <div class="panel-title">
+            <i class="las la-sticky-note panel-head-icon"></i>
+            <span class="panel-title-text">{{ page_title }}</span>
+        </div>
+        <div class="panel-action">
+            {% if page_add %}
+                <a href="{{ common.url_route }}note/add" class="btn btn-primary btn-outline btn-gradient btn-pill btn-sm"><i class="las la-plus mr-1"></i> {{ lang.text_new_note }}</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="panel-body pb-0">
+        <div class="notes-block">
+            <div class="row">
+                {% for value in result %}
+                    <div class="col-md-3">
+                        <div class="notes-card" style="background: {{ value.background }};color: {{ value.color }}">
+                            <div class="notes">
+                                <h2>{{ value.title }}</h2>
+                                <div class="notes-body">{{ value.description|html_entity_decode }}</div>
+                            </div>
+                            <div class="notes-footer">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 text-left">
+                                        <p class="font-14 mb-0"><i class="las la-calendar mr-2"></i>{{ value.date_of_joining|date(common.info.date_format) }}</p> 
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        {% if page_edit %}
+                                            <a href="{{ common.url_route }}note/edit&id={{ value.id }}"><i class="las la-edit"></i></a>
+                                        {% endif %}
+                                        {% if page_delete %}
+                                            <a class="table-delete"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="mb-0 font-18">{{ lang.text_no_data_found }}</p>
+                    </div>
+                    {% if page_add %}
+                        <div class="col-12 text-center pb-5">
+                            <a href="{{ common.url_route }}note/add" class="btn btn-primary btn-gradient btn-pill mt-3">{{ lang.text_new_note }}</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Note Modal -->
+<div id="note-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{{ include('common/delete-modal.twig') }}
+{{ include('common/footer.twig') }}

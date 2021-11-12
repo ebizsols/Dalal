@@ -1,0 +1,60 @@
+{{ include('common/header.twig') }}
+<!-- User list page start -->
+<div class="panel panel-default">
+    <div class="panel-head">
+        <div class="panel-title">
+            <i class="las la-shipping-fast panel-head-icon"></i>
+            <span class="panel-title-text">{{ page_title }}</span>
+        </div>
+        <div class="panel-action">
+            <div class="dropdown export-dropdown d-inline-block mr-2">
+                <a class="btn btn-white btn-sm btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-cloud-download-alt text-primary pr-1"></i> <span>{{ lang.text_export }}</span> <i class="las la-angle-down pl-2"></i></a>
+                <ul class="dropdown-menu dropdown-menu-right export-button">
+                    <li><a href="#" class="excel"><i class="las la-file-excel pr-2"></i>{{ lang.text_excel }}</a></li>
+                    <li><a href="#" class="csv"><i class="las la-file-csv pr-2"></i>{{ lang.text_csv }}</a></li>
+                    <li><a href="#" class="print"><i class="las la-print pr-2"></i>{{ lang.text_print }}</a></li>
+                    <li><a href="#" class="copy"><i class="las la-copy pr-2"></i>{{ lang.text_copy }}</a></li>
+                </ul>
+            </div>
+            <div class="btn btn-white btn-sm btn-pill text-left mr-2">
+                <i class="las la-filter text-danger mr-1"></i>
+                <input type="text" class="table-date-range" data-start="{{ period.start|date(common.info.date_format) }}" data-end="{{ period.end|date(common.info.date_format) }}" data-route="emaillog">
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped datatable-table" width="100%">
+                <thead>
+                    <tr class="table-heading">
+                        <th class="table-srno">#</th>
+                        <th>{{ lang.text_email_to_and_bcc }}</th>
+                        <th>{{ lang.text_subject }}</th>
+                        <th>{{ lang.text_message }}</th>
+                        <th>{{ lang.text_created_date }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in result %}
+                        <tr>
+                            <td class="table-srno">{{ loop.index }}</td>
+                            <td><a class="font-14">
+                                <p class="m-0"><b>{{ lang.text_to }} : </b>{{ value.email_to }}</p>
+                                {% if value.email_bcc %}
+                                    <p class="m-0"><b>{{ lang.text_bcc }} : </b>{{ value.email_bcc }}</p>
+                                {% endif %}
+                                <p class="mt-3"><b>{{ lang.text_sent_by }} : </b>{{ value.user_name }}</p>
+                                <p class="mt-2"><b>{{ lang.text_mail_of }} : </b>{{ value.type }}</p>
+                            </td>
+                            <td>{{ value.subject }}</td>
+                            <td>{{ value.message|html_entity_decode }}</td>
+                            <td>{{ value.date_of_joining|date(common.info.date_format) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{{ include('common/footer.twig') }}

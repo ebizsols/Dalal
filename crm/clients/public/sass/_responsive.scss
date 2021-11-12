@@ -1,0 +1,56 @@
+
+
+/*************************************************
+[ MEDIA QUERIES START ] *********************
+**************************************************/
+/* FROM 1200px TO 1400px */ 
+@media (min-width: 1200px) and (max-width: 1400px) {
+}
+/* FROM 992px TO 1199PX */ 
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+/* FROM 0PX TO 992PX */ 
+@media only screen and (max-width: 992px) {
+	.menu {
+		display: none;
+		position: absolute;
+		top: 76px;
+		right: 0;
+		width: 100%;
+		background: #fff;
+		z-index: 111;
+		box-shadow: 0px 0px 50px -15px rgba(0,0,0,0.33);
+
+		ul {
+			li {
+				display: block;
+				padding: 10px 30px;
+				border-bottom: 1px solid $colorE;
+
+				a {
+					display: block;
+					color: $color3;
+				}
+			}
+		}
+	}
+
+	.menu-icon {
+		display: block;
+	}
+}
+/* FROM 768PX TO 979PX */ 
+@media (min-width: 768px) and (max-width: 979px) {
+}
+/* FROM 0PX TO 768PX */ 
+@media only screen and (max-width: 768px) {
+
+	.menu-icon {
+		display: block;
+	}
+}
+/* FROM 0PX TO 480PX */ 
+@media only screen and (max-width: 480px) {
+
+}

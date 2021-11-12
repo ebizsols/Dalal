@@ -1,0 +1,151 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="icon-rocket panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                <button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}domains" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+            </div>  
+        </div>
+        <div class="panel-body">
+            <input type="hidden" name="_token" value="{{ common.token }}">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_name }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-certificate"></i></span>
+                            </div>
+                            <input type="text" name="domain[name]" class="form-control" value="{{ result.name }}" placeholder="{{ lang.text_name }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_url }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-tag"></i></span>
+                            </div>
+                            <input type="text" name="domain[url]" class="form-control" value="{{ result.url }}" placeholder="{{ lang.text_url }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_registration_date }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-calendar"></i></span>
+                            </div>
+                            <input type="text" name="domain[r_date]" class="form-control date" value="{{ result.registration_date|date(common.info.date_format) }}" placeholder="{{ lang.text_registration_date }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_expiry_date }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-calendar-times"></i></span>
+                            </div>
+                            <input type="text" name="domain[e_date]" class="form-control date" value="{{ result.expiry_date|date(common.info.date_format) }}" placeholder="{{ lang.text_expiry_date }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_provider }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-umbrella"></i></span>
+                            </div>
+                            <input type="text" name="domain[provider]" class="form-control" value="{{ result.provider }}" placeholder="{{ lang.text_provider }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_hosting }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-warehouse"></i></span>
+                            </div>
+                            <input type="text" name="domain[hosting]" class="form-control" value="{{ result.hosting }}" placeholder="{{ lang.text_hosting }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group customer-search">
+                        <label class="col-form-label">{{ lang.text_customer }}</label>
+                        <select name="domain[customer]" class="selectpicker" data-width="100%" data-live-search="true" title="{{ lang.text_customer }}">
+                            {% for value in customers %}
+                                <option value="{{ value.id }}"{% if value.id == result.customer %} selected{% endif %}>{{ value.company }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_annual_price }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select name="domain[currency]" class="custom-select">
+                                    {% for value in currency %}
+                                        <option value="{{ value.id }}"{% if value.id == result.currency %} selected{% endif %}>{{ value.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="text" name="domain[price]" class="form-control" value="{{ result.price }}" placeholder="{{ lang.text_annual_price }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_status }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-check-square"></i></span>
+                            </div>
+                            <select name="domain[status]" class="custom-select">
+                                <option value="1"{% if result.status == '1' %} selected{% endif %}>{{ lang.text_active }}</option>
+                                <option value="0"{% if result.status == '0' %} selected{% endif %}>{{ lang.text_inactive }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-form-label d-block">{{ lang.text_do_not_renew_after_expiry }}</label>
+                        <div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block">
+                            <input type="checkbox" name="domain[renew]" class="custom-control-input" id="renew" value="1"{% if result.renew == '1' %} checked{% endif %}>
+                            <label class="custom-control-label" for="renew">{{ lang.text_do_not_renew_after_expiry }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="col-form-label d-block">{{ lang.text_remark }}</label>
+                        <textarea name="domain[remark]" class="summernote">{{ result.remark }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="domain[id]" value="{{ result.id }}">
+        </div>
+        <div class="panel-footer text-center">
+            <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+        </div>
+    </div>
+</form>
+
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+
+{{ include('common/footer.twig') }}

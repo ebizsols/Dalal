@@ -1,0 +1,117 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" class="panel panel-default" method="post">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-calendar-check panel-head-icon"></i>
+			<span class="panel-title-text">{{ page_title }}</span>
+		</div>
+		<div class="panel-action">
+		</div>
+	</div>
+	<div class="panel-body">
+		<input type="hidden" name="_token" value="{{ common.token }}">
+		<div class="date_pick row">
+			<input type="hidden" name="day">
+			<input type="hidden" name="month">
+			<input type="hidden" name="year">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label class="col-form-label">{{ lang.text_select_date_for_attendence }} <span class="form-required">*</span></label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="las la-calendar-check"></i></span>
+						</div>
+						<input type="text" name="attendence_date" class="form-control bg-white attendence" required autocomplete="off" readonly>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive attendence-container d-none">
+			<table class="table table-align-middle table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>{{ lang.text_user_info }}</th>
+						<th>{{ lang.text_user_role }}</th>
+						<th>
+							<div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block mt-1 mb-1">
+								<input type="checkbox" class="custom-control-input attendence-head" id="attendence-head-P" value="P">
+								<label class="custom-control-label font-12" for="attendence-head-P">{{ lang.text_persent }}</label>
+							</div>
+						</th>
+						<th>
+							<div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block mt-1 mb-1">
+								<input type="checkbox" class="custom-control-input attendence-head" id="attendence-head-A" value="A">
+								<label class="custom-control-label font-12" for="attendence-head-A">{{ lang.text_absent }}</label>
+							</div>
+						</th>
+						<th>
+							<div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block mt-1 mb-1">
+								<input type="checkbox" class="custom-control-input attendence-head" id="attendence-head-L" value="L">
+								<label class="custom-control-label font-12" for="attendence-head-L">{{ lang.text_late }}</label>
+							</div>
+						</th>
+						<th>
+							<div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block mt-1 mb-1">
+								<input type="checkbox" class="custom-control-input attendence-head" id="attendence-head-H" value="H">
+								<label class="custom-control-label font-12" for="attendence-head-H">{{ lang.text_holiday }}</label>
+							</div>
+						</th>
+						<th>
+							<div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block mt-1 mb-1">
+								<input type="checkbox" class="custom-control-input attendence-head" id="attendence-head-OL" value="OL">
+								<label class="custom-control-label font-12" for="attendence-head-OL">{{ lang.text_onleave }}</label>
+							</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for value in result %}
+						<tr>
+							<td>{{ loop.index }}</td>
+							<td>
+								<p class="mb-0 text-primary">{{ value.name }}</p>
+								<p class="mb-0">{{ value.email }}</p>
+							</td>						
+							<td>{{ value.role }}</td>
+							<td>
+								<div class="custom-control custom-radio custom-radio-1 d-inline-block mt-1 mb-1">
+									<input type="radio" class="custom-control-input attendence-P" name="attendence[{{ value.user_id }}]" id="P-{{ value.user_id }}" value="P">
+									<label class="custom-control-label font-12" for="P-{{ value.user_id }}">{{ lang.text_persent }}</label>
+								</div>
+							</td>
+							<td>
+								<div class="custom-control custom-radio custom-radio-1 d-inline-block mt-1 mb-1">
+									<input type="radio" class="custom-control-input attendence-A" name="attendence[{{ value.user_id }}]" id="A-{{ value.user_id }}" value="A">
+									<label class="custom-control-label font-12" for="A-{{ value.user_id }}">{{ lang.text_absent }}</label>
+								</div>
+							</td>
+							<td>
+								<div class="custom-control custom-radio custom-radio-1 d-inline-block mt-1 mb-1">
+									<input type="radio" class="custom-control-input attendence-L" name="attendence[{{ value.user_id }}]" id="L-{{ value.user_id }}" value="L">
+									<label class="custom-control-label font-12" for="L-{{ value.user_id }}">{{ lang.text_late }}</label>
+								</div>
+							</td>
+							<td>
+								<div class="custom-control custom-radio custom-radio-1 d-inline-block mt-1 mb-1">
+									<input type="radio" class="custom-control-input attendence-H" name="attendence[{{ value.user_id }}]" id="H-{{ value.user_id }}" value="H">
+									<label class="custom-control-label font-12" for="H-{{ value.user_id }}">{{ lang.text_holiday }}</label>
+								</div>
+							</td>
+							<td>
+								<div class="custom-control custom-radio custom-radio-1 d-inline-block mt-1 mb-1">
+									<input type="radio" class="custom-control-input attendence-OL" name="attendence[{{ value.user_id }}]" id="OL-{{ value.user_id }}" value="OL">
+									<label class="custom-control-label font-12" for="OL-{{ value.user_id }}">{{ lang.text_onleave }}</label>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="panel-footer text-center attendence-submit d-none">
+		<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+	</div>
+</form>
+{{ include('common/footer.twig') }}

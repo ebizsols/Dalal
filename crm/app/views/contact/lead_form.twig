@@ -1,0 +1,262 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-bullhorn panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                <button type="submit" class="btn btn-primary btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}leads" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+                {% if result.contact_id == '0' and page_convert %}
+                    <a href="{{ common.url_route }}lead/convert&id={{ result.id }}&token={{ common.token }}" class="btn btn-secondary btn-sm  btn-pill pt-2 pb-2">{{ lang.text_convert_to_contact }}</a>
+                {% elseif page_contact_edit and result.contact_id %}
+                    <a href="{{ common.url_route }}contact/edit&id={{ result.contact_id }}" class="btn btn-default btn-sm  btn-pill pt-2 pb-2">{{ lang.text_converted_to_contact }}</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="panel-body">
+            <input type="hidden" name="_token" value="{{ common.token }}">
+            <ul class="nav nav-tabs nav-tabs-line nav-tabs-line-primary">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#basic-info" data-toggle="tab"><i class="las la-info-circle mr-2"></i>{{ lang.text_basic_info }}</a>
+                </li>
+                <li class="nav-item dropdown">  
+                    <a class="nav-link" href="#address" data-toggle="tab"><i class="las la-address-book mr-2"></i>{{ lang.text_address }}</a>
+                </li>
+                <li class="nav-item dropdown">  
+                    <a class="nav-link" href="#remarks" data-toggle="tab"><i class="las la-paragraph mr-2"></i>{{ lang.text_remark }}</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="basic-info">
+                    {% if admin %}
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label">{{ lang.text_staff }} <span class="form-required">*</span></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-user-tie"></i></span>
+                                    </div>
+                                    <select name="contact[staff]" class="custom-select">
+                                        {% for value in staff %}
+                                            <option value="{{ value.user_id }}"{% if result.user_id == value.user_id %} selected{% endif %}>{{ value.name~' ( '~value.user_name~' ) ' }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <input type="hidden" name="contact[staff]" value="{{ user.user_id }}">
+                    {% endif %} 
+                    <div class="row align-items-center">
+                        <div class="col-md-2 form-group">
+                            <label class="col-form-label">{{ lang.text_primary_contact }} <span class="form-required">*</span></label>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-frown"></i></span>
+                                    </div>
+                                    <select class="custom-select" name="contact[salutation]" required>
+                                        <option value="">{{ lang.text_salutation }}</option>
+                                        <option value="{{ lang.text_mr }}"{% if result.salutation == lang.text_mr %} selected{% endif %}>{{ lang.text_mr }}</option>
+                                        <option value="{{ lang.text_mrs }}"{% if result.salutation == lang.text_mrs %} selected{% endif %}>{{ lang.text_mrs }}</option>
+                                        <option value="{{ lang.text_ms }}"{% if result.salutation == lang.text_ms %} selected{% endif %}>{{ lang.text_ms }}</option>
+                                        <option value="{{ lang.text_dr }}"{% if result.salutation == lang.text_dr %} selected{% endif %}>{{ lang.text_dr }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="contact[firstname]" value="{{ result.firstname }}" placeholder="{{ lang.text_first_name }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="contact[lastname]" value="{{ result.lastname }}" placeholder="{{ lang.text_last_name }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row align-items-start">
+                        <label class="col-md-2 col-form-label pt-3">{{ lang.text_company }} <span class="form-required">*</span></label>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-building"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="contact[company]" value="{{ result.company }}" placeholder="{{ lang.text_company }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_email_address }} <span class="form-required">*</span></label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-envelope"></i></span>
+                            </div>
+                            <input type="email" class="form-control" name="contact[email]" value="{{ result.email }}" placeholder="{{ lang.text_email_address }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_phone_number }} <span class="form-required">*</span></label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-mobile"></i></span>
+                            </div>
+                            <input type="number" class="form-control" name="contact[phone]" value="{{ result.phone }}" placeholder="{{ lang.text_phone_number }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_website }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-globe"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="contact[website]" value="{{ result.website }}" placeholder="{{ lang.text_website }}" >
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_source }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-star-of-life"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="contact[source]" value="{{ result.source }}" placeholder="{{ lang.text_source }}" >
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">Marketing</label>
+                        <div class="col-md-10">
+                            <div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block">
+                                <input type="checkbox" name="contact[marketing][email]" class="custom-control-input" id="marketing-email" value="email"{% if result.marketing.email == 'email' %} checked{% endif %}>
+                                <label class="custom-control-label" for="marketing-email">Email</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block">
+                                <input type="checkbox" name="contact[marketing][phone]" class="custom-control-input" id="marketing-phone" value="phone"{% if result.marketing.phone == 'phone' %} checked{% endif %}>
+                                <label class="custom-control-label" for="marketing-phone">Phone</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block">
+                                <input type="checkbox" name="contact[marketing][sms]" class="custom-control-input" id="marketing-sms" value="sms"{% if result.marketing.sms == 'sms' %} checked{% endif %}>
+                                <label class="custom-control-label" for="marketing-sms">SMS</label>
+                            </div>
+                            <div class="custom-control custom-checkbox custom-checkbox-1 d-inline-block">
+                                <input type="checkbox" name="contact[marketing][social]" class="custom-control-input" id="marketing-social" value="social"{% if result.marketing.social == 'social' %} checked{% endif %}>
+                                <label class="custom-control-label" for="marketing-social">Social Media</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_status }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-check-square"></i></span>
+                            </div>
+                            <select name="contact[status]" class="custom-select">
+                                <option value="1"{% if result.status == '1' %} selected{% endif %}>{{ lang.text_new }}</option>
+                                <option value="2"{% if result.status == '2' %} selected{% endif %}>{{ lang.text_attempted }}</option>
+                                <option value="3"{% if result.status == '3' %} selected{% endif %}>{{ lang.text_not_attempted }}</option>
+                                <option value="4"{% if result.status == '4' %} selected{% endif %}>{{ lang.text_working }}</option>
+                                <option value="5"{% if result.status == '5' %} selected{% endif %}>{{ lang.text_contacted }}</option>
+                                <option value="6"{% if result.status == '6' %} selected{% endif %}>{{ lang.text_converted_qualified }}</option>
+                                <option value="7"{% if result.status == '7' %} selected{% endif %}>{{ lang.text_disqualified }} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_expire_date }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-calendar-check"></i></span>
+                            </div>
+                            <input type="text" name="contact[expire]" class="form-control date" value="{{ result.expire|date(common.info.date_format) }}" placeholder="{{ lang.text_expire_date }} (dd-mm-yyyy)">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="address">
+                    <div class="row form-group">
+                        <label class="col-md-2 col-form-label">{{ lang.text_address }}</label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-map-signs"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="contact[address][address1]" value="{{ result.address.address1 }}" placeholder="{{ lang.text_address_line_1 }}">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-map-signs"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="contact[address][address2]" value="{{ result.address.address2 }}" placeholder="{{ lang.text_address_line_2 }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_address_city }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-map-marker-alt"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="contact[address][city]" value="{{ result.address.city }}" placeholder="{{ lang.text_address_city }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_state }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-map-marker-alt"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="contact[address][state]" value="{{ result.address.state }}" placeholder="{{ lang.text_state }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_address_country }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-map-marker-alt"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="contact[address][country]" value="{{ result.address.country }}" placeholder="{{ lang.text_address_country }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">{{ lang.text_address_postal }}</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-map"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="contact[address][pin]" value="{{ result.address.pin }}" placeholder="{{ lang.text_address_postal }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="remarks">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_remark }}</label>
+                        <textarea class="summernote" name="contact[remark]">{{ result.remark }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="contact[id]" value="{{ result.id }}">
+        </div>
+        <div class="panel-footer text-center">
+            <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+        </div>
+    </div>
+</form>
+
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+
+{{ include('common/footer.twig') }}

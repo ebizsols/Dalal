@@ -1,0 +1,115 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+	<input type="hidden" name="_token" value="{{ token }}">
+	<input type="hidden" name="transaction[id]" value="{{ result.id }}">
+	<div class="panel panel-default">
+		<div class="panel-head">
+			<div class="panel-title">
+				<i class="las la-book panel-head-icon"></i>
+				<span class="panel-title-text">{{ page_title }}</span>
+			</div>
+			<div class="panel-action">
+				<button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}account/transactions" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_account }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-id-card"></i></span>
+							</div>
+							<select name="transaction[account_id]" class="custom-select transaction-account" required>
+								<option value="" data-currency=''>{{ lang.text_select_account }}</option>
+								{% for value in accounts %}
+									<option value="{{ value.id }}" data-currency='{{ value.abbr }}' {% if value.id == result.account_id %}selected{% endif %}>{{ value.account_name~'('~value.bank_name~')' }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_date }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-calendar"></i></span>
+							</div>
+							<input type="text" name="transaction[date]" class="form-control date" value="{{ result.date|date(common.info.date_format) }}" placeholder="{{ lang.text_date }} . . . " required>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_transaction_type }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-bookmark"></i></span>
+							</div>
+							<select name="transaction[transaction_type]" class="custom-select" required>
+								<option value="">{{ lang.text_select_transaction_type }}</option>
+								<option value="1" {{ result.transaction_type == '1' ? 'selected' : '' }}>Debit</option>
+								<option value="2" {{ result.transaction_type == '2' ? 'selected' : '' }}>Credit</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_amount }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text account-currency">{{ result.abbr }}</span>
+							</div>
+							<input type="text" name="transaction[amount]" class="form-control" value="{% if result.transaction_type == '1' %}{{ result.debit }}{% elseif result.transaction_type == '2' %}{{ result.credit }}{% endif %}" placeholder="{{ lang.text_amount }} . . . " required>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_payment_method }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-credit-card"></i></span>
+							</div>
+							<select name="transaction[method]" class="custom-select">
+								{% for value in methods %}
+									<option value="{{ value.id }}" {{ value.id == result.method ? 'selected' : '' }}>{{ value.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_ref_hash }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-qrcode"></i></span>
+							</div>
+							<input type="text" name="transaction[code]" class="form-control" value="{{ result.code }}" placeholder="{{ lang.text_ref_hash }} . . . ">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_description }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-paragraph"></i></span>
+							</div>
+							<textarea name="transaction[description]" class="form-control" placeholder="{{ lang.text_description }} . . .">{{ result.description }}</textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-footer text-center">
+			<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+		</div>
+	</div>
+</form>
+{{ include('common/footer.twig') }}

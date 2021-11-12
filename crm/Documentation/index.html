@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Client Manager | Documentation</title>
+	<link rel="icon" type="image/x-icon" href="images/favicon.png">
+	
+	<link rel="stylesheet" href="css/prism.css" />
+	<link rel="stylesheet" href="css/jquery.fancybox.min.css" />
+	<!-- Custom Stylesheet -->
+	<link rel="stylesheet" href="css/style.css" />
+	<style>.style-none {list-style: none;}</style>
+</head>
+<body>
+	
+	<!-- Main Container -->
+	<div id="main-wrapper">
+		<!-- Menu Wrapper -->
+		<div class="menu-wrapper menu-wrapper-white">
+			<div class="menu">
+				<!-- Logo Container -->
+				<div id="logo">
+					<div class="tbl-cell logo-icon">
+						<a href="#"><img src="images/icon.png" alt=""></a>
+					</div>
+					<div class="tbl-cell logo">
+						<a href="#"><img src="images/logo.png"></a>
+					</div>
+				</div>
+				<!-- Menu Container -->
+				<ul>
+					<li>
+						<a href="#introduction" class="active"><i class="icon-info"></i><span>Introduction</span></a>
+					</li>
+					<li>
+						<a href="#general-information"><i class="ti-desktop"></i><span>General Information</span></a>
+					</li>
+					<li>
+						<a href="#file-strucutre"><i class="ti-files"></i><span>File Strucutre</span></a>
+					</li>
+					<li>
+						<a href="#font-family"><i class="fas fa-flag"></i><span>Font Family</span></a>
+					</li>
+					<li>
+						<a href="#SCSS"><i class="ti-css3"></i><span>SCSS</span></a>
+					</li>
+					<li>
+						<a href="#icons"><i class="ti-layout-width-full"></i><span>Icons</span></a>
+					</li>
+					<li>
+						<a href="#installation"><i class="ti-ruler-pencil"></i><span>Installation</span></a>
+					</li>
+					<!-- <li>
+						<a href="#customization"><i class="ti-ruler-pencil"></i><span>Customization</span></a>
+					</li> -->
+					<li>
+						<a href="#gdpr"><i class="ti-ruler"></i><span>GDPR</span></a>
+					</li>
+					<li>
+						<a href="#changelog"><i class="ti-layout"></i><span>Change Log</span></a>
+					</li>
+					<li>
+						<a href="#support"><i class="ti-settings"></i><span>Help & Support</span></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Main Page Wrapper -->
+		<div class="page-wrapper">
+			<!-- Page header -->
+			<div class="page-hdr p-4">
+				<div class="row align-items-center">
+					<div class="col-6 page-hdr-left">
+						<div class="mobile-logo">
+							<a href="#"><img src="images/logo.png" alt=""></a>
+						</div>
+					</div>
+					<div class="col-6 page-hdr-right">
+						<div class="page-hdr-mobile">
+							<div class="page-menu open-left-menu">
+								<a href="#"><i class="icon-menu"></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-title">
+				<div class="row align-items-center">
+					<div class="col-sm-6">
+						<h2 class="page-title-text">Documentation</h2>
+					</div>
+					<div class="col-sm-6 text-right">
+						<div class="breadcrumbs">
+							<ul>
+								<li><a href="#">Home</a></li>
+								<li>Documentation</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page-body">
+				<div class="row">
+					<div class="col-12">
+						<div id="introduction" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">Introduction</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>Thank you for purchasing our Client Manager theme. If you have any questions that are beyond the scope of this help file, please feel free to contact us here Pepdev or mail us at support@pepdev.com.</p>
+								<p>Client Manager – is fully featured and responsive web application for Client Management. Beautifully designed for best User Interface & User Experience. It helps you manage unlimited Contacts, Projects, Quotes, Invoices, Expenses and get paid online integrated with payment gateway(Paypal). Invoicing System, helps you ease out business process with its features. Seprate client portal for clients to access quotes and invoices.</p>
+								<ul>
+									<li>Author : <a href="http://pepdev.com/" class="text-primary">Pepdev</a></li>
+									<li>Contact : <a class="text-primary">pepdevofficial@gmail.com</a></li>
+								</ul>
+								<p>Support does include:</p>
+								<ul>
+									<li class="text-dark">Availability of the author to answer questions</li>
+									<li class="text-dark">Answering technical questions about item’s features</li>
+									<li class="text-dark">Assistance with reported bugs and issues</li>
+								</ul>
+								<p>Support does not include:</p>
+								<ul>
+									<li class="text-danger">Custmaization Work</li>
+									<li class="text-danger">Any Installation Work</li>
+									<li class="text-danger">Support for any Third Party Plugins / Software</li>
+									<li class="text-danger">Solve bug in your customized version</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="general-information" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">General Information</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<h4>Software requirements</h4>
+								<ul>
+									<li><a href="https://www.sublimetext.com/3" class="text-primary">Sublime Text 3</a> used to edit the .HTML, .JS, .CSS, .SCSS, .php files</li>
+									<li><a href="http://koala-app.com/" class="text-primary">Koala</a> used as precompiler for SCSS to CSS convert.</li>
+								</ul>
+								<p class="mb-4">Client Manager comes with a flexible file structure that can be easily used.</p>
+								<h4>The following scheme displays the template files structure.</h4>
+								<ul class="style-none">
+									<li class="text-black mb-2"><i class="fa fa-folder text-light font-18 mr-2"></i> Documentation - <small class="text-primary">contains documentation of template cusotmisation and support</small></li>
+									<li class="text-black mb-2"><i class="fa fa-folder text-light font-18 mr-2"></i> License - <small class="text-primary">contains License file of template</small></li>
+									<li class="text-black mb-2">
+										<i class="fa fa-folder text-light font-18 mr-2"></i> Theme - <small class="text-primary">contains the main files of the theme. which will be uploaded on server.</small>
+										<ul class="style-none mt-2">
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> App - <small class="text-primary">Contains Controller, Model and Views Files</small>
+											</li>
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> Builder - <small class="text-primary">contains sytem files like router, session, Mailer and more.</small>
+											</li>
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> Clients - <small class="text-primary">contains Client Portal files(Structure is same as main Directory).</small>
+											</li>
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> Config - <small class="text-primary">contains configuration files.</small>
+											</li>
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> Install - <small class="text-primary">contains installation files(Please delete this folder after installation).</small>
+											</li>
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> Public - <small class="text-primary">contains CSS, JS, Images files.</small>
+											</li>
+											<li class="text-black mb-2"> 
+												<i class="icon-doc text-light font-18 mr-2"></i> Public - <small class="text-primary">contains CSS, JS, Images files.</small>
+											</li>
+										</ul>
+									</li>
+									<li class="text-black mb-2"><i class="fa fa-folder text-light font-18 mr-2"></i> Screenshot - <small class="text-primary">Contains screenshot of theme.</small></li>
+									<li class="text-black mb-2">
+										<i class="fa fa-folder text-light font-18 mr-2"></i> Sources - <small class="text-primary">Contains screenshot of theme.</small>
+										<ul class="style-none mt-2">
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> sass - <small class="text-primary">contains .css SCSS files used in the theme.</small>
+											</li>
+											<li class="text-black mb-2"> 
+												<i class="far fa-folder text-light font-18 mr-2"></i> DB File - <small class="text-primary">contains .css Database .mysql file used in the theme.</small>
+											</li>
+										</ul>
+									</li>
+									<li class="text-black mb-2"><i class="icon-doc text-light font-18 mr-2"></i> readme.txt - <small class="text-primary">contains the information about theme.</small></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="file-strucutre" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">File Strucutre</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<h4>HTML file Structure</h4>
+								<p>This template has a responsive layout. below is smaple code of HTML</p>
+								<pre class="language-markup mb-5">
+									<code>
+										&lt;!DOCTYPE html>
+										&lt;!DOCTYPE html>
+										&lt;html lang="en">
+
+										&lt;head>
+										&lt;meta charset="UTF-8">
+										&lt;meta http-equiv="X-UA-Compatible" content="IE=edge">
+										&lt;meta name="viewport" content="width=device-width, initial-scale=1">
+										&lt;title>Client Manager | Admin Panel</title>
+										&lt;link rel="icon" type="image/x-icon" href="public/images/favicon.png">
+										<!-- Font Faimily -->
+										&lt;link href="https://fonts.googleapis.com/css?family=Dosis:500,600" rel="stylesheet">
+										&lt;link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500" rel="stylesheet">
+										<!-- Include css files -->
+										&lt;link rel="stylesheet" href="public/css/jquery-ui.min.css" />
+										&lt;link rel="stylesheet" href="public/css/datatables.min.css">
+										&lt;link rel="stylesheet" href="public/css/bootstrap-select.min.css" />
+										&lt;link rel="stylesheet" href="public/css/morris.css" />
+										&lt;link rel="stylesheet" href="public/css/dropzone.min.css">
+										&lt;link rel="stylesheet" href="public/css/perfect-scrollbar.css">
+										&lt;link rel="stylesheet" href="public/css/style.css" />
+									</code>
+								</pre>
+								<h4>CSS file Structure</h4>
+								<p>any styles need to be changed just replace it with the wanted styles in the respective block in your style.scss.</p>
+								<pre class="language-css">
+									<code>
+
+										.h-200 
+										{
+											max-height: 200px;
+											position: relative;
+											overflow-y: auto;
+										}
+										.h-250 
+										{
+											max-height: 250px;
+											position: relative;
+											overflow-y: auto;
+										}
+										.h-300 
+										{
+											max-height: 300px;
+											position: relative;
+											overflow-y: auto;
+										}
+										.h-350 
+										{
+											max-height: 350px;
+											position: relative;
+											overflow-y: auto;
+										}
+										.h-400 
+										{
+											max-height: 400px;
+											position: relative;
+											overflow-y: auto;
+										}
+										.h-500 
+										{
+											max-height: 500px;
+											position: relative;
+											overflow-y: auto;
+										}
+										.h-600 
+										{
+											max-height: 600px;
+											position: relative;
+											overflow-y: auto;
+										}
+									</code>
+								</pre>
+								<h4>JS file Structure</h4>
+								<p> This template has dynamic animations, which have been implemented in JavaScript. The JS file is custom.js.</p>
+								<pre class="language-javascript">
+									<code>
+										//*************************************************
+										//Sidebar menu  ***********************************
+										//*************************************************
+										$('body').on('click', '.open-sidebar-right', function () 
+										{
+											var ele = $(this);
+											$('body').css('overflow', 'hidden');
+											$('body').append('<div class="overlay"></div>');
+											setTimeout(function(){ $('.sidebar-right').css('right', '0'); }, 50);
+										});
+
+										$('body').on('click', '.sidebar-close, .overlay', function () 
+										{
+											$('body').css('overflow', 'visible');
+											$('.sidebar-right').css('right', '-450px');
+											setTimeout(function(){ $('.overlay').remove(); }, 200);
+										})
+
+										//*************************************************
+										//Left Side menu  *********************************
+										//*************************************************
+										$('body').on('click', '.menu-close', function () 
+										{
+											var ele = $(this);
+											$('#main-wrapper').addClass('page-menu-small');
+											ele.find('i').removeClass('fa-hand-point-left');
+											ele.find('i').addClass('fa-hand-point-right');
+											ele.removeClass('menu-close');
+											ele.addClass('menu-open');
+										});
+
+										$('body').on('click', '.menu-open', function () 
+										{
+											var ele = $(this);
+											$('#main-wrapper').removeClass('page-menu-small');
+											ele.find('i').removeClass('fa-hand-point-right');
+											ele.find('i').addClass('fa-hand-point-left');
+											ele.removeClass('menu-open');
+											ele.addClass('menu-close');
+										});
+									</code>
+								</pre>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="font-family" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">Font Family</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>We have used google fonts for the template you can change whatever font you wish</p>
+								<pre class="language-css">
+									<code>
+										@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500');
+										@import url('https://fonts.googleapis.com/css?family=Dosis:500,700');
+
+										$font: 'Poppins', sans-serif;
+										$fontHeading: "Dosis", 'Poppins', sans-serif;
+									</code>
+								</pre>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="SCSS" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">SCSS</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>Apez Admin Template is based on scss and we import all the file into style.css you can simply edit any scss and compile it. We have used koala compiler for compile.</p>
+								<pre class="language-css">
+									<code>
+										/************************************************
+										[ ICON CSS START ] ******************************
+										*************************************************/
+										@import '../../assets/icons/font-awesome/css/line-awesome.min.css';
+
+										/************************************************
+										[ BOOTSTRAP START ] *****************************
+										*************************************************/
+										@import "bootstrap/bootstrap.scss";
+
+										/************************************************
+										[ BASIC CSS START ] *****************************
+										*************************************************/
+										@import "_variable.scss";
+
+										/************************************************
+										[ SHORTCODES CSS START ] ************************
+										*************************************************/
+										@import "_shortcodes.scss";
+
+										/************************************************
+										[ TYPOGRAPHY CSS START ] ************************
+										*************************************************/
+										@import "_typography.scss";
+
+										/************************************************
+										[ TYPOGRAPHY CSS START ] ************************
+										*************************************************/
+										@import "_calendar.scss";
+									</code>
+								</pre>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="reference-file" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">Reference File</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>In this template jQuery libraries and plugins have been used for dynamic animation.</p>
+								<ul>
+									<li>jQuery (jquery-3.3.1.min.js)</li>
+									<li>Bootstrap (bootstrap.min.js)</li>
+									<li>Chartjs (Chart.min.js)</li>
+									<li>Datatable (datatables.min.js)</li>
+									<li>Dropzone (dropzone.min.js)</li>
+									<li>Fullcalendar (fullcalendar.min.js)</li>
+									<li>jQuery UI (jquery-ui.min)</li>
+									<li>knob Chart (jquery.knob.min.js)</li>
+									<li>Mask (jquery.mask.min.js)</li>
+									<li>Material (material.min.js)</li>
+									<li>Moment (moment.min.js)</li>
+									<li>Morris (morris.min.js)</li>
+									<li>Popper (popper.min.js)</li>
+									<li>Raphael (raphael.min.js)</li>
+									<li>Sparkline (jquery.sparkline.min.min.js)</li>
+									<li>Summernote (summernote-bs4.min.js)</li>
+									<li>Sweetalert (sweetalert.js)</li>
+									<li>Switchery (switchery.min.js)</li>
+									<li>Tippy (tippy.all.min.js)</li>
+									<li>Toastr (toastr.min.js)</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="icons" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">Icons</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>We have used multiple icons. Below is list of all icons</p>
+								<div class="table-responsive">
+									<table class="table table-bordered">
+										<tbody>
+											<tr>
+												<td>Lineawesome Icons</td>
+												<td><code>lar la-folder</code></td>
+												<td><a href="https://icons8.com/line-awesome" class="text-primary">Official Page</a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="installation" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">Installation</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>First time you have to configure and then you are good to go. We have created automatic installer to install Client Manager theme. Automatic installer is similar to wordpress and opencart.</p>
+								<h4>1 .First method for installing theme Using Installer (Recommended)</h4>
+								<ul>
+									<li>Create Database and Database User in your Database and remeber credential of it.</li>
+									<li>Unzip the downloaded package in an empty directory and upload everything from upload folder to your server directory.</li>
+									<li>Open browser (like - chrome) and run your server directory URL (like - yourdomain.com) in browser. It will take you to automatic installer</li>
+									<li>Installer will ask database credentials and other info like mail, mobile number etc.</li>
+									<li>Once you enter these information. Installation will be done.</li>
+								</ul>
+								<div class="row pb-4">
+									<div class="col-md-4">
+										<a href="images/install-1.jpg" data-fancybox="gallery"><img class="img-thumbnail" src="images/install-1.jpg" alt="Install"></a>
+									</div>
+									<div class="col-md-4">
+										<a href="images/install-2.jpg" data-fancybox="gallery"><img class="img-thumbnail" src="images/install-2.jpg" alt="Install"></a>
+									</div>
+									<div class="col-md-4">
+										<a href="images/install-3.jpg" data-fancybox="gallery"><img class="img-thumbnail" src="images/install-3.jpg" alt="Install"></a>
+									</div>
+								</div>
+								<p>Installtion is similar to wordpress installtion. If you need more help on installation. Please send us mail on pepdevofficial@gmail.com</p>
+								<p>Note - This is automatic process. You do not have to open any code file.</p>
+								<h4>2 .Second method for installing theme or Manual Process</h4>
+								<p>If you are not comfortable with installer than you can go for manual process. Do not worry installer just fill database information in config.php file and load dummy data in database.</p>
+								<ul>
+									<li>Create Database and Database User in your Database and remeber credential of it.</li>
+									<li>After that import client_manager.sql file(which is available in Source/DB file folder) in your Database which you have created.</li>
+									<li>Unzip the downloaded package in an empty directory and upload everything from upload folder to your server directory.</li>
+									<li>
+										After that you need to put that credentials in two file(config.php).
+										<ol>
+											<li><b>First file : </b>This file located in config folder which is in main code folder.</li>
+											<li><b>Second File file</b> This file located in config folder which is in main code clients folder. See the below structure of config file.</li>
+										</ol>
+										Please update Database information, Directory path and Web URL in these config files. See the below structure of config file.
+									</li>
+									<li>Run your URL and it will open clientmanager theme.</li>
+								</ul>
+								<h5><b>Config File</b></h5>
+								
+								<pre class="language-css mb-3">
+									<code>
+										/*Application Name*/
+										define('NAME', 'Client Manager');
+										/*Domain name like www.yourdomain.com*/
+										define('URL', '');
+										define('URL_CLIENTS', URL.'clients/');
+
+
+										/*Application Address*/
+										define('DIR_ROUTE', 'index.php?route=');
+										define('DIR', '');
+										define('DIR_CLIENTS', DIR.'clients/');
+										define('DIR_APP', DIR.'app/');
+										define('DIR_BUILDER', DIR.'builder/');
+										define('DIR_VIEW', DIR_APP.'views/');
+										define('DIR_IMAGE', DIR.'public/images/');
+										define('DIR_UPLOADS', DIR.'public/uploads/');
+										define('DIR_STORAGE', DIR_BUILDER.'storage/');
+										define('DIR_LIBRARY', DIR_BUILDER.'library/');
+										define('DIR_LANGUAGE', DIR_APP.'language/');
+
+
+										/** MySQL settings - You can get this info from your web host **/
+										/*MySQL database host*/
+										define('DB_HOSTNAME', 'localhost');
+										/*MySQL database username*/
+										define('DB_USERNAME', '');
+										/*MySQL database password*/
+										define('DB_PASSWORD', '');
+										/*MySQL database Name*/
+										define('DB_DATABASE', '');
+										/*Table Prefix*/
+										define('DB_PREFIX', 'cm_');
+
+
+										define('AUTH_KEY', '');
+										define('LOGGED_IN_SALT', '');
+										define('TOKEN', '');
+										define('TOKEN_SALT', '');
+									</code>
+								</pre>
+								<h5><b>C . Open Admin panel</b></h5>
+								<p>To open admin panel type url. For example www.your-domain.com</p>
+								<p>Your admin panel credentials if you are going through manual process</p>
+								<p><b>Username - admin</b></p>
+								<p><b>password - Test@123</b></p>
+								<p><b>For security reasons Please change password after first login in admin panel.</b></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="gdpr" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">GDPR Rule Implemented</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>We have implemented these rules of gdpr in our theme</p>
+								<ul>
+									<li>Admin enters the client/lead details into Office Manager and assign the lead to staff/sales member. This sales-member + admin are now the only people who can access the client data, no other sales-members can view. This applies to any forms where client details are held such as projects, leads, invoices, quotes etc etc.</li>
+									<li>Within Leads a datefield for data destruction/expire date need to be populated by sales-member.</li>
+									<li>On contacts & leads there is marketing checkbox, 'None | Email | Phone | SMS | Social Media'.</li>
+									<li>Admin/SuperAdmin receives lead from client or 3rd party and can assign to staff.</li>
+									<li>Created Client Portal so client can access their data any time.</li>
+									<li>Client can Rectify their data.</li>
+									<li>Client can Edit their data.</li>
+									<li>Client can download their quotes and invoices.</li>
+									<li>Client can choose their data for marketing or restrict it.</li>
+									<li>If there is data breach. you can send message manually to client directly from contact view page.</li>
+									<li>Conset for Cookies</li>
+								</ul>
+								<p><b>If there are any rules left let us know we will try to implement that rule asap.</b></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="changelog" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">Change Log</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<h4>Version 3.1</h4>
+								<ul>
+									<li>
+										Quotation
+										<ol>
+											<li>Added status like draft, published etc</li>
+											<li>Added Proposal Text Editor</li>
+											<li>Added Project Name to invoice template</li>
+										</ol>
+									</li>
+									<li>
+										Bug Fixes
+										<ol>
+											<li>Ticket List - Assigned user can see only their tickets (assigned to them)</li>
+											<li>Account Debit Credit on update</li>
+										</ol>
+									</li>
+									<li>
+										UI Improvements
+									</li>
+								</ul>
+								<h4>Version 3.0</h4>
+								<ul>
+								    <li>Complete New Version</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div id="support" class="panel panel-default">
+							<div class="panel-head">
+								<div class="panel-title">
+									<span class="panel-title-text">Help & Support</span>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>24/7 Support, Just mail us any issue we will be happpy to help.</p>
+								<p>For any issue create ticket by clicking here <a class="text-primary" href="http://pepdev.com">support</a></p>
+								<p>Or you can email us.</p>
+								<p>Email - <b>support@pepdev.com</b>, <b>pepdevofficial@gmail.com</b></p>
+								<p>Thank you for purchasing Client Manager Theme. If you have any question that is beyond the scope of this documentation, Please feel free to on live chat at pepdev.com or send us an email.</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="panel panel-default">
+							<div class="panel-body text-center">
+								<p class="font-36 text-success font-500 m-0">Thank you</p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Include js files -->
+	<!-- jQuery Library -->
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	<!-- Popper Plugin -->
+	<script type="text/javascript" src="js/popper.min.js"></script>
+	<!-- Bootstrap Framework -->
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<!-- prism Plugin -->
+	<script type="text/javascript" src="js/prism.js"></script>
+	<!-- prism Plugin -->
+	<script type="text/javascript" src="js/jquery.fancybox.min.js"></script>
+	<!-- scrolltofixed Plugin -->
+	<script type="text/javascript" src="js/jquery-scrolltofixed-min.js"></script>
+	<!-- scrolltofixed Plugin -->
+	<script type="text/javascript" src="js/jquery.scrollTo.min.js"></script>
+	<!-- Toastr Plugin -->
+	<script type="text/javascript" src="js/custom.js"></script>
+
+</body>
+</html>

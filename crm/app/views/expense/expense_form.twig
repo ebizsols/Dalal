@@ -1,0 +1,139 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-receipt panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                <button type="submit" class="btn btn-primary btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}expenses" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+            </div>  
+        </div>
+        <div class="panel-body">
+            <input type="hidden" name="_token" value="{{ common.token }}">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_purchase_by }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-user"></i></span>
+                            </div>
+                            <input type="text" name="expense[purchaseby]" class="form-control" value="{{ result.purchase_by }}" placeholder="{{ lang.text_purchase_by }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_purchase_amount }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select name="expense[currency]" class="custom-select" required>
+                                    {% for value in currency %}
+                                        <option value="{{ value.id }}"{% if result.currency == value.id %} selected{% endif %}>{{ value.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="text" name="expense[amount]" class="form-control" value="{{ result.purchase_amount }}" placeholder="{{ lang.text_purchase_amount }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_payment_method }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-wallet"></i></span>
+                            </div>
+                            <select name="expense[paymenttype]" class="custom-select" required>
+                                <option value="">{{ lang.text_payment_method }}</option>
+                                {% for value in paymenttype %}
+                                    <option value="{{ value.id }}"{% if result.payment_type == value.id %} selected{% endif %}>{{ value.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_purchase_date }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-calendar"></i></span>
+                            </div>
+                            <input type="text" name="expense[purchasedate]" class="form-control date" value="{{ result.purchase_date|date(common.info.date_format) }}" placeholder="{{ lang.text_purchase_date }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group customer-search">
+                        <label class="col-form-label">{{ lang.text_expense_type }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-receipt"></i></span>
+                            </div>
+                            <select class="custom-select" name="expense[expensetype]" required>
+                                {% for value in expensetype %}
+                                    <option value="{{ value.id }}"{% if result.expense_type == value.id %} selected{% endif %}>{{ value.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_description }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-paragraph"></i></span>
+                            </div>
+                            <textarea name="expense[description]" class="form-control" rows="10">{{ result.description }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                {% if result.id %}
+                    <div class="col-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-1">{{ lang.text_receipt }}</label>
+                            <div class="attach-file col-md-10">
+                                <a class="btn btn-warning btn-sm text-dark" data-toggle="modal" data-target="#attach-file">{{ lang.text_upload_receipt }}</a>
+                            </div>
+                        </div>
+                        <div class="attachment-container">
+                            {% for value in receipt %}
+                                <div class="attachment-image attachment-pdf">
+                                    {% if value.ext == 'pdf' %}
+                                        <a href="public/uploads/attachments/{{ value.file_name }}" class="open-pdf"><i class="las la-file-pdf"></i></a>
+                                    {% else %}
+                                        <a href="public/uploads/attachments/{{ value.file_name }}"  data-fancybox="gallery"><img src="public/uploads/attachments/{{ value.file_name }}" alt=""></a>
+                                    {% endif %}
+                                    <input type="hidden" name="expense[attached][]" value="{{ value.file_name }}">
+                                    <div class="attachment-delete"><a class="las la-trash"></a></div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <input type="hidden" name="expense[id]" value="{{ result.id }}">
+        </div>
+        <div class="panel-footer text-center">
+            <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+        </div>
+    </div>
+</form>
+<!-- Attach File Modal -->
+<div id="attach-file" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ lang.text_upload_receipt }}</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ common.url_route }}attach/documents" class="dropzone" id="attach-file-upload">
+                    <input type="hidden" name="id" value="{{ result.id }}">
+                    <input type="hidden" name="type" value="expense">
+                    <input type="hidden" name="_token" value="{{ common.token }}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="public/css/jquery.fancybox.min.css">
+{{ include('common/footer.twig') }}

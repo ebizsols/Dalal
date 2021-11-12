@@ -1,0 +1,59 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" class="row" method="post">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-head">
+                <div class="panel-title">
+                    <i class="las la-envelope-open panel-head-icon"></i>
+                    <span class="panel-title-text">{{ page_title }}</span>
+                </div>
+                <div class="panel-action">
+                    <button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <input type="hidden" name="_token" value="{{ common.token }}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_name }} <span class="form-required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-user"></i></span></div>
+                                <input type="text" name="receiver[name]" class="form-control" placeholder="{{ lang.text_name }} . . ." required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_email_address }} <span class="form-required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-envelope"></i></span></div>
+                                <input type="text" name="receiver[email]" class="form-control" placeholder="{{ lang.text_email_address }} . . ." required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">{{ lang.text_subject }} <span class="form-required">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text"><i class="las la-comment"></i></span></div>
+                        <input type="text" name="receiver[subject]" class="form-control" placeholder="{{ lang.text_subject }} . . ." required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label">{{ lang.text_message }}</label>
+                    <textarea name="receiver[message]" class="summernote"></textarea>
+                </div>
+            </div>
+            <div class="panel-footer text-center">
+                <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+{{ include('common/footer.twig') }}

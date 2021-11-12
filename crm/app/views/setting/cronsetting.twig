@@ -1,0 +1,29 @@
+{{ include('common/header.twig') }}
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-tools panel-head-icon"></i>
+			<span class="panel-title-text">{{ lang.text_cron_automation_setting }}</span>
+		</div>
+	</div>
+	<div class="panel-body">
+		<form action="{{ action }}" method="post">
+			<input type="hidden" name="_token" value="{{ common.token }}">
+			<input type="hidden" name="name" value="recurring">
+			<div class="form-group row align-items-start">
+				<label class="col-form-label col-md-2">{{ lang.text_security_token }}</label>
+				<div class="col-md-10">
+					<input type="text" name="security_token" class="form-control" value="{{ result.data }}" disabled>
+					<button type="submit" name="submit" class="btn btn-info btn-sm mt-3">{{ lang.text_re_generate_token }}</button>
+				</div>
+			</div>
+		</form>
+		<div class="br-bottom-1x mt-3 mb-4"></div>
+		<h5 class="font-20">{{ lang.text_cron_setting_message }}</h5>
+		<div class="form-group">
+			<label class="col-form-label">{{ lang.text_create_cron_job_using_following_command }}</label>
+			<input type="text" class="form-control" value="/usr/bin/php {{ common.dir }}index.php route=recurringjob code={{ result.data }}" readonly>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

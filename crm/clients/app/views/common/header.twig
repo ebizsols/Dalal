@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title }} | {{ lang.text_client~' '~ lang.text_portal }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ common.theme.favicon }}">
+    
+    <!-- Incclude css files -->
+    <link rel="stylesheet" href="public/css/morris.css">
+    <link rel="stylesheet" href="public/css/style.css" />
+    <!-- Include js files -->
+    <script type="text/javascript" src="public/js/vendor.js"></script>
+    <script type="text/javascript" src="public/js/admin.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-8 col-lg-4">
+                        <a href="{{ common.url }}" class="logo">
+                            <img src="{{ common.theme.logo }}" alt="">
+                        </a>
+                    </div>
+                    <div class="col-12 col-lg-8 menu text-right">
+                        <ul>
+                            <li><a href="{{ common.url }}">{{ lang.text_dashboard }}</a></li>
+                            <li><a href="{{ common.url_route }}quotes">{{ lang.text_quotations }}</a></li>
+                            <li><a href="{{ common.url_route }}invoices">{{ lang.text_invoices }}</a></li>
+                            <li><a href="{{ common.url_route }}tickets">{{ lang.text_tickets }}</a></li>
+                            <li class="menu-dropdown-wrapper">
+                                <a>{{ lang.text_my_account }}</a>
+                                <div class="menu-dropdown menu-dropdown-right menu-dropdown-push-right">
+                                    <div class="arrow arrow-right"></div> 
+                                    <div class="menu-dropdown-inner">
+                                        <div class="menu-dropdown-head br-bottom-1x pb-3">
+                                            <div class="tbl-cell">
+                                                <i class="las la-user-circle font-44"></i>
+                                            </div>
+                                            <div class="tbl-cell pl-2">
+                                                <p class="m-0 font-16 ">{{ common.user.name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="menu-dropdown-body">
+                                            <ul class="menu-nav">
+                                                <li class="p-0"><a href="{{ common.url_route }}profile"><i class="las la-user-tie"></i><span>{{ lang.text_my_profile }}</span></a></li>
+                                                <li class="p-0"><a href="{{ common.url_route }}changepassword"><i class="las la-key"></i><span>{{ lang.text_change_password }}</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="menu-dropdown-footer">
+                                            <a href="{{ common.url_route }}logout" class="btn btn-outline btn-primary btn-pill btn-outline-2x pl-3 pr-3">{{ lang.text_logout }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-4 menu-icon text-right">
+                        <a class=""><i class="las la-bars"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <input type="hidden" class="common_date_format" value="{{ common.info.picker_date_format }}">
+            <input type="hidden" class="common_date_my_format" value="{{ common.info.picker_my_format }}">
+            <input type="hidden" class="common_daterange_format" value="{{ common.info.range_date_format }}">
+            <input type="hidden" class="common_daterange_my_format" value="{{ common.info.range_my_format }}">
+            <input type="hidden" class="site_url" value="{{ common.url_route }}">

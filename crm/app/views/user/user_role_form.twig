@@ -1,0 +1,73 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<input type="hidden" name="_token" value="{{ common.token }}">
+		<div class="panel-head">
+			<div class="panel-title">
+				<i class="las la-user-secret panel-head-icon"></i>
+				<span class="panel-title-text">{{ page_title }}</span>
+			</div>
+			<div class="panel-action">
+				<button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+				<a href="{{ common.url_route }}role" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+			</div>  
+		</div>
+		<div class="panel-wrapper">
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-form-label">{{ lang.text_user_role_name }}</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="las la-users"></i></span>
+						</div>
+						<input type="text" name="name" class="form-control" value="{{ result.name }}" placeholder="{{ lang.text_user_role_name }}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-form-label">{{ lang.text_description }}</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="las la-paragraph"></i></span>
+						</div>
+						<textarea name="description" class="form-control" rows="3">{{ result.description }}</textarea>
+					</div>
+				</div>
+				<div class="mb-2">
+					<label class="col-form-label">{{ lang.text_permission }}</label>
+					<table class="table table-bordered table-role">
+						<thead class="thead-light">
+							<tr>
+								<th>{{ lang.text_list }}</th>
+								<th>{{ lang.text_add }}</th>
+								<th>{{ lang.text_edit }}</th>
+								<th>{{ lang.text_delete }}</th>
+								<th>{{ lang.text_view }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for role_value in role %}
+							<tr>
+								{% for sub_key,sub_value in role_value %}
+								<td>
+									{% if sub_value %}
+									<div class="custom-control custom-checkbox custom-checkbox-1">
+										<input type="checkbox" class="custom-control-input" name="role[]" id="role-{{ sub_key }}" value="{{ sub_key }}"{% for value in role_selected %}{% if value == sub_key %} checked{% endif %}{% endfor %}>
+										<label class="custom-control-label" for="role-{{ sub_key }}">{{ sub_value }}</label>
+									</div>
+									{% endif %}
+								</td>
+								{% endfor %}
+							</tr> 
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<input type="hidden" name="id" value="{{ result.id }}">
+		</div>
+		<div class="panel-footer text-center">
+			<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+		</div>
+	</div>
+</form>
+{{ include('common/footer.twig') }}

@@ -1,0 +1,150 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+	<input type="hidden" name="_token" value="{{ common.token }}">
+	<div class="panel panel-default">
+		<div class="panel-head">
+			<div class="panel-title">
+				<i class="las la-donate panel-head-icon"></i>
+				<span class="panel-title-text">{{ page_title }}</span>
+			</div>
+			<div class="panel-action">
+				<button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}salarytemplate" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_salary_grade }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend"><span class="input-group-text"><i class="las la-tag"></i></span></div>
+							<input type="text" name="salary[grade]" class="form-control" value="{{ result.grade }}" placeholder="{{ lang.text_grade }}" required>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_currency }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-wallet"></i></span>
+							</div>
+							<select name="salary[currency]" class="custom-select" required>
+								{% for value in currencies %}
+								    <option value="{{ value.id }}"{% if result.currency == value.id %} selected{% endif %}>{{ value.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_basic_salary }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend"><span class="input-group-text"><i class="las la-wallet"></i></span></div>
+							<input type="text" name="salary[basic_salary]" class="form-control basic-salary" value="{{ result.basic_salary }}" placeholder="{{ lang.text_basic_salary }}" required>
+							<span class="invalid-feedback"></span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<table class="table table-bordered table-align-middle mb-5 allowance-container">
+						<thead>
+							<tr>
+								<td colspan="3" class="pt-2 pb-2"><label>{{ lang.text_allowances }}</label></td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for value in result.allowance %}
+								<tr class="item-row">
+									<td><input type="text" name="salary[allowance][{{ loop.index0 }}][label]" class="form-control mb-0" value="{{ value.label }}" placeholder="{{ lang.text_allowance_label }}"></td>
+									<td>
+										<input type="text" name="salary[allowance][{{ loop.index0 }}][value]" class="form-control mb-0 allowance" value="{{ value.value }}" placeholder="{{ lang.text_allowance_value }}">
+										<span class="invalid-feedback"></span>
+									</td>
+									<td><a class="text-danger text-center remove-row" data-name="allowance"><i class="las la-trash-alt"></i></a></td>
+								</tr>
+							{% else %}
+								<tr class="item-row">
+									<td><input type="text" name="salary[allowance][0][label]" class="form-control mb-0" placeholder="{{ lang.text_allowance_label }}"></td>
+									<td>
+										<input type="text" name="salary[allowance][0][value]" class="form-control mb-0 allowance" placeholder="{{ lang.text_allowance_value }}">
+										<span class="invalid-feedback"></span>
+									</td>
+									<td><a class="text-danger text-center remove-row" data-name="allowance"><i class="las la-trash-alt"></i></a></td>
+								</tr>
+							{% endfor %}
+							<tr>
+								<td colspan="3" class="p-1 text-right"><a class="btn btn-primary btn-sm add-row" data-name="allowance"><i class="las la-plus"></i> {{ lang.text_add }}</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-6">
+					<table class="table table-bordered table-align-middle mb-5 deduction-container">
+						<thead>
+							<tr>
+								<td colspan="3" class="pt-2 pb-2"><label>{{ lang.text_deduction }}</label></td>
+							</tr>
+						</thead>
+						<tbody>
+							{% for value in result.deduction %}
+								<tr class="item-row">
+									<td><input type="text" name="salary[deduction][{{ loop.index0 }}][label]" class="form-control mb-0" value="{{ value.label }}" placeholder="{{ lang.text_deduction_label }}"></td>
+									<td>
+										<input type="text" name="salary[deduction][{{ loop.index0 }}][value]" class="form-control mb-0 deduction" value="{{ value.value }}" placeholder="{{ lang.text_deduction_value }}">
+										<span class="invalid-feedback"></span>
+									</td>
+									<td><a class="text-danger text-center remove-row" data-name="deduction"><i class="las la-trash-alt"></i></a></td>
+								</tr>
+							{% else %}
+								<tr class="item-row">
+									<td><input type="text" name="salary[deduction][0][label]" class="form-control mb-0" placeholder="{{ lang.text_deduction_label }}"></td>
+									<td>
+										<input type="text" name="salary[deduction][0][value]" class="form-control mb-0 deduction" placeholder="{{ lang.text_deduction_value }}">
+										<span class="invalid-feedback"></span>
+									</td>
+									<td><a class="text-danger text-center remove-row" data-name="deduction"><i class="las la-trash-alt"></i></a></td>
+								</tr>
+							{% endfor %}
+							<tr>
+								<td colspan="3" class="p-1 text-right"><a class="btn btn-primary btn-sm add-row" data-name="deduction"><i class="las la-plus"></i> {{ lang.text_add }}</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4"></div>
+				<div class="col-md-8">
+					<table class="table table-align-middle table-bordered table-align-middle">
+						<thead>
+							<tr>
+								<td colspan="2" class="pt-2 pb-2"><label>{{ lang.text_total_salary_details }}</label></td>
+							</tr>
+							<tr>
+								<td>{{ lang.text_gross_salary }}</td>
+								<td><input type="text" name="salary[gross_salary]" class="form-control mb-0 gross-salary" value="{{ result.gross_salary }}" readonly></td>
+							</tr>
+							<tr>
+								<td>{{ lang.text_total_deduction }}</td>
+								<td>
+									<input type="text" name="salary[total_deduction]" class="form-control mb-0 total-deduction" value="{{ result.total_deduction }}" readonly>
+								</td>
+							</tr>
+							<tr>
+								<td>{{ lang.text_net_salary }}</td>
+								<td><input type="text" name="salary[net_salary]" class="form-control mb-0 net-salary" value="{{ result.net_salary }}" readonly></td>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="salary[id]" value="{{ result.id }}">
+		<div class="panel-footer text-center">
+			<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+		</div>
+	</div>
+</form>
+<script src="public/js/salary.js"></script>
+{{ include('common/footer.twig') }}

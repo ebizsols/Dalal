@@ -1,0 +1,31 @@
+<?php
+
+$lang = array(
+	'text_new_ticket' => 'Novo Ticket',
+	'text_open_tickets' => 'Tickets Abertos',
+	'text_closed_tickets' => 'Tickets Fechados',
+	'text_all_tickets' => 'Todos os Tickets',
+	'text_edit_ticket' => 'Mensagens',
+	'text_department' => 'Departamento',
+	'text_priority' => 'Prioridade',
+	'text_last_updated' => 'Atualizado',
+	'text_open' => 'Aberto',
+	'text_closed' => 'Fechado',
+	'text_subject' => 'Assunto',
+	'text_ticket_info' => 'Informações do Ticket',
+	'text_closed' => 'Fechado',
+	'text_attachments' => 'Anexos',
+	'text_add_more_file' => '+ Arquivo',
+	'text_ticket_status' => 'Status',
+	'text_replied' => 'Respondido',
+	'text_low' => 'Baixo',
+	'text_medium' => 'Médio',
+	'text_high' => 'Alto',
+	'text_closed' => 'Fechado',
+	'text_oepn' => 'Aberto',
+	'text_id' => 'ID',
+	'text_waiting_for_reply' => 'Aguardando resposta',
+	'text_post_reply' => 'Mensagem',
+	'text_close_on_reply' => 'Fechar',
+	'text_choose_file' => 'Escolher'
+);

@@ -1,0 +1,66 @@
+{{ include('common/header.twig') }}
+<!-- Project list page start -->
+<div class="content">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-ticket-alt panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                <a href="{{ common.url_route }}ticket/add" class="btn btn-primary btn-gradient btn-outline btn-pill btn-sm"><i class="las la-plus mr-1"></i> {{ lang.text_new_ticket }}</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-stripped table-bordered datatable-table" width="100%">
+                    <thead>
+                        <tr class="table-heading">
+                            <th>#</th>
+                            <th>{{ lang.text_name }}</th>
+                            <th>{{ lang.text_department }}</th>
+                            <th>{{ lang.text_subject }}</th>
+                            <th>{{ lang.text_priority }}</th>
+                            <th>{{ lang.text_status }}</th>
+                            <th>{{ lang.text_last_updated }}</th>
+                            <th>{{ lang.text_created_date }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for value in result %}
+                            <tr>
+                                <td>#{{ value.id }}</td>
+                                <td>{{ value.name }}</td>
+                                <td>{{ value.department }}</td>
+                                <td>{{ value.subject }}</td>
+                                <td>
+                                    {% if value.priority == 'Low' %}
+                                        <span class="badge badge-Low badge-sm badge-pill">{{ lang.text_low }}</span>
+                                    {% elseif value.priority == 'Medium' %}
+                                        <span class="badge badge-Medium badge-sm badge-pill">{{ lang.text_medium }}</span>
+                                    {% else %}
+                                        <span class="badge badge-High badge-sm badge-pill">{{ lang.text_high }}</span>
+                                    {% endif %} 
+                                </td>
+                                <td>
+                                    {% if value.status == '1' %}
+                                        {{ lang.text_closed }}
+                                    {% else %}
+                                        {{ lang.text_open }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ value.last_updated|date(common.info.date_format) }}</td>
+                                <td>{{ value.date_of_joining|date(common.info.date_format) }}</td>
+                                <td>
+                                    <a href="{{ common.url_route }}ticket/edit&id={{ value.id }}" class="btn btn-primary btn-outline btn-pill btn-sm" data-toggle="tooltip" title="{{ lang.text_view }}"><i class="las la-laptop font-16"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{ include('common/footer.twig') }}

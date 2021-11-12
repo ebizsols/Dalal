@@ -1,0 +1,484 @@
+{{ include('common/header.twig') }}
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-file-invoice panel-head-icon"></i>
+			<span class="panel-title-text">{{ page_title }}</span>
+		</div>
+		<div class="panel-action">
+			{% if page_sendmail %}
+				<div class="btn-group d-inline-block">
+					<a class="btn btn-primary btn-sm btn-outline btn-gradient btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-envelope mr-1"></i> <span>{{ lang.text_send_email }}</span> <i class="las la-caret-down"></i></a>
+					<ul class="dropdown-menu invoice-sendmail">
+						<li><a class="dropdown-item" data-name="custom">{{ lang.text_send_custom_message }}</a></li>
+						<li><a class="dropdown-item" data-name="newinvoice">{{ lang.text_invoice~' '~lang.text_created }}</a></li>
+						<li><a class="dropdown-item" data-name="invoicepaymentreminder">{{ lang.text_invoice~' '~lang.text_payment_reminder }}</a></li>
+						<li><a class="dropdown-item" data-name="invoiceoverduenotice">{{ lang.text_invoice~' '~lang.text_overdue_notice }}</a></li>
+						<li><a class="dropdown-item" data-name="invoicerefundconfirmation">{{ lang.text_invoice~' '~lang.text_refund_confirmation }}</a></li>
+					</ul>
+				</div>
+			{% endif %}
+			<div class="btn-group d-inline-block">
+				<a class="btn btn-secondary btn-sm btn-outline btn-gradient btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-tasks mr-1"></i> <span>Mark As</span> <i class="las la-caret-down"></i></a>
+				<ul class="dropdown-menu invoice-markas">
+					<li><a class="dropdown-item" data-name="Paid">{{ lang.text_paid }}</a></li>
+					<li><a class="dropdown-item" data-name="Partially Paid">{{ lang.text_partially_paid }}</a></li>
+					<li><a class="dropdown-item" data-name="Unpaid">{{ lang.text_unpaid }}</a></li>
+					<li><a class="dropdown-item" data-name="Pending">{{ lang.text_pending }}</a></li>
+					<li><a class="dropdown-item" data-name="In Process">{{ lang.text_in_process }}</a></li>
+					<li><a class="dropdown-item" data-name="Cancelled">{{ lang.text_cancelled }}</a></li>
+					<li><a class="dropdown-item" data-name="Other">{{ lang.text_other }}</a></li>
+					<li><a class="dropdown-item" data-name="Unknown">{{ lang.text_unknown }}</a></li>
+				</ul>
+			</div>
+			{% if page_pdf %}
+				<a href="{{ common.url_route }}invoice/pdf&id={{ result.id }}" class="btn btn-danger btn-sm btn-outline btn-gradient btn-pill" target="_blank"><i class="las la-file-pdf mr-1"></i> <span>{{ lang.text_pdf }}</span></a>
+			{% endif %}
+			{% if page_add_payment %}
+				<a class="btn btn-warning btn-sm btn-outline btn-gradient btn-pill" data-toggle="modal" data-target="#addPayment"><i class="las la-credit-card mr-1"></i> <span>{{ lang.text_add_payment }}</span></a>
+			{% endif %}
+			{% if page_documents %}
+				<a data-toggle="modal" class="btn btn-secondary btn-sm btn-outline btn-gradient btn-pill" data-target="#attach-file" class="btn btn-secondary btn-sm"><i class="las la-paperclip"></i></a>
+			{% endif %}
+			{% if page_edit %}
+				<a href="{{ common.url_route }}invoice/edit&id={{ result.id }}" class="btn btn-info btn-sm btn-outline btn-gradient btn-pill"><i class="las la-edit mr-1"></i> <span>{{ lang.text_edit }}</span></a>
+			{% endif %}
+		</div>
+	</div>
+	
+</div>
+<div class="row">
+	<div class="col-lg-12 col-xl-8">
+		<div class="panel panel-default">
+			<div class="panel-wrapper">
+				<div class="inv-template">
+					<div class="inv-template-bdy table-responsive p-4">
+						<div class="company">
+							<table>
+								<tbody>
+									<tr>
+										<td class="info">
+											<div class="logo"><img src="{{ common.info.logo }}" alt="logo"></div>
+											<div class="name">{{ common.info.legal_name }}</div>
+											<div class="text">{{ common.info.address|join(', ') }}</div>
+										</td>
+										<td class="text-right">
+											<div class="title">{{ lang.text_invoice }}</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="meta">
+							<table>
+								<tbody>
+									<tr>
+										<td class="bill-to v-aling-bottom">
+											<div class="heading">{{ lang.text_bill_to }}</div>
+											<div class="title">{{ result.company }}</div>
+											<div class="text">{{ result.email }}</div>
+											<div class="text">{{ result.address|join(', ') }}</div>
+										</td>
+										<td class="info v-aling-bottom">
+											<table class="text-right">
+												<tbody>
+													<tr>
+														<td class="text">#</td>
+														<td class="text w-min-130">{{ common.info.invoice.prefix~"%05d"|format(result.id) }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_invoice_date }}</td>
+														<td class="text w-min-130">{{ result.invoicedate|date(common.info.date_format) }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_due_date }}</td>
+														<td class="text w-min-130">{{ result.duedate|date(common.info.date_format) }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_payment_method }}</td>
+														<td class="text w-min-130">{{ result.payment }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_status }}</td>
+														<td class="text w-min-130">
+															{% if result.inv_status == '0' %}
+																{{ lang.text_draft }}
+															{% else %}
+																{% if result.status == 'Paid' %}
+																	{{ lang.text_paid }}
+																{% elseif result.status == 'Unpaid' %}
+																	{{ lang.text_unpaid }}
+																{% elseif result.status == 'Pending' %}
+																	{{ lang.text_pending }}
+																{% elseif result.status == 'In Process' %}
+																	{{ lang.text_in_process }}
+																{% elseif result.status == 'Cancelled' %}
+																	{{ lang.text_cancelled }}
+																{% elseif result.status == 'Other' %}
+																	{{ lang.text_other }}
+																{% elseif result.status == 'Partially Paid' %}
+																	{{ lang.text_partially_paid }}
+																{% else %}
+																	{{ lang.text_unknown }}
+																{% endif %}
+															{% endif %}
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="item">
+							<table>
+								<thead>
+									<tr>
+										<th>{{ lang.text_item_and_description }}</th>
+										<th>{{ lang.text_quantity }}</th>
+										<th>{{ lang.text_unit_cost }}</th>
+										<th>{{ lang.text_discount }}</th>
+										<th>{{ lang.text_tax }}</th>
+										<th>{{ lang.text_price }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for value in result.items %}
+										<tr>
+											<td class="title"><p>{{ value.name }}</p><span>{{ value.descr }}</span></td>
+											<td>{{ value.quantity }}</td>
+											<td>{{ result.currency_abbr~' '~value.cost }}</td>
+											<td class="discount">{{ result.currency_abbr }} {% if value.discountvalue %}{{ value.discountvalue }}{% else %}0{% endif %}</td>
+											<td class="tax">
+												{% for tax in value.tax %}
+													<div><span>{{ result.currency_abbr~' '~tax.tax_price }}</span><span>({{ tax.name }})</span></div>
+												{% endfor %}
+											</td>
+											<td>{{ result.currency_abbr~' '~value.price }}</td>
+										</tr>
+									{% endfor %}
+									<tr class="total">
+										<td rowspan="6" colspan="4" class="blank">
+											{% if result.want_payment %}
+												<div class="payment">
+													<div class="title">{{ lang.text_payment_info }}</div>
+													<table>
+														<tbody>
+															<tr>
+																<td>{{ lang.text_account_hash }}</td>
+																<td>{{ common.info.invoice.accountnumber }}</td>
+															</tr>
+															<tr>
+																<td>{{ lang.text_account_name }}</td>
+																<td>{{ common.info.invoice.accountname }}</td>
+															</tr>
+															<tr>
+																<td>{{ lang.text_bank_name }}</td>
+																<td>{{ common.info.invoice.bankname }}</td>
+															</tr>
+															<tr>
+																<td>{{ lang.text_bank_details }}</td>
+																<td>{{ common.info.invoice.bankdetails }}.</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											{% endif %}
+										</td>
+										<td class="title">{{ lang.text_sub_total }}</td>
+										<td class="value">{{ result.currency_abbr~result.subtotal }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_discount }}</td>
+										<td class="value">{{ result.currency_abbr~result.discount_value }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_tax }}</td>
+										<td class="value">{{ result.currency_abbr~result.tax }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_total }}</td>
+										<td class="value">{{ result.currency_abbr~result.amount }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_paid }}</td>
+										<td class="value">{{ result.currency_abbr~result.paid }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_due }}</td>
+										<td class="value">{{ result.currency_abbr~result.due }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="note">
+							<table>
+								<tbody>
+									<tr>
+										<td class="block v-align-top">
+											<span>{{ lang.text_customer_note }}</span>
+											<p>{{ result.note }}</p>
+										</td>
+										<td class="block v-align-top">
+											<span>{{ lang.text_terms_Conditions }}</span>
+											<p>{{ result.tc }}</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						{% if result.want_signature %}
+							<div class="bottom pr-30">
+								<table>
+									<tbody>
+										<tr>
+											<td class="sign">
+												{% if common.info.signature and common.info.signature is ondisk %}
+													<img src="public/uploads/{{ common.info.signature }}">
+												{% else %}
+													<div class="sign_white"></div>
+												{% endif %}
+												<div class="text-right">{{ lang.text_authorised_sign }}</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-12 col-xl-4">
+		<div class="row">
+			<div class="col-md-6 col-lg-6 col-xl-12">
+				<div class="panel panel-default">
+					<div class="panel-head">
+						<div class="panel-title">
+							<i class="las la-credit-card panel-head-icon"></i>
+							<span class="panel-title-text">{{ lang.text_payment_history }}</span>
+						</div>
+						<div class="panel-action">
+							
+						</div>
+					</div>
+					<div class="panel-body">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th class="font-12">{{ lang.text_date }}</th>
+									<th class="font-12">{{ lang.text_method }}</th>
+									<th class="font-12">{{ lang.text_amount }}</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>{% set total = 0 %}
+								{% for value in payments %}
+									<tr>
+										<td class="font-12">{{ value.payment_date|date(common.info.date_format) }}</td>
+										<td class="font-12">{% if value.is_online %}{{ value.gateway }}{% else %}{{ value.method_name }}{% endif %}</td>
+										<td class="font-12">{{ result.currency_abbr~value.amount }}</td>
+										<td class="text-center">
+											<a class="btn btn-danger btn-circle btn-outline btn-outline-1x payment-delete" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+										</td>
+									</tr>{% set total = total + value.amount %}
+								{% else %}
+									<tr>
+										<td class="font-12" colspan="4">{{ lang.text_no_payment_history }}</td>
+									</tr>
+								{% endfor %}
+								<tr>
+									<td colspan="2" class="text-right">{{ lang.text_total }}</td>
+									<td colspan="2">{{ result.currency_abbr~total }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col-lg-6 col-xl-12">
+				<div class="panel panel-default">
+					<div class="panel-head">
+						<div class="panel-title">
+							<i class="la las la-paperclip panel-head-icon"></i>
+							<span class="panel-title-text">{{ lang.text_attachments }}</span>
+						</div>
+						<div class="panel-action">
+							<a data-toggle="modal" class="btn btn-secondary btn-sm btn-outline btn-gradient btn-pill" data-target="#attach-file" class="btn btn-secondary btn-sm"><i class="las la-paperclip"></i></a>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="attachment-container">
+							{% for value in attachments %}
+								<div class="attachment-image attachment-pdf">
+									{% if value.ext == 'pdf' %}
+										<a href="public/uploads/attachments/{{ value.file_name }}" class="open-pdf"><i class="las la-file-pdf"></i></a>
+									{% else %}
+										<a href="public/uploads/attachments/{{ value.file_name }}"  data-fancybox="gallery"><img src="public/uploads/attachments/{{ value.file_name }}" alt=""></a>
+									{% endif %}
+									<input type="hidden" name="expense[attached][]" value="{{ value.file_name }}">
+									<div class="attachment-delete"><a class="las la-trash"></a></div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-8">
+	</div>
+	<div class="col-lg-6">
+	</div>
+	<div class="col-lg-6">
+		
+	</div>
+</div>
+{% if page_sendmail %}
+	<!-- Send Email Modal -->
+	<div id="invoiceMail" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{{ lang.text_send_email }}</h5>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<form action="{{ common.url_route }}invoice/sendmail" method="post" enctype="multipart/form-data">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label class="col-form-label">{{ lang.text_to }} <span class="form-required">*</span></label>
+								<input type="text" class="form-control" value="{{ result.email }}" placeholder="{{ lang.text_to }}" readonly>
+							</div>
+							<div class="col-md-6 form-group">
+								<label class="col-form-label">{{ lang.text_bcc }}</label>
+								<input type="email" class="form-control" name="mail[bcc]" placeholder="{{ lang.text_bcc }}">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-form-label">{{ lang.text_subject }} <span class="form-required">*</span></label>
+							<input type="text" class="form-control invoice-subject" name="mail[subject]" placeholder="{{ lang.text_subject }}" required>
+						</div>
+						<div class="form-group">
+							<label class="col-form-label">Attach PDF?</label>
+							<div class="custom-control custom-checkbox custom-checkbox-1">
+								<input type="checkbox" name="mail[attachPdf]" class="custom-control-input" value="1" id="mailPdf" checked>
+								<label class="custom-control-label" for="mailPdf"><i class="icon-paper-clip ml-2"></i> invoice-{{ result.id }}.pdf</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-form-label">{{ lang.text_message }}</label>
+							<textarea name="mail[message]" class="mail-summernote invoice-message" placeholder="{{ lang.text_message }}"></textarea>
+						</div>
+						<input type="hidden" class="invoice_id" name="mail[invoice]" value="{{ result.id }}">
+						<input type="hidden" name="mail[to]" value="{{ result.email }}">
+						<input type="hidden" name="mail[name]" value="{{ result.company }}">
+						<input type="hidden" name="_token" value="{{ common.token }}">
+					</div>
+					<div class="modal-footer text-center">
+						<button type="submit" class="btn btn-primary btn-pill btn-gradient" name="submit">{{ lang.text_send }}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endif %}
+{% if page_add_payment %}
+	<!-- Add Payment Modal -->
+	<div id="addPayment" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{{ lang.text_add_payment }}</h5>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<form action="{{ action }}" method="post">
+					<div class="modal-body">
+						<div class="form-group">
+							<label class="col-form-label">{{ lang.text_payment_method }} <span class="form-required">*</span></label>
+							<select name="payment[method]" class="custom-select" required>
+								<option value="">{{ lang.text_payment_method }}</option>
+								{% for value in payment_method %}
+									<option value="{{ value.id }}">{{ value.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="col-form-label">{{ lang.text_amount~'('~result.currency_abbr }}) <span class="form-required">*</span></label>
+							<input type="text" class="form-control" name="payment[amount]" value="{{ result.due }}" placeholder="{{ lang.text_amount }}" required>
+						</div>
+						<div class="form-group">
+							<label class="col-form-label">{{ lang.text_payment_date }} <span class="form-required">*</span></label>
+							<input type="text" class="form-control bg-white date" name="payment[date]" placeholder="{{ lang.text_payment_date }}" required readonly>
+						</div>
+						<input type="hidden" name="payment[customer]" value="{{ result.customer }}">
+						<input type="hidden" name="payment[invoice]" value="{{ result.id }}">
+						<input type="hidden" name="payment[currency]" value="{{ result.currency }}">
+						<input type="hidden" name="_token" value="{{ common.token }}">
+					</div>
+					<div class="modal-footer">
+						<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill font-12">{{ lang.text_save }}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endif %}
+{% if page_documents %}
+	<!-- Attach File Modal -->
+	<div id="attach-file" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{{ lang.text_upload_attachments }}</h5>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form action="{{ common.url_route }}attach/documents" class="dropzone" id="attach-file-upload">
+						<input type="hidden" name="id" value="{{ result.id }}">
+						<input type="hidden" name="type" value="invoice">
+						<input type="hidden" name="_token" value="{{ common.token }}">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+<!-- Mark As Modal -->
+<div id="markas-card" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">{{ lang.text_confirm }}</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<p class="delete-card-ttl">{{ lang.text_are_you_sure }}</p>
+			</div>
+			<div class="modal-footer">
+				<form action="{{ common.url_route }}invoice/markas" class="" method="post">
+					<input type="hidden" value="{{ result.id }}" name="id">
+					<input type="hidden" class="invoice-status" value="" name="status">
+					<input type="hidden" name="_token" value="{{ common.token }}">
+					<button type="submit" class="btn btn-primary btn-gradient btn-pill" name="submit">{{ lang.text_ok }}</button>
+				</form>
+				<button type="button" class="btn btn-default btn-gradient btn-pill" data-dismiss="modal">{{ lang.text_close }}</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{{ include('common/delete-modal.twig') }}
+
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+<script type="text/javascript" src="public/js/invoice.js"></script>
+{{ include('common/footer.twig') }}

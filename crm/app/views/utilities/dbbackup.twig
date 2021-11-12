@@ -1,0 +1,19 @@
+{{ include('common/header.twig') }}
+
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-cloud-download-alt panel-head-icon"></i>
+			<span class="panel-title-text">{{ page_title }}</span>
+		</div>
+	</div>
+	<div class="panel-body">
+		<form action="{{ action }}" method="post">
+			<input type="hidden" name="_token" value="{{ common.token }}">
+			<a href="{{ common.url_route }}dbbackup/download" class="d-none btn btn-primary btn-outline btn-pill">{{ lang.text_download }}</a>
+			<button type="submit" name="submit" class="btn btn-primary btn-outline btn-gradient btn-pill">{{ lang.text_download }}</button>
+		</form>
+	</div>
+</div>
+
+{{ include('common/footer.twig') }}

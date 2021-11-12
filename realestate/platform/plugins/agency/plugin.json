@@ -1,0 +1,9 @@
+{
+    "name": "Agency",
+    "namespace": "Botble\\Agency\\",
+    "provider": "Botble\\Agency\\Providers\\AgencyServiceProvider",
+    "author": "Botble Technologies",
+    "url": "https://botble.com",
+    "version": "1.0",
+    "description": "Agency plugin"
+}

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title~' | '~common.info.name }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ common.theme.favicon }}">
+    <!-- Include css files -->
+    <link rel="stylesheet" href="public/css/style.css" />
+
+    <!-- Include js files -->
+    <script type="text/javascript" src="public/js/vendor.min.js"></script>
+    <script type="text/javascript" src="public/js/admin.js"></script>
+</head>
+<body>
+    <div class="mobile-menu-background"></div>
+    <div class="wrapper {% if common.theme.layout %}{{ common.theme.layout }}{% endif %}">
+        <div id="media-upload" class="modal fade">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="media-hdr"><p>{{ lang.text_media }} <span>({{ lang.text_click_on_image_to_select }})</span></p></div>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {% if 'media/upload' in common.permission or common.is_admin %}
+                            <div class="media-upload-container">
+                                <form action="{{ common.url_route }}media/upload" class="dropzone" id="media-dropzone" method="post" enctype="multipart/form-data"><div class="fallback"><input name="file" type="file" /></div></form>
+                            </div>
+                        {% endif %}
+                        <div class="media-all pt-3"></div>
+                        <input type="hidden" class="uploaded" value="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Main Container -->
+        <div id="main-wrapper" class="{% if common.theme.layout_fixed %} {{ common.theme.layout_fixed }} {% endif %} {% if common.theme.side_menu %} menu-{{ common.theme.side_menu }} {% endif %} {% if common.theme.layout_menu %} {{ common.theme.layout_menu }} {% endif %}">
+            <!-- Menu Wrapper -->
+            <div class="menu-wrapper">
+                <div class="menu">
+                    <ul>
+                        <li class="menu-title">{{ lang.text_main }}</li>
+                        <li id="dashboard-li">
+                            <a href="{{ common.url_route }}dashboard"><i class="las la-chalkboard"></i><span>{{ lang.text_dashboard }}</span></a>
+                        </li>
+                        {% if common.is_admin or 'contacts' in common.permission %}
+                            <li id="contact-li">
+                                <a href="{{ common.url_route }}contacts"><i class="las la-address-book"></i>{{ lang.text_contacts }}</span></a>
+                            </li>
+                        {% endif %}
+                        {% if common.is_admin or 'leads' in common.permission %}
+                            <li id="lead-li">
+                                <a href="{{ common.url_route }}leads"><i class="las la-bullhorn"></i>{{ lang.text_leads }}</span></a>
+                            </li>
+                        {% endif %}
+                        {% if common.is_admin or 'projects' in common.permission %}
+                            <li id="project-li">
+                                <a href="{{ common.url_route }}projects"><i class="las la-layer-group"></i><span>{{ lang.text_projects }}</span></a>
+                            </li>
+                        {% endif %}
+                        {% if common.is_admin or 'quotes' in common.permission or 'invoices' in common.permission or 'recurring' in common.permission %}
+                            <li class="menu-title">{{ lang.text_sales }}</li>
+                            {% if common.is_admin or 'quotes' in common.permission %}
+                                <li id="quotes-li">
+                                    <a href="{{ common.url_route }}quotes"><i class="las la-calculator"></i><span>{{ lang.text_quotes~'\/'~lang.text_estimates }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'invoices' in common.permission %}
+                                <li id="invoice-li">
+                                    <a href="{{ common.url_route }}invoices"><i class="las la-file-invoice"></i><span>{{ lang.text_invoices }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'recurring' in common.permission %}
+                                <li id="rinvoice-li">
+                                    <a href="{{ common.url_route }}recurring"><i class="las la-file-invoice-dollar"></i><span>{{ lang.text_recurring_invoices }}</span></a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                        {% if common.is_admin or 'account/transactions' in common.permission or 'accounts' in common.permission or 'expenses' in common.permission %}
+                            <li class="menu-title">{{ lang.text_accounting }}</li>
+                            {% if common.is_admin or 'account/transactions' in common.permission %}
+                                <li id="transactions-li">
+                                    <a href="{{ common.url_route }}account/transactions"><i class="las la-book"></i><span>{{ lang.text_transactions }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'accounts' in common.permission %}
+                                <li id="accounts-li">
+                                    <a href="{{ common.url_route }}accounts"><i class="las la-landmark"></i><span>{{ lang.text_accounts }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'expenses' in common.permission %}
+                                <li id="expense-li">
+                                    <a href="{{ common.url_route }}expenses"><i class="las la-receipt"></i><span>{{ lang.text_expenses }}</span></a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                        {% if common.is_admin or 'makepayment' in common.permission or 'managesalary' in common.permission or 'salarytemplate' in common.permission %}
+                            <li class="menu-title">{{ lang.text_payroll }}</li>
+                            {% if common.is_admin or 'makepayment' in common.permission %}
+                                <li id="makepayment-li">
+                                    <a href="{{ common.url_route }}makepayment"><i class="las la-money-check"></i><span>{{ lang.text_make_payment }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'managesalary' in common.permission %}
+                                <li id="managesalary-li">
+                                    <a href="{{ common.url_route }}managesalary"><i class="las la-wallet"></i><span>{{ lang.text_manage_salary }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'salarytemplate' in common.permission %}
+                                <li id="salarytemplate-li">
+                                    <a href="{{ common.url_route }}salarytemplate"><i class="las la-donate"></i><span>{{ lang.text_salary_template }}</span></a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                        {% if common.is_admin or 'domains' in common.permission or 'calendar' in common.permission or 'notes' in common.permission or 'staffattendance' in common.permission or 'tickets' in common.permission or 'noticeboard' in common.permission %}
+                            <li class="menu-title">{{ lang.text_others }}</li>
+                            {% if common.is_admin or 'staffattendance' in common.permission %}
+                                <li id="attendance-li">
+                                    <a href="{{ common.url_route }}staffattendance"><i class="las la-calendar-check"></i><span>{{ lang.text_attendance }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'tickets' in common.permission %}
+                                <li id="ticket-li">
+                                    <a href="{{ common.url_route }}tickets"><i class="las la-ticket-alt"></i><span>{{ lang.text_tickets }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'domains' in common.permission %}
+                                <li id="domain-li">
+                                    <a href="{{ common.url_route }}domains"><i class="las la-server"></i><span>{{ lang.text_domains }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'calendar' in common.permission %}
+                                <li id="calendar-li">
+                                    <a href="{{ common.url_route }}calendar"><i class="las la-calendar"></i><span>{{ lang.text_calendar }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'notes' in common.permission %}
+                                <li id="note-li">
+                                    <a href="{{ common.url_route }}notes"><i class="las la-sticky-note"></i><span>{{ lang.text_notes }}</span></a>
+                                </li>
+                            {% endif %}
+                            {% if common.is_admin or 'noticeboard' in common.permission %}
+                                <li id="noticeboard-li">
+                                    <a href="{{ common.url_route }}noticeboard"><i class="las la-bell"></i><span>{{ lang.text_noticeboard }}</span></a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                        {% if common.is_admin or 'user' in common.permission or 'subscriber' in common.permission %}
+                            <li class="menu-title">{{ lang.text_users }}</li>
+                            <li id="user-li" class="has-sub">
+                                <a><i class="las la-user-tie"></i><span>{{ lang.text_users }}</span><i class="arrow rotate"></i></a>
+                                <ul id="user" class="sub-menu">
+                                    {% if common.is_admin or 'user' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}user"><span>{{ lang.text_users }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin %}
+                                        <li>
+                                            <a href="{{ common.url_route }}role"><span>{{ lang.text_user_role }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'subscriber' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}subscriber"><span>{{ lang.text_subscribers }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if common.is_admin or 'send/email' in common.permission or 'sendbulk/email' in common.permission or 'emailtemplate' in common.permission  or 'emailsettings' in common.permission  %}
+                            <li class="menu-title">{{ lang.text_email }}</li>
+                            <li id="emailsetting-li" class="has-sub">
+                                <a><i class="las la-envelope-open"></i><span>{{ lang.text_email }}</span><i class="arrow rotate"></i></a>
+                                <ul id="emailsetting" class="sub-menu">
+                                    {% if common.is_admin or 'send/email' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}send/email"><span>{{ lang.text_send_email }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'sendbulk/email' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}sendbulk/email"><span>{{ lang.text_send_bulk_email }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'emailtemplate' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}emailtemplate&for=newticket"><span>{{ lang.text_email_template }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'emailsettings' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}emailsettings"><span>{{ lang.text_email_settings }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if common.is_admin or 'emaillog' in common.permission or 'cronlog' in common.permission or 'dbbackup' in common.permission %}
+                            <li class="menu-title">{{ lang.text_utilities }}</li>
+                            <li id="utilities-li" class="has-sub">
+                                <a><i class="las la-tools"></i><span>{{ lang.text_utilities }}</span><i class="arrow rotate"></i></a>
+                                <ul id="utilities" class="sub-menu">
+                                    {% if common.is_admin or 'emaillog' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}emaillog"><span>{{ lang.text_email_log }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'cronlog' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}cronlog"><span>{{ lang.text_cron_log }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'dbbackup' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}dbbackup"><span>{{ lang.text_database_backup }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if common.is_admin or 'info' in common.permission or 'taxes' in common.permission or 'currency' in common.permission or 'paymentmethod' in common.permission or 'paypalgateway' in common.permission or 'items' in common.permission or 'departments' in common.permission or 'expensetype' in common.permission or 'cronsetting' in common.permission %}
+                            <li class="menu-title">{{ lang.text_settings }}</li>
+                            <li id="setting-li" class="has-sub">
+                                <a><i class="las la-cog"></i><span>{{ lang.text_settings }}</span><i class="arrow rotate"></i></a>
+                                <ul id="setting" class="sub-menu">
+                                    {% if common.is_admin or 'info' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}info"><span>{{ lang.text_organisation_info }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'taxes' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}taxes"><span>{{ lang.text_taxes }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'currency' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}currency"><span>{{ lang.text_currency }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'paymentmethod' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}paymentmethod"><span>{{ lang.text_payment_method }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'paypalgateway' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}paypalgateway"><span>{{ lang.text_paypal_gateway }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'items' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}items"><span>{{ lang.text_items }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'departments' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}departments"><span>{{ lang.text_departments }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'expensetype' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}expensetype"><span>{{ lang.text_expense_types }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                    {% if common.is_admin or 'cronsetting' in common.permission %}
+                                        <li>
+                                            <a href="{{ common.url_route }}cronsetting"><span>{{ lang.text_cron_setting }}</span></a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if common.is_admin %}
+                            <li id="customization-li">
+                                <a href="{{ common.url_route }}customization" tabindex="0"><i class="las la-laptop-code"></i><span>{{ lang.text_theme_customization }}</span></a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <!-- Page header -->
+            <div class="page-hdr{% if common.theme.header_color %} {{ common.theme.header_color }}{% endif %}">
+                <div class="row align-items-center">
+                    <div class="col-4 col-md-7 page-hdr-left">
+                        <div id="logo">
+                            <div class="tbl-cell logo-icon">
+                                <a href="#"><img src="{{ common.theme.logo_icon }}" alt=""></a>
+                            </div>
+                            <div class="tbl-cell logo">
+                                <a href="{{ common.url_route }}dashboard"><img src="{{ common.theme.logo }}"></a>
+                            </div>
+                        </div>
+                        <div class="page-menu menu-icon ml-3">
+                            {% if common.theme.layout_menu %}
+                                <a class="animated menu-open">
+                                    <i class="las la-hand-point-right"></i>
+                                </a>
+                            {% else %}
+                                <a class="animated menu-close">
+                                    <i class="las la-hand-point-left"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% if common.page_search %}
+                            <div class="page-search">
+                                <input type="text" placeholder="{{ lang.text_search_contact_by_name_or_mobile_number }} . . . ">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-8 col-md-5 page-hdr-right">
+                        <div class="page-hdr-desktop">
+                            <div class="page-menu open-left-menu">
+                                <a href="#"><i class="las la-bars"></i></a>
+                            </div>
+                            {% if common.new_invoice %}
+                                <div class="page-menu">
+                                    <a href="{{ common.url_route }}invoice/add" data-toggle="tooltip" data-placement="bottom" title="{{ lang.text_new~' '~lang.text_invoice }}"><i class="las la-file-invoice"></i></a>
+                                </div>
+                            {% endif %}
+                            {% if common.new_expense %}
+                                <div class="page-menu">
+                                    <a href="{{ common.url_route }}expense/add" data-toggle="tooltip" data-placement="bottom" title="{{ lang.text_new~' '~lang.text_expense }}"><i class="las la-receipt"></i></a>
+                                </div>
+                            {% endif %}
+                            {% if common.new_transaction %}
+                                <div class="page-menu">
+                                    <a href="{{ common.url_route }}account/transaction/add" data-toggle="tooltip" data-placement="bottom" title="{{ lang.text_new~' '~lang.text_transaction }}"><i class="las la-book"></i></a>
+                                </div>
+                            {% endif %}
+                            {% if common.new_contact %}
+                                <div class="page-menu">
+                                    <a href="{{ common.url_route }}contact/add" data-toggle="tooltip" data-placement="bottom" title="{{ lang.text_new~' '~lang.text_contact }}"><i class="las la-address-book"></i></a>
+                                </div>
+                            {% endif %}
+                            {% if common.is_admin %}
+                                <div class="page-menu menu-dropdown-wrapper">
+                                    <a><i class="las la-cog"></i><span></span></a>
+                                    <div class="menu-dropdown menu-dropdown-right menu-dropdown-push-right">
+                                        <div class="arrow arrow-right"></div> 
+                                        <div class="menu-dropdown-inner">
+                                            <div class="menu-dropdown-head">{{ lang.text_settings }}</div>
+                                            <div class="menu-dropdown-body">
+                                                <ul class="menu-nav">
+                                                    <li><a href="{{ common.url_route }}info"><i class="las la-cog"></i><span>{{ lang.text_settings }}</span></a></li>
+                                                    <li><a href="{{ common.url_route }}taxes"><i class="las la-wallet"></i><span>{{ lang.text_finance }}</span></a></li>
+                                                    <li><a href="{{ common.url_route }}items"><i class="las la-list-ul"></i><span>{{ lang.text_items }}</span></a></li>
+                                                    <li><a href="{{ common.url_route }}expensetype"><i class="las las la-receipt"></i><span>{{ lang.text_expense_types }}</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="menu-dropdown-footer">
+                                                <a href="#" class="btn btn-outline btn-primary btn-pill btn-outline-2x font-12 btn-sm" target="_blank">{{ lang.text_support }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="page-menu menu-dropdown-wrapper menu-user">
+                                <a><i class="las la-user-clock"></i></a>
+                                <div class="menu-dropdown menu-dropdown-right menu-dropdown-push-right">
+                                    <div class="arrow arrow-right"></div> 
+                                    <div class="menu-dropdown-inner">
+                                        <div class="menu-dropdown-head pb-3">
+                                            <div class="tbl-cell">
+                                                <!-- <img src="public/images/author.jpg" alt=""> -->
+                                                <i class="las la-user-circle"></i>
+                                            </div>
+                                            <div class="tbl-cell pl-2 text-left">
+                                                <p class="m-0 font-18">{{ common.user.firstname~' '~common.user.lastname }}</p>
+                                                <p class="m-0 font-14">{{ common.user.role }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="menu-dropdown-body">
+                                            <ul class="menu-nav">
+                                                <li><a href="{{ common.url_route }}calendar"><i class="las la-calendar-check"></i><span>{{ lang.text_my_events }}</span></a></li>
+                                                <li><a href="{{ common.url_route }}notes"><i class="las la-sticky-note"></i><span>{{ lang.text_my_notes }}</span></a></li>
+                                                <li><a href="{{ common.url_route }}profile"><i class="las la-user-edit"></i><span>{{ lang.text_my_profile }}</span></a></li>
+                                                <li><a href="{{ url }}clients"><i class="las la-globe"></i><span>{{ lang.text_client~' '~lang.text_portal }}</span></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="menu-dropdown-footer text-right">
+                                            <a href="{{ common.url_route }}logout" class="btn btn-outline btn-primary btn-pill btn-outline-2x font-12 btn-sm">{{ lang.text_logout }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page-hdr-mobile">
+                            <div class="page-menu open-mobile-search">
+                                <a href="#"><i class="las la-search"></i></a>
+                            </div>
+                            <div class="page-menu open-left-menu">
+                                <a href="#"><i class="las la-bars"></i></a>
+                            </div>
+                            <div class="page-menu open-page-menu-desktop">
+                                <a href="#"><i class="las la-ellipsis-h"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Page Wrapper -->
+            <div class="page-wrapper">
+                <input type="hidden" class="common_date_format" value="{{ common.info.picker_date_format }}">
+                <input type="hidden" class="common_date_my_format" value="{{ common.info.picker_my_format }}">
+                <input type="hidden" class="common_daterange_format" value="{{ common.info.range_date_format }}">
+                <input type="hidden" class="common_daterange_my_format" value="{{ common.info.range_my_format }}">
+                <input type="hidden" class="site_url" value="{{ common.url_route }}">
+                <input type="hidden" class="s_token" value="{{ common.token }}">
+                <div class="page-body">

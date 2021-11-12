@@ -1,0 +1,1468 @@
+/*------------------------------------------------------------------
+[Master SASS Stylesheet]
+
+Project  :  Office manager
+Version  :  1.0
+Author   :  Pepdev
+Website  :  www.pepdev.com
+-------------------------------------------------------------------*/
+/**
+* Table of Contents :
+* BASIC CSS START
+* SHORTCODES CSS START
+* TYPOGRAPHY CSS START
+* COMMON CSS START
+* PANEL CSS START
+* COLOR CSS START
+* BUTTON CSS START
+* PROGRESSBAR CSS START
+* TABS CSS START
+* TOOLTIPS CSS START
+* ALERTS CSS START
+* TOASTR CSS START
+* FORM CSS START
+* DROPZONE CSS START
+* DATE CSS START
+* MENU CSS STAR
+* PAGE CSS START
+* INVOICE TEMPLATE CSS START
+* LOGIN CSS START
+* NOT FOUND CSS START
+* MEDIA QUERIES START
+
+[Color codes]
+
+
+Background: #FCFCFC ( Body Color )
+Content:    #555 ( Light black )
+Content:    #777 ( Lighter black )
+Content:    #DDD ( Lighter White )
+Content:    #EEE ( Light White )
+Header h1:  #333 ( Black )
+Header h2:  #555 ( Light Black )
+Footer:     $footerColor ( Check 'sass/partials/variable.scss' file )
+a (active): $color-primary-0 ( Check 'sass/partials/variable.scss' file)
+Primary Color: $color-primary-0 ( Check 'sass/partials/variable.scss' file )
+Blue Color = #3483FF ( Blue Color )
+Green Color = #54C798 ( Green Color )
+Orange Color = #EFA752 ( Orange Color )
+Purple Color = #A675D4 ( Purple Color )
+
+[Typography]
+
+Body copy:  14px/ font-family: "Poppins", sans-serif;
+h1, h2, h3, h4, h5, h6: 36px/ font-family: "Dosis", sans-serif;
+Sidebar heading:  font-family: "Dosis", sans-serif;
+Input, textarea:  font-family: "Poppins", sans-serif;
+
+-------------------------------------------------------------------*/
+@import '../fonts/line-awesome/css/line-awesome.min.css';
+/************************************************
+[ Import 3rd party Styles START ] ***************
+*************************************************/
+@import "bootstrap/bootstrap.scss";
+@import "_datatable.scss";
+
+/************************************************
+[ BASIC CSS START ] *****************************
+*************************************************/
+@import "_variable.scss";
+
+/************************************************
+[ shortcodes CSS START ] ************************
+*************************************************/
+@import "_shortcodes.scss";
+
+/************************************************
+[ TYPOGRAPHY CSS START ] ************************
+*************************************************/
+@import "_typography.scss";
+
+/************************************************
+[ COMMON CSS START ] ****************************
+*************************************************/
+.container-fluid {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.row {
+    margin-left: -7.5px;
+    margin-right: -7.5px;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+}
+
+.modal-title {
+    font-size: 20px;
+}
+
+.tbl {
+    display: table;
+    width: 100%;
+}
+
+.tbl-row {
+    display: table-row;
+}
+
+.tbl-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.separator {
+    >div{
+        border-right: 1px solid #ebedf2;
+    }
+}
+
+.widget1 {
+    padding: 20px;
+    i {
+        font-size: 32px;
+    }
+    .title {
+        font-size: 18px;
+        font-family: $fontHeading;
+        color: $color3;
+        font-weight: 600;
+    }
+
+    .desc {
+        font-size: 14px;
+        color: $color7;
+    }
+
+    .stats {
+        text-align: right;
+        font-size: 36px;
+        font-weight: 500;
+    }
+}
+
+/************************************************
+[ PANEL CSS START ] *****************************
+*************************************************/
+@import "_panel.scss";
+
+/************************************************
+[ COLOR CSS START ] *****************************
+*************************************************/
+@import "_color.scss";
+
+/************************************************
+[ BUTTON CSS START ] ****************************
+*************************************************/
+@import "_buttons.scss";
+
+/************************************************
+[ TABS CSS START ] ******************************
+*************************************************/
+@import "_tabs.scss";
+
+/************************************************
+[ TOOLTIPS CSS START ] **************************
+*************************************************/
+@import "_tooltips.scss";
+
+/************************************************
+[ ALERTS CSS START ] ****************************
+*************************************************/
+@import "_alerts.scss";
+
+/************************************************
+[ TOASTR CSS START ] ****************************
+*************************************************/
+@import "_toastr.scss";
+
+/************************************************
+[ TABLES CSS START ] ****************************
+*************************************************/
+@import "_tables.scss";
+
+/************************************************
+[ FORM CSS START ] ******************************
+*************************************************/
+@import "_form.scss";
+
+/************************************************
+[ DATE CSS START ] ******************************
+*************************************************/
+@import "_daterangepicker.scss";
+
+/************************************************
+[ HEADR CSS START ] *****************************
+*************************************************/
+
+.header {
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 25px; 
+    background: #282a3c;
+    box-shadow: 0px 1px 15px 1px rgba(81, 77, 92, 0.5);
+}
+
+.logo {
+
+    img {
+        height: 30px;
+    }
+}
+
+.menu {
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style: none;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0 10px;
+
+        a {
+            font-size: 18px;
+            font-family: $fontHeading;
+            color: $colorA;
+            padding: 5px;
+        }
+    }
+}
+
+.menu-icon {
+    display: none;
+
+    a {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        font-size: 24px;
+        color: $colorC;
+        text-align: center;
+    }
+}
+
+.material-card {
+    width: 100%;
+    background-color: #FFF;
+    box-shadow: 0 0 4px 0 rgba(150, 150, 150, 0.17);
+}
+
+//Menu Dropdown
+.menu-dropdown-wrapper {
+    position: relative;
+
+    &:hover {
+        .menu-dropdown {
+            visibility: visible;
+            opacity: 1;
+            -webkit-transform: translateY(0);
+            -moz-transform: translateY(0);
+            -ms-transform: translateY(0);
+            -o-transform: translateY(0);
+            transform: translateY(0);
+        }
+    }
+}
+
+.menu-dropdown-push-right {
+    margin-right: -20px;
+}
+
+.menu-dropdown-right {
+    right: 40px;
+}
+
+.menu-dropdown {
+    top: 100%;
+    text-align: left;
+    position: absolute;
+    z-index: 999;
+    padding-top: 10px;
+    width: 250px;
+    line-height: 1.6;
+    border-radius: 6px;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transform: translateY(40px);
+    -moz-transform: translateY(40px);
+    -ms-transform: translateY(40px);
+    -o-transform: translateY(40px);
+    transform: translateY(40px);
+    -webkit-transition: all 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    -moz-transition: all 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    -ms-transition: all 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    -o-transition: all 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: all 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+
+    .arrow {
+        top: -10px;
+        left: 50%;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-color: transparent transparent #f4f4f4 transparent;
+        border-style: solid;
+        border-width: 10px 10px 10px 10px;
+
+        &::after {
+            content: " ";
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 0;
+            border-color: transparent transparent #fff transparent;
+            border-style: solid;
+            border-width: 10px 10px 10px 10px;
+            left: -10px;
+            bottom: -10px;
+        }
+    }
+
+    .arrow-left {
+        left: 20px;
+    }
+
+    .arrow-right {
+        left: unset;
+        right: 20px;
+    }
+}
+
+.menu-dropdown-inner {
+    width: 250px;
+    background-color: $colorF;
+    border-radius: 6px;
+    box-shadow: 0px 0px 15px 1px rgba(113, 106, 202, 0.2);
+}
+
+.menu-dropdown-head {
+    padding: 25px 20px 0 20px;
+    font-size: 14px;
+    color: $color-primary-3;
+}
+
+.menu-dropdown-body {
+    padding: 10px 20px 10px 20px;
+}
+
+.menu-nav {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+        display: block;
+
+        a {
+            position: relative;
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            color: $color7;
+            text-decoration: none;
+            vertical-align: middle;
+            padding: 10px 0;
+
+            &:hover {
+                color: $color-primary-0;
+            }
+
+            i {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+                width: 40px;
+                font-size: 20px;
+            }
+
+            span {
+                display: table-cell;
+                vertical-align: middle;
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+.menu-dropdown-footer {
+    padding: 20px 20px 20px 20px;
+    border-top: 1px solid $colorD;
+}
+
+/*************************************************
+[PAGE CSS START] *********************************
+**************************************************/
+
+.div-center {
+    position: relative;
+    width: 900px;
+    margin: 0 auto;
+}
+.table-container {
+    background: $colorF;
+    box-shadow: 0 0 10px 0 rgba(218, 218, 218, 0.1);
+    
+    th {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    td {
+        vertical-align: middle;
+        font-size: 14px;
+    }
+}
+
+.table-icon {
+    min-width: 100px;
+    width: 100px;
+    .fa {
+        width: 56px;
+        height: 56px;
+        line-height: 56px;
+        font-size: 28px;
+        text-align: center;
+        color: $colorF;
+        background: #1d9f75;
+        border-radius: 4px;
+    }
+}
+
+.table-srno {
+    width: 30px;
+}
+
+.table-img {
+    width: 100px;
+    margin: 0 auto;
+    text-align: center;
+    img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+.table-action {
+    text-align: center;
+
+    p {
+        margin: 0;
+    }
+}
+
+.table-name {
+    min-width: 200px;
+    width: 200px;
+}
+
+.table-input {
+
+    td {
+
+        select {
+            font-size: 12px;
+            border: 0;
+
+            &:focus {
+                outline: 1px solid $color-primary-0;
+            }
+        }
+
+        textarea {
+            width: 100%;
+            border: 0;
+            padding: 5px;
+
+
+            &:focus {
+                outline: 1px solid $color-primary;
+            }
+        }
+
+        .bootstrap-select > .dropdown-toggle {
+            border: 0;
+        }
+    }
+}
+
+.twitter-typeahead {
+    width: 100%;
+}
+
+.timeline {
+    position: relative;
+    margin-left: 140px;
+    padding: 20px 0 20px;
+    border-left: 1px solid #277ad8;
+
+    li {
+
+        list-style: none;
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 10px;
+            height: 10px;
+            border: 1px solid #1b6ac4;
+            border-radius: 50%;
+            top: 30px;
+            left: -6px;
+            background-color: #277ad8;
+        }
+    }
+
+    .time {
+        width: 90px;
+        top: 25px;
+        left: -120px;
+        text-align: right;
+        position: absolute;
+    }
+}
+
+.timeline-container {
+    padding: 10px 20px;
+    position: relative;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    border: 1px solid #efefef;
+    background-color: #fff;
+    border-radius: 6px;
+
+    .arrow {
+        top: 22px;
+        left: -11px;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-color: transparent #f3f3f3 transparent transparent;
+        border-style: solid;
+        border-width: 11px 11px 11px 0;
+
+        &::after {
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 0;
+            border-color: transparent #fff transparent transparent;
+            border-style: solid;
+            border-width: 10px 10px 10px 0;
+            content: " ";
+            left: 1px;
+            bottom: -10px;
+        }
+    }
+
+    .description {
+        font-size: 12px;
+        font-weight: 500;
+        color: $color5;
+    }
+
+    .author {
+        font-size: 14px;
+        padding: 5px 0 0 0;
+        color: $color-primary;
+    }
+}
+
+.form-transparent {
+    width: 100%;
+    line-height: 30px;
+    padding: 0 5px;
+    border: 1px solid transparent;
+    border-radius: 0;
+
+    &:focus {
+        border: 1px solid $color-primary;
+    }
+}
+
+select.form-transparent {
+    height: 32px!important;
+}
+
+/************************************************
+[ LOGIN CSS START ] *****************************
+*************************************************/
+
+.lgn-background {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    padding: 30px 0 20px 0;
+    background: #e6e6e6;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    //background-image: url(../images/background.jpg);
+
+    &::after {
+        //content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        background: linear-gradient(-90deg, rgba(51, 66, 68, 0.9), rgba(95, 59, 128, 0.9));
+    }
+}
+
+.lgn-wrapper {
+    max-width: 460px;
+    margin: 0 auto;
+    position: relative;
+    background: rgba(255, 255, 255, 1);
+    border: 0;
+    border-radius: 2px;
+    //box-shadow: 0 0 10px 0px rgba(93, 93, 93, 0.18);
+    z-index: 1111;
+}
+
+.rgr-wrapper {
+    max-width: 900px;
+}
+
+.lgn-logo {
+    position: relative;
+    padding: 20px 0;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #f5f5f5;
+    a {
+        display: inline-block;
+    }
+    
+    img {
+        max-height: 40px;
+    }
+}
+
+.lgn-type {
+    position: absolute;
+    bottom: 0;
+    right: 12px;
+    font-family: $fontHeading;
+    font-size: 16px;
+    color: $color7;
+    margin: 0;
+}
+
+.lgn-input {
+    position: relative;
+    width: 100%;
+    padding: 10px 15px 0 15px;
+    margin: 0 0 15px 0;
+    overflow: hidden;
+    label {
+        font-size: $sMediumFont;
+        color: $color3;
+    }
+    input {
+        padding: 16px 20px;
+        height: auto;
+        line-height: normal;
+        color: $color3;
+        border-radius: 40px!important;
+        background: #f5f5f5;
+
+        &:focus {
+            color: $color3;
+        }
+    }
+    &.is-invalid {
+        label {
+            color: $color-red;
+        }
+        input {
+            border-color: $color-red;
+        }
+        .fa {
+            color: $colorF;
+            background: $color-red;
+        }
+    }
+}
+
+.lgn-submit {
+    text-align: center;
+    padding: 20px 0;
+    button {
+        padding: 10px 40px;
+    }
+}
+
+.lgn-forgot {
+    padding: 0 30px;
+    font-size: 18px;
+    a {
+        font-family: $fontHeading;
+        letter-spacing: 1px;
+        color: $color-primary;
+    }
+}
+
+.lgn-footer {
+    text-align: center;
+    padding: 10px 0;
+    background: rgba(238, 238, 238, 0.32);
+
+    p {
+        color: $color-primary-4;
+        margin: 0 0 5px 0;
+    }
+
+    a {
+        font-size: 18px;
+        letter-spacing: .5px;
+        font-family: $fontHeading;
+        color: $color3;
+
+        &:hover {
+            color: $color-primary-4;
+        }
+    }
+}
+
+//*************************************************
+//Icon Page ***************************************
+//************************************************* 
+#icon-list {
+    margin: 10px;
+    background: $colorF;
+    padding: 10px;
+}
+
+.icon-list-block {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px;
+    min-width: 200px;
+    text-align: left;
+    .fa {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: $mediumFont;
+        color: $color3;
+        padding: 0 10px 0 0;
+    }
+    span {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: $sMediumFont;
+        color: $color3;
+    }
+}
+
+/************************************************
+[ NOT FOUND CSS START ] *************************
+*************************************************/
+.notfound-wrapper {
+    text-align: center;
+    margin: 50px 0 0 0;
+    h2 {
+        font-size: 150px;
+        text-transform: uppercase;
+        color: #F09E71;
+        letter-spacing: 2px;
+        font-weight: bold;
+        display: block;
+        margin: 10px 0;
+    }
+    p {
+        font-size: 48px;
+        text-transform: uppercase;
+        color: #333;
+        margin: 10px 0;
+        font-weight: 600;
+    }
+    span {
+        display: block;
+        font-size: 32px;
+        color: #555;
+        margin: 10px 0;
+    }
+}
+
+/************************************************
+[ INVOICE TEMPLATE CSS START ] ******************
+*************************************************/
+
+.inv-template {
+}
+
+.inv-template-hdr {
+    padding: 20px;
+    border-bottom: 4px dotted $color9;
+
+    .ribbon {
+        position: absolute;
+        top: 0px;
+        left: -23px;
+        color: $colorF;
+        padding: 5px 20px;
+        background: $color-dark;
+
+        &::before {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            left: 0;
+            border-top: solid 5px $color-dark;
+            border-right: solid 5px $color-dark;
+            border-bottom: solid 5px transparent;
+            border-left: solid 5px transparent;
+        }
+    } 
+}
+
+.inv-template-bdy {
+
+    .w-min-130 {
+        min-width: 130px;
+        width: 130px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    .inv-template {
+    }
+
+    .company {
+        padding: 0 0 15px 0;
+    }
+
+    .company .title {
+        font-size: 32px;
+        font-weight: 800;
+        color: #333;
+        font-family: $fontHeading;
+        text-transform: uppercase;
+    }
+
+    .company .name {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        margin: 5px 0 5px 0;
+    }
+
+    .company .logo {
+        margin: 0 0 10px 0;
+        padding: 0;
+    }
+
+    .company .logo img {
+        height: 40px;
+    }
+
+    .company .text {
+        font-size: 12px;
+        color: #333;
+        margin: 0 0 5px 0;
+    }
+
+    .meta {
+        padding: 15px 0;
+        border-top: 1px solid #ddd;
+    }
+
+    .meta .heading {
+        font-size: 10px;
+        color: #777;
+    }
+
+    .meta .title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        margin: 5px 0 5px 0;
+    }
+
+    .meta .text {
+        font-size: 12px;
+        color: #333;
+        margin: 0 0 5px 0;
+    }
+
+    .proposal {
+        .subject {
+            font-size: 13px;
+            color: #333;
+            display: block;
+            margin: 0;
+            padding: 10px 0;
+            border-top: 1px solid #dbdbdb;
+        }
+
+        .proposal-content {
+            padding: 10px 0 10px 0;
+            margin: 0;
+            border-top: 1px solid #dbdbdb;
+
+            p {
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .item {
+        text-align: left;
+        padding: 25px 0;
+        border-top: 1px solid #ddd;
+    }
+
+    .item table th {
+        color: #000;
+        font-size: 12px;
+        padding: 8px;
+        font-weight: 400;
+        background-color: #DDD;
+        border: 1px solid #DDD;
+    }
+
+    .item table td {
+        color: #333;
+        font-size: 12px;
+        padding: 10px;
+        border: 1px solid #DDD;
+    }
+
+    .item .title p {
+        font-size: 12px;
+        margin: 0 0 5px 0;
+    }
+
+    .item .title span {
+        font-size: 12px;
+        color: #777;
+    }
+
+    .item .tax div {
+        margin: 5px 0 0 0;
+        padding: 5px 0 0 0;
+    }
+
+    .item .tax div:nth-child(1) {
+        margin: 0;
+        padding: 0;
+        border-top: 0;
+    }
+
+    .item .tax span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .item .tax span:nth-child(2) {
+        font-size: 12px;
+        margin: 0 0 0 5px;
+        color: #777;
+    }
+
+    .item .total .blank {
+        border: 0;
+    }
+
+    .item .total .title {
+        text-align: right;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .note {
+        padding: 20px 0;
+        border-top: 1px solid #eee;
+    }
+
+    .note .block {
+        width: 50%;
+    }
+
+    .note .block span {
+        display: block;
+        font-size: 12px;
+        color: #333;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .note p {
+        font-size: 12px;
+        color: #333;
+        margin: 5px 0 0 0;
+    }
+
+    .item .payment {
+        padding: 15px 0;
+    }
+
+    .item .payment .title, .payment-total .payment .title {
+        font-size: 12px;
+        color: #333;
+        margin: 0 0 5px 0;
+        font-weight: 500;
+        text-align: left;
+    }
+
+    .item .payment td, .payment-total .payment td {
+        font-size: 12px;
+        color: #333;
+        padding: 0 0 5px 0;
+        border: 0;
+        background-color: #fff;
+    }
+
+    .item .payment td:nth-child(1), .payment-total .payment td:nth-child(1) {
+        min-width: 100px;
+        width: 100px;
+        color: #777;
+    }
+
+    .strip {
+        position: relative;
+        width: 100%;
+        height: 50px;
+        text-align: right;
+        background-color: #ffc809;
+    }
+
+    .strip p {
+        position: absolute;
+        right: 0;
+        top: -1px;
+        display: inline-block;
+        padding: 0px 20px;
+        margin: 0 75px 0 0;
+        font-size: 44px;
+        text-transform: uppercase;
+        color: #333;
+        font-weight: 800;
+        background-color: #fff;
+    }
+
+    .inv-template-1 .item table {
+        border: 1px solid #9ea9be;
+    }
+
+    .inv-template-1 .item tr:nth-child(2n) {
+        background-color: #f7f9fd;
+    }
+
+    .inv-template-1 .item th {
+        padding: 15px 10px;
+        color: #eee;
+        font-weight: 400;
+        background-color: #373b46;
+        border: 0;
+    }
+
+    .inv-template-1 .item td {
+        color: #373b46;
+        border: 0;
+        padding: 10px;
+    }
+
+    .inv-template-1 .payment {
+        border: 0;
+    }
+
+    .payment-total {
+        padding-bottom: 25px;
+    }
+
+    .payment-total td:nth-child(1) {
+        width: 60%;
+    }
+
+    .payment-total td:nth-child(2) {
+        width: 40%;
+    }
+
+    .payment-total .total {
+    }
+
+    .payment-total .total td {
+        padding: 5px 5px 10px 5px;
+        font-size: 16px;
+        color: #333;
+        border-spacing:0 15px;
+    }
+
+    .payment-total .total td:nth-child(1) {
+        width: 50%;
+    }
+
+    .payment-total .total td:nth-child(2) {
+        width: 50%;
+        padding-right: 30px!important;
+        font-weight: 600;
+    }
+
+    .payment-total .total .main td {
+        font-size: 20px;
+        font-weight: 800;
+        padding: 10px;
+        background-color: #ffc809;
+    }
+
+    .bottom {
+        padding: 20px 0 20px 0;
+        border-top: 1px solid #eee;
+    }
+
+    .sign {
+        text-align: right; 
+    }
+
+    .sign div {
+        font-size: 18px;
+        color: #555;
+        font-weight: 600;
+    }
+
+    .sign img {
+        height: 40px;
+    }
+
+    .sign .sign_white {
+        width: 200px;
+        height: 50px;
+    }
+}
+
+.br-bottom-1x {
+    border-bottom: 5px dotted $colorA;
+}
+
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    margin: 70px 0 0 0;
+    background: #3a2250;
+
+    p {
+        color: $colorA;
+        margin: 0;
+    }
+}
+/************************************************
+Card CLASS **************************************
+*************************************************/
+
+#card-table {
+    width: 100% !important;
+    border-bottom: 0;
+    tr {
+        background: transparent;
+        &:nth-child(1) {
+            td {
+                border-top: 0;
+                .card-block {
+                    &:nth-child(1) {
+                        padding: 0;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+    td {
+        padding: 0;
+    }
+}
+
+.card-block {
+    position: relative;
+    margin: 0 0 20px 0;
+    border: 1px solid $colorC;
+    border-left: 5px solid $colorA;
+    border-radius: 4px;
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    padding: 5px;
+    background: $colorF;
+    border: 0;
+    transition: all .4s;
+    &:hover {
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, .18);
+    }
+}
+
+.card-hdr {
+    padding: 0 0 5px 0;
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid $colorE;
+}
+
+.card-left {
+    span {
+        display: inline-block;
+        color: $color5;
+    }
+}
+
+.card-right {
+    color: $color5;
+    span {
+        font-size: 12px;
+    }
+}
+
+.card-img {
+    width: 40px;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 10px 0 10px;
+    img {
+        max-height: 69px;
+    }
+    i{
+        display: inline-block;
+        color: $color9;
+        padding: 0 10px 0 0;
+        font-size: 44px;
+    }
+}
+
+.card-info {
+    display: table-cell;
+    vertical-align: middle;
+    .fa {
+        min-width: 24px;
+        text-align: center;
+    }
+}
+
+.card-subject {
+    span {
+        display: block;
+        font-size: 12px;
+        color: $colorA;
+    }
+
+    p {
+        font-size: 14px;
+        color: $color3;
+        margin: 0;
+    }
+}
+
+.card-name {
+    font-size: 16px;
+    color: $color3;
+    white-space: nowrap;
+}
+
+.card-text {
+    font-size: 13px;
+    color: $color9;
+    padding: 5px 0 0 0;
+}
+
+.card-ftr {
+    width: 100%;
+    min-height: 30px;
+    padding: 5px 0 0 0;
+    margin: 5px 0 0 0;
+    border-top: 1px solid $colorE;
+    .label {
+        margin: 0 5px 0 0;
+        font-size: 12px;
+    }
+}
+
+.card-action {
+}
+
+.chat {
+    color: #111;
+    background: #f2f3f8;
+
+    .chat-history {
+        margin: 0;
+        padding: 0;
+        li {
+            list-style: none;
+        }
+
+        .message-data {
+            margin-bottom: 15px;
+
+            i {
+                color: $color3;
+            }
+        }
+
+        .message-data-time {
+            color: $colorA;
+            font-size: 12px;
+        }
+
+        .message {
+            position: relative;
+            display: inline-block;
+            max-width: 90%;
+            padding: 12px 16px;
+            font-size: 14px;
+            text-align: left;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 20px 0 rgba(62,28,131,0.1);
+
+            &:after {
+                bottom: 100%;
+                left: 20px;
+                border: solid transparent;
+                content: " ";
+                height: 0;
+                width: 0;
+                position: absolute;
+                pointer-events: none;
+                border-bottom-color: #CFC4FF;
+                border-width: 10px;
+                margin-left: -10px;
+            }
+
+            &:nth-last-child(1) {
+                p {
+                    margin-bottom: 0; 
+                }
+            }
+        }
+
+        .my-message {
+
+            .message {
+                background: #CFC4FF;
+            }
+        }
+
+        .other-message {
+            .message {
+                background: #FFED7D;
+
+                &:after {
+                    border-bottom-color: #FFED7D;
+                    left: unset;
+                    right: 20px;
+                }
+            }
+        }
+    }
+}
+
+.attached-file {
+    display: block;
+    padding: 3px;
+    margin: 5px 0 5px 0;
+    border: 1px solid $color3;
+}
+
+.ticket-info {
+    padding: 0 0 20px 0;
+    table {
+        tr {
+            td {
+                vertical-align: middle;
+                color: $color3;
+                &:nth-child(1) {
+                    font-size: 12px;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
+
+.note-editable.card-block {
+    border: 0;
+}
+
+
+.attached-files {
+}
+
+.attached-files-block {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 10px 0 0;
+
+    a {
+        display: inline-block;
+        vertical-align: top;
+    }
+    
+    i {
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 36px;
+        color: $color-danger;
+        text-align: center;
+        border: 4px solid $colorD;
+        border-radius: 4px;
+
+    }
+
+    img {
+        height: 100px;
+        border: 4px solid $colorD;
+        border-radius: 4px;
+    }
+}
+
+.delete-file {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 0 0 0;
+    a {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: $sMediumFont !important;
+        color: $colorF;
+        text-align: center;
+        background-color: $color-danger;
+        border-radius: 2px;
+    }
+}
+
+/************************************************
+[ Media query CSS START ] ***********************
+*************************************************/
+@import "_responsive.scss";
+
+
+
+
+
+
+
+
+
+
+
+

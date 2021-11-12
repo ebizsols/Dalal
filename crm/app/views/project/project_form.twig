@@ -1,0 +1,302 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_token" value="{{ common.token }}">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-layer-group panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                <button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}projects" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+            </div>  
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs nav-tabs-line nav-tabs-line-primary">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#project-info" data-toggle="tab"><i class="las la-info-circle mr-2"></i>{{ lang.text_basic_info }}</a>
+                </li>
+                <li class="nav-item">  
+                    <a class="nav-link" href="#project-staff" data-toggle="tab"><i class="las la-users mr-2"></i>{{ lang.text_staff }}</a>
+                </li>
+                <li class="nav-item">  
+                    <a class="nav-link" href="#project-task" data-toggle="tab"><i class="las la-tasks mr-2"></i>{{ lang.text_tasks }}</a>
+                </li>
+            </ul>
+            <div class="tab-content mt-4">
+                <div class="tab-pane active" id="project-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_project_name }} <span class="form-required">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-layer-group"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" name="project[name]" value="{{ result.name }}" placeholder="{{ lang.text_project_name }}" required>
+                                </div>
+                            </div>
+                            <div class="form-group customer-search">
+                                <label class="col-form-label">{{ lang.text_customer }} <span class="form-required">*</span></label>
+                                <div class="form-group">
+                                    <select name="project[customer]" class="selectpicker" data-width="100%" data-live-search="true" title="{{ lang.text_customer }}" required>
+                                        {% for value in customers %}
+                                            <option value="{{ value.id }}" data-tokens="{{ value.company }}"{% if result.customer == value.id %} selected{% endif %}>{{ value.company }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_billing_method }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-money-bill-alt"></i></span>
+                                    </div>
+                                    <select class="custom-select billing-method" name="project[billingmethod]">
+                                        <option value="1"{% if result.billing_method == '1' %} selected{% endif %}>{{ lang.text_fixed_cost_for_project }}</option>
+                                        <option value="2"{% if result.billing_method == '2' %} selected{% endif %}>{{ lang.text_based_on_project_hours }}</option>
+                                        <option value="3"{% if result.billing_method == '3' %} selected{% endif %}>{{ lang.text_based_on_task_hours }}</option>
+                                        <option value="4"{% if result.billing_method == '4' %} selected{% endif %}>{{ lang.text_based_on_staff_hours }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_currency }} <span class="form-required">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-credit-card"></i></span>
+                                    </div>
+                                    <select name="project[currency]" class="custom-select" required>
+                                        {% for value in currency %}
+                                            <option value="{{ value.id }}"{% if result.currency == value.id %} selected{% endif %}>{{ value.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group budget-cost">
+                                <label class="col-form-label">{{ lang.text_total_budget_cost }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-wallet"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" value="{{ result.total_cost }}" name="project[totalcost]" placeholder="{{ lang.text_total_budget_cost }}">
+                                </div>
+                            </div>
+                            <div class="form-group rate-hour">
+                                <label class="col-form-label">{{ lang.text_rate_per_hour }}</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="project[ratehour]" value="{{ result.rate_hour }}" placeholder="{{ lang.text_rate_per_hour }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text font-12">{{ lang.text_per_hour }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group project-hours">
+                                <label class="col-form-label">{{ lang.text_project_hours }}</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="project[projecthour]" value="{{ result.project_hour }}" placeholder="{{ lang.text_project_hours }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text font-12">{{ lang.text_hours }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_project_start_date }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-calendar"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control date" name="project[start_date]" value="{{ result.start_date|date(common.info.date_format) }}" placeholder="{{ lang.text_project_start_date }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_project_due_date }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-calendar-check"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control date" name="project[due_date]" value="{{ result.due_date|date(common.info.date_format) }}" placeholder="{{ lang.text_project_due_date }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">% {{ lang.text_complete }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-tachometer-alt"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control" name="project[completed]" value="{{ result.completed }}" placeholder="% {{ lang.text_complete }}">
+                                    <div class="input-group-append"><span class="input-group-text">%</span></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_description }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="las la-paragraph"></i></span>
+                                    </div>
+                                    <textarea class="form-control" rows="5" name="project[description]" placeholder="{{ lang.text_description }}">{{ result.description }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="project-staff">
+                    <div class="">
+                        <table class="table table-input table-align-middle font-12">
+                            <thead>
+                                <tr>
+                                    <th>{{ lang.text_staff }}</th>
+                                    <th>{{ lang.text_hours }}</th>
+                                    <th>{{ lang.text_rate_per_hour }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for value in result.staff %}
+                                    <tr>
+                                        <td>
+                                            <select class="selectpicker" name="project[staff][{{ loop.index0 }}][name]" data-width="100%" data-live-search="true" title="{{ lang.text_staff }}">
+                                                {% for staff_value in staff %}
+                                                    <option value="{{ staff_value.user_id }}"{% if value.name == staff_value.user_id %} selected{% endif %}>{{ staff_value.name }}<small>({{ staff_value.email }})</small></option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-transparent" name="project[staff][{{ loop.index0 }}][hours]" value="{{ value.hours }}">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-transparent" name="project[staff][{{ loop.index0 }}][rate]" value="{{ value.rate }}">
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="delete font-20 mt-3" data-toggle="tooltip" data-placement="top" title="Delete"><i class="las la-trash text-danger p-1 m-1"></i></a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>
+                                            <select class="selectpicker" name="project[staff][0][name]" data-width="100%" data-live-search="true" title="{{ lang.text_staff }}">
+                                                {% for staff_value in staff %}
+                                                    <option value="{{ staff_value.user_id }}">{{ staff_value.name }}<small>({{ staff_value.email }})</small></option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-transparent" name="project[staff][0][hours]" value="">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-transparent" name="project[staff][0][rate]" value="">
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="delete font-20 mt-3" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash text-danger p-1 m-1"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <a class="btn btn-success btn-sm btn-pill btn-gradient add-staff"><i class="las la-plus mr-1"></i> {{ lang.text_add~' '~lang.text_staff }}</a>
+                    </div>
+                </div>
+                <div class="tab-pane" id="project-task">
+                    <div class="table-responsive">
+                        <table class="table table-input table-align-middle font-12">
+                            <thead>
+                                <tr>
+                                    <th>{{ lang.text_task_name }}</th>
+                                    <th>{{ lang.text_description }}</th>
+                                    <th>{{ lang.text_rate_per_hour }}</th>
+                                    <th>{{ lang.text_work_hours }} (HH)</th>
+                                    <th>{{ lang.text_status }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for value in result.task %}
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="project[task][{{ loop.index0 }}][name]" value="{{ value.name }}" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="project[task][{{ loop.index0 }}][description]" value="{{ value.description }}" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="project[task][{{ loop.index0 }}][ratehour]" value="{{ value.ratehour }}" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="project[task][{{ loop.index0 }}][budgethour]" value="{{ value.budgethour }}" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <select name="project[task][{{ loop.index0 }}][status]" class="custom-select">
+                                                <option>{{ lang.text_status }}</option>
+                                                <option value="1"{% if value.status == '1' %} selected{% endif %}>{{ lang.text_started }}</option>
+                                                <option value="2"{% if value.status == '2' %} selected{% endif %}>{{ lang.text_in_process }}</option>
+                                                <option value="3"{% if value.status == '3' %} selected{% endif %}>{{ lang.text_testing }}</option>
+                                                <option value="4"{% if value.status == '4' %} selected{% endif %}>{{ lang.text_completed }}</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="delete font-20 mt-3" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash text-danger text-danger p-1 m-1"></i></a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="project[task][0][name]" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="project[task][0][description]" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="project[task][0][ratehour]" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="project[task][0][budgethour]" class="form-transparent">
+                                        </td>
+                                        <td>
+                                            <select name="project[task][0][status]" class="custom-select">
+                                                <option>{{ lang.text_status }}</option>
+                                                <option value="1">{{ lang.text_started }}</option>
+                                                <option value="2">{{ lang.text_in_process }}</option>
+                                                <option value="3">{{ lang.text_testing }}</option>
+                                                <option value="4">{{ lang.text_completed }}</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="delete font-20 mt-3" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash text-danger text-danger p-1 m-1"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <a class="btn btn-success btn-sm btn-pill btn-gradient add-task"><i class="las la-plus mr-1"></i> {{ lang.text_add_task }}</a>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="project[id]" value="{{ result.id }}">   
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<input type="hidden" class="staff-list" value="{{ staff|json_encode|e }}">
+<input type="hidden" class="lang-staff" value="{{ lang.text_staff }}">
+<input type="hidden" class="lang-status" value="{{ lang.text_status }}">
+<input type="hidden" class="lang-started" value="{{ lang.text_started }}">
+<input type="hidden" class="lang-in-process" value="{{ lang.text_in_process }}">
+<input type="hidden" class="lang-testing" value="{{ lang.text_testing }}">
+<input type="hidden" class="lang-completed" value="{{ lang.text_completed }}">
+<script src="public/js/project.js"></script>
+
+{{ include('common/footer.twig') }}

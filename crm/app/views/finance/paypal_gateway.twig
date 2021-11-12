@@ -1,0 +1,94 @@
+{{ include('common/header.twig') }}
+<!-- Payment Gateway page start -->
+<div class="panel panel-default">
+    <form action="{{ action }}" method="post">
+        <input type="hidden" name="_token" value="{{ common.token }}">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="lab la-cc-paypal panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_paypal_username }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="paypal[username]" value="{{ result.username }}" placeholder="{{ lang.text_paypal_username }} . . .">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_paypal_password }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-key"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="paypal[password]" value="{{ result.password }}" placeholder="{{ lang.text_paypal_password }} . . .">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_paypal_signature }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-signature"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="paypal[signature]" value="{{ result.signature }}" placeholder="{{ lang.text_paypal_signature }} . . .">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_paypal~' '~lang.text_email_address }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-envelope"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="paypal[email]" value="{{ result.email }}" placeholder="{{ lang.text_paypal~' '~lang.text_email_address }} . . .">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_paypal_mode }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-server"></i></span>
+                            </div>
+                            <select class="custom-select" name="paypal[mode]">
+                                <option value="0"{% if result.mode == '0' %} selected{% endif %}>{{ lang.text_sandbox }}</option>
+                                <option value="1"{% if result.mode == '1' %} selected{% endif %}>{{ lang.text_live }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_paypal_status }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-check-square"></i></span>
+                            </div>
+                            <select class="custom-select" name="paypal[status]">
+                                <option value="1"{% if result.status == '1' %} selected{% endif %}>{{ lang.text_enable }}</option>
+                                <option value="0"{% if result.status == '0' %} selected{% endif %}>{{ lang.text_disable }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-center">
+            <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+        </div>
+    </form>
+</div>
+
+{{ include('common/footer.twig') }}

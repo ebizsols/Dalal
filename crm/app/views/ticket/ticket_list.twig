@@ -1,0 +1,77 @@
+{{ include('common/header.twig') }}
+<!-- Ticket list page start -->
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-ticket-alt panel-head-icon"></i>
+			<span class="panel-title-text">{{ page_title }}</span>
+		</div>
+		<div class="panel-action">
+			<a href="{{ common.url_route }}tickets&filter=open" class="btn btn-outline btn-warning btn-outline-1x btn-sm btn-pill">{{ lang.text_open_tickets~'('~ticketCount.open }} )</a>
+			<a href="{{ common.url_route }}tickets&filter=closed" class="btn btn-outline btn-success btn-outline-1x btn-sm btn-pill">{{ lang.text_closed_tickets~'('~ticketCount.closed }} )</a>
+			<a href="{{ common.url_route }}tickets&filter=all" class="btn btn-outline btn-primary btn-outline-1x btn-sm btn-pill">{{ lang.text_all_tickets~'('~ticketCount.all }} )</a>
+			{% if page_add %}
+				<a href="{{ common.url_route }}ticket/add" class="btn btn-primary btn-gradient btn-sm btn-pill"><i class="las la-plus mr-1"></i> {{ lang.text_new_ticket }}</a>
+			{% endif %}
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-striped table-align-middle table-middle table-bordered datatable-table" width="100%">
+				<thead>
+					<tr class="table-heading">
+						<th>#</th>
+						<th>User Info</th>
+						<th>{{ lang.text_subject }}</th>
+						<th>{{ lang.text_status }}</th>
+						<th>{{ lang.text_last_updated }}</th>
+						<th>{{ lang.text_created_date }}</th>
+						{% if page_edit or page_delete %}
+							<th></th>
+						{% endif %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for value in result %}
+						<tr>
+							<td>{{ loop.index }}</td>
+							<td>
+								<a class="text-primary">{{ value.name }}</a>
+								<p class="m-0">{{ value.email }}</p>
+								<p class="m-0">{{ value.mobile }}</p>
+							</td>
+							<td>{{ value.subject }}</td>
+							<td>
+								{% if value.status != '1' %}
+									{% if value.date_of_joining == value.last_updated %}
+										<span class="badge badge-primary badge-pill badge-sm">{{ lang.text_new }}</span>
+									{% elseif value.reply_status == '1' %}
+										<span class="badge badge-success badge-pill badge-sm">{{ lang.text_replied }}</span>
+									{% else %}
+										<span class="badge badge-warning badge-pill badge-sm">{{ lang.text_waiting_for_reply }}</span>
+									{% endif %}
+								{% else %}
+									<span class="badge badge-default badge-pill badge-sm">{{ lang.text_closed }}</span>
+								{% endif %}
+							</td>
+							<td>{{ value.last_updated|date(common.info.date_format) }}</td>
+							<td>{{ value.date_of_joining|date(common.info.date_format) }}</td>
+							{% if page_edit or page_delete %}
+								<td class="table-action">
+									{% if page_edit %}
+										<a href="{{ common.url_route }}ticket/edit&id={{ value.id }}" class="btn btn-primary btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_edit }}"><i class="las la-edit"></i></a>
+									{% endif %}
+									{% if page_delete %}
+										<a class="btn btn-danger btn-circle btn-outline btn-outline-1x table-delete" data-toggle="tooltip" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+									{% endif %}
+								</td>
+							{% endif %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% if page_delete %}{{ include('common/delete-modal.twig') }}{% endif %}
+	{{ include('common/footer.twig') }}

@@ -1,0 +1,242 @@
+{{ include('common/header.twig') }}
+<!-- Moris Chart Plugin -->
+<script type="text/javascript" src="public/js/raphael-min.js"></script>
+<script type="text/javascript" src="public/js/morris.min.js"></script>
+<!-- Dahsboard Body -->
+<div class="content">
+    <div class="row">
+        <div class="col-md-6 col-lg-3">
+            <div class="dashboard-stat color-success">
+                <div class="content"><h4>{{ statistics.0.total }}</h4> <span>{{ lang.text_contact }}</span></div>
+                <div class="icon"><i class="las la-users"></i></div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="dashboard-stat color-warning">
+                <div class="content"><h4>{{ statistics.1.total }}</h4> <span>{{ lang.text_projects }}</span></div>
+                <div class="icon"><i class="las la-layer-group"></i></div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="dashboard-stat color-primary">
+                <div class="content"><h4>{{ statistics.2.total }}</h4> <span>{{ lang.text_invoices }}</span></div>
+                <div class="icon"><i class="las la-file-invoice"></i></div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="dashboard-stat color-danger">
+                <div class="content"><h4>{{ statistics.3.total }}</h4> <span>{{ lang.text_quotes }}</span></div>
+                <div class="icon"><i class="las la-envelope-letter"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="icon-widget-heading pb-3">{{ lang.text_income_expense }}</div>
+                    <div id="inv-exp-chart" style="height: 380px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="">
+                    <div class="icon-widget-heading pr-3 pl-3 pt-3 pb-0">{{ lang.text_expense_categories_breakdown }}</div>
+                    <div id="exp-catg-chart" style="height: 180px;"></div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="">
+                    <div class="icon-widget-heading pr-3 pl-3 pt-3 pb-0">{{ lang.text_ticket_status_breakdown }}</div>
+                    <div id="ticket-chart" style="height: 180px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-head">
+                    <div class="panel-title">
+                        <i class="las la-credit-card panel-head-icon"></i>
+                        <span class="panel-title-text">{{ lang.text_latest_invoices }}</span>
+                    </div>
+                    <div class="panel-action"></div>
+                </div>
+                <div class="panel-wrapper">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{ lang.text_customer }}</th>
+                                        <th>{{ lang.text_amount }}</th>
+                                        <th>{{ lang.text_status }}</th>
+                                        <th>{{ lang.text_date }}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for value in invoices %}
+                                    <tr>
+                                        <td><a href="{{ common.url_route }}invoice/view&id={{ value.id }}" class="text-primary">{{ common.info.invoice.prefix~"%05d"|format(value.id) }}</a></td>
+                                        <td class="text-dark">{{ value.company }}</td>
+                                        <td class="text-dark">{{ value.abbr~value.amount }}</td>
+                                        <td>
+                                            {% if value.status == 'Paid' %}
+                                            <span class="badge badge-Paid badge-pill badge-sm">{{ lang.text_paid }}</span>
+                                            {% elseif value.status == 'Unpaid' %}
+                                            <span class="badge badge-Unpaid badge-pill badge-sm">{{ lang.text_unpaid }}</span>
+                                            {% elseif value.status == 'Pending' %}
+                                            <span class="badge badge-Pending badge-pill badge-sm">{{ lang.text_pending }}</span>
+                                            {% elseif value.status == 'In Process' %}
+                                            <span class="badge badge-In-Process badge-pill badge-sm">{{ lang.text_in_process }}</span>
+                                            {% elseif value.status == 'Cancelled' %}
+                                            <span class="badge badge-Cancelled badge-pill badge-sm">{{ lang.text_cancelled }}</span>
+                                            {% elseif value.status == 'Other' %}
+                                            <span class="badge badge-Other badge-pill badge-sm">{{ lang.text_other }}</span>
+                                            {% elseif value.status == 'Partially Paid' %}
+                                            <span class="badge badge-Partially-Paid badge-pill badge-sm">{{ lang.text_partially_paid }}</span>
+                                            {% else %}
+                                            <span class="badge badge-Unknown badge-pill badge-sm">{{ lang.text_unknown }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><i class="fa fa-clock-o mr-2 text-muted"></i>{{ value.date_of_joining|date(common.info.date_format) }}</td>
+                                        <td>
+                                            <a href="{{ common.url_route }}invoice/view&id={{ value.id }}" class="mr-2"><i class="las la-laptop mr-2 text-dark" data-toggle="tooltip" title="{{ lang.text_view }}"></i></a>
+                                            <a href="{{ common.url_route }}invoice/edit&id={{ value.id }}"><i class="las la-edit mr-2 text-info" data-toggle="tooltip" title="{{ lang.text_edit }}"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center font-18">{{ lang.text_no_record_found }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="icon-widget-heading pb-3">{{ lang.text_invoice_status_breakdown }}</div>
+                    <div id="inv-status-chart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-head">
+                    <div class="panel-title">
+                        <i class="las la-credit-card panel-head-icon"></i>
+                        <span class="panel-title-text">{{ lang.text_latest_contacts }}</span>
+                    </div>
+                    <div class="panel-action"></div>
+                </div>
+                <div class="panel-wrapper">
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ lang.text_company }}</th>
+                                    <th>{{ lang.text_first_name }}</th>
+                                    <th>{{ lang.text_last_name }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for value in contacts %}
+                                <tr>
+                                    <td><a href="{{ common.url_route }}contact/edit&id={{ value.id }}" class="text-primary">{{ value.company }}</a></td>
+                                    <td class="text-dark">{{ value.firstname }}</td>
+                                    <td class="text-dark">{{ value.lastname }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center font-18">{{ lang.text_no_record_found }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        Morris.Area({
+            element: 'inv-exp-chart',
+            data: [
+            {"period":"2017-11",
+            "income":"0",
+            "expense":"0"},
+            {"period":"2017-12",
+            "income":"125",
+            "expense":"94"},
+            {"period":"2018-01",
+            "income":"78",
+            "expense":"58"},
+            {"period":"2018-02",
+            "income":"68",
+            "expense":"198"},
+            {"period":"2018-03",
+            "income":"180",
+            "expense":"150"},
+            {"period":"2018-04",
+            "income":"103",
+            "expense":"87"},
+            {"period":"2018-05",
+            "income":"250",
+            "expense":"150"}],
+            //lineColors: ['#00ced1', '#ff758e'],
+            xkey: 'period',
+            xLabelFormat: function (x) { return months[x.getMonth()]; },
+            ykeys: ['income','expense'],
+            labels: ['{{ lang.text_income }}', '{{ lang.text_expense }} '],
+            pointSize: 0,
+            fillOpacity: 0.8,
+            pointStrokeColors:['#ffc107', '#3483FF'],
+            behaveLikeLine: true,
+            gridLineColor: '#e0e0e0',
+            lineWidth: 0,
+            smooth: false,
+            hideHover: 'auto',
+            lineColors: ['#3483FF', '#aaa'],
+            resize: true
+        });
+        Morris.Donut({
+            element: 'exp-catg-chart',
+            data: {{ expenses }},
+            colors: ['#93e3ff', '#b0dd91', '#ffe699', '#f8cbad', '#a4a4a4'],
+            formatter: function(y) {
+                return y + '%'
+            }
+        });
+        Morris.Donut({
+            element: 'ticket-chart',
+            data: {{ ticketByStatus }},
+            colors: ['#f4516c', '#716aca'],
+            formatter: function(y) {
+                return y + '%'
+            }
+        });
+        Morris.Donut({
+            element: 'inv-status-chart',
+            data: {{ invoiceByStatus }},
+            colors: ['#ccc5a8', '#52bacc', '#dbdb46', '#98aafb', '#5cbae6', '#b6d957', '#fac364', '#8cd3ff', '#d998cb', '#f2d249', '#93b9c6'],
+            formatter: function(y) {
+                return y + '%'
+            }
+        });
+    });
+</script>
+{{ include('common/footer.twig') }}

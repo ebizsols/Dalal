@@ -1,0 +1,75 @@
+{{ include('common/header.twig') }}
+<!-- Profile page start -->
+<div class="row">
+	<form class="col-sm-6" action="{{ common.url_route }}profile" method="post">
+		<div class="panel panel-default">
+			<div class="panel-head">
+				<div class="panel-title">
+					<i class="las la-user panel-head-icon"></i>
+					<span class="panel-title-text">{{ lang.text_basic_info }}</span>
+				</div>
+			</div>
+			<div class="panel-body">
+				<input type="hidden" name="_token" value="{{ common.token }}">
+				<input type="hidden" value="{{ result.user_id }}" name="id" >
+				<div class="form-group">
+					<label class="col-form-label">{{ lang.text_username }} <span class="form-required">*</span></label>
+					<input type="text" class="form-control" name="username" value="{{ result.user_name }}" placeholder="{{ lang.text_username }}" required>
+				</div>
+				<div class="row">
+					<div class="col-sm-6 form-group">
+						<label class="col-form-label">{{ lang.text_first_name }} <span class="form-required">*</span></label>
+						<input type="text" class="form-control" name="firstname" value="{{ result.firstname }}" placeholder="{{ lang.text_first_name }}" required>
+					</div>
+					<div class="col-sm-6 form-group">
+						<label class="col-form-label">{{ lang.text_last_name }} <span class="form-required">*</span></label>
+						<input type="text" class="form-control" name="lastname" value="{{ result.lastname }}" placeholder="{{ lang.text_last_name }}" required>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6 form-group">
+						<label class="col-form-label">{{ lang.text_email_address }}</label>
+						<input type="text" class="form-control" name="email" value="{{ result.email }}" placeholder="{{ lang.text_email_address }}" readonly >
+					</div>
+					<div class="col-sm-6">
+						<label class="col-form-label">{{ lang.text_mobile_number }}</label>
+						<input type="number" class="form-control" name="mobile" value="{{ result.mobile }}"  pattern=".{6,}" placeholder="{{ lang.text_mobile_number }}">
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer text-center">
+				<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+			</div>
+		</div>
+	</form>
+	<form class="col-sm-6" action="{{ common.url_route }}profile/password" method="post">
+		<div class="panel panel-default">
+			<div class="panel-head">
+				<div class="panel-title">
+					<i class="icon-key panel-head-icon"></i>
+					<span class="panel-title-text">{{ lang.text_change_password }}</span>
+				</div>
+			</div>
+			<div class="panel-body">
+				<input type="hidden" name="_token" value="{{ common.token }}">
+				<input type="hidden" value="{{ result.user_id }}" name="id" >
+				<div class="form-group">
+					<label class="col-form-label">{{ lang.text_current_password }} <span class="form-required">*</span></label>
+					<input type="password" class="form-control" name="old-password" pattern=".{6,}" title="Minimum 6 word required!" placeholder="**********" required>
+				</div>
+				<div class="form-group">
+					<label class="col-form-label">{{ lang.text_password }} <span class="form-required">*</span></label>
+					<input type="password" class="form-control" name="new-password" pattern=".{6,}" title="Minimum 6 word required!" placeholder="**********" required>
+				</div>
+				<div class="form-group">
+					<label>{{ lang.text_confirm_password }} <span class="form-required">*</span></label>
+					<input type="password" class="form-control" name="confirm-password" title="Minimum 6 word required!" pattern=".{6,}" placeholder="**********" required>
+				</div>
+			</div>
+			<div class="panel-footer text-center">
+				<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+			</div>
+		</div>
+	</form>
+</div>
+{{ include('common/footer.twig') }}

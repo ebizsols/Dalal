@@ -1,0 +1,379 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" class="invoice-form" method="post">
+    <input type="hidden" name="_token" value="{{ common.token }}">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-file-invoice panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action">
+                <button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}invoices" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+            </div>  
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group customer-search">
+                        <label class="col-form-label">{{ lang.text_customer }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <select class="selectpicker" name="invoice[customer]" data-width="100%" data-live-search="true" title="{{ lang.text_customer }}" required>
+                                {% for value in customers %}
+                                    <option value="{{ value.id }}"{% if value.id == result.customer %} selected{% endif %}>{{ value.company }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_invoice_date }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-calendar"></i></span>
+                            </div>
+                            <input type="text" name="invoice[invoicedate]" class="form-control date" value="{{ result.invoicedate|date(common.info.date_format) }}" placeholder="{{ lang.text_invoice_date }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_due_date }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-calendar-check"></i></span>
+                            </div>
+                            <input type="text" name="invoice[duedate]" class="form-control date" value="{{ result.duedate|date(common.info.date_format) }}" placeholder="{{ lang.text_due_date }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_currency }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-credit-card"></i></span>
+                            </div>
+                            <select name="invoice[currency]" class="custom-select" required>
+                                {% for value in currency %}
+                                    <option value="{{ value.id }}"{% if result.currency == value.id %} selected{% endif %}>{{ value.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_payment_method }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-credit-card"></i></span>
+                            </div>
+                            <select name="invoice[paymenttype]" class="custom-select" required>
+                                <option value="">{{ lang.text_payment_method }}</option>
+                                {% for value in payment_method %}
+                                    <option value="{{ value.id }}"{% if result.paymenttype == value.id %} selected{% endif %}>{{ value.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_payment_status }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-check-square"></i></span>
+                            </div>
+                            <select name="invoice[status]" id="" class="custom-select" required>
+                                <option value="Paid"{% if result.status == 'Paid' %} selected{% endif %}>{{ lang.text_paid }}</option>
+                                <option value="Partially Paid"{% if result.status == 'Partially Paid' %} selected{% endif %}>{{ lang.text_partially_paid }}</option>
+                                <option value="Unpaid"{% if result.status == 'Unpaid' %} selected{% endif %}>{{ lang.text_unpaid }}</option>
+                                <option value="Pending"{% if result.status == 'Pending' %} selected{% endif %}>{{ lang.text_pending }}</option>
+                                <option value="In Process"{% if result.status == 'In Process' %} selected{% endif %}>{{ lang.text_in_process }}</option>
+                                <option value="Cancelled"{% if result.status == 'Cancelled' %} selected{% endif %}>{{ lang.text_cancelled }}</option>
+                                <option value="Other"{% if result.status == 'Other' %} selected{% endif %}>{{ lang.text_other }}</option>
+                                <option value="Unknown"{% if result.status == 'Unknown' %} selected{% endif %}>{{ lang.text_unknown }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_invoice }} {{ lang.text_status }} <span class="form-required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-check-square"></i></span>
+                            </div>
+                            <select name="invoice[inv_status]" class="custom-select" required>
+                                <option value="0"{% if result.inv_status == '0' %} selected{% endif %}>{{ lang.text_draft }}</option>
+                                <option value="1"{% if result.inv_status == '1' %} selected{% endif %}>{{ lang.text_published }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="invoice-items table-responsive pt-3 pb-5">
+                <table class="table-input">
+                    <thead>
+                        <tr>
+                            <th>{{ lang.text_item_name }}</th>
+                            <th>{{ lang.text_item_description }}</th>
+                            <th>{{ lang.text_quantity }}</th>
+                            <th>{{ lang.text_unit_cost }}</th>
+                            <th>{{ lang.text_discount }}</th>
+                            <th>{{ lang.text_tax }}</th>
+                            <th>{{ lang.text_price }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key,value in result.items %}
+                            <tr class="item-row">
+                                <td class="">
+                                    <textarea name="invoice[item][{{ key }}][name]" class="item-name">{{ value.name }}</textarea>
+                                </td>
+                                <td class="invoice-item">
+                                    <textarea name="invoice[item][{{ key }}][descr]" class="item-descr">{{ value.descr }}</textarea>
+                                </td>
+                                <td class="">
+                                    <textarea type="text" name="invoice[item][{{ key }}][quantity]" class="item-quantity">{{ value.quantity }}</textarea>
+                                </td>
+                                <td class="">
+                                    <textarea type="text" name="invoice[item][{{ key }}][cost]" class="item-cost">{{ value.cost }}</textarea>
+                                </td>
+                                <td class="">
+                                    <div class="row no-gutters">
+                                        <div class="col">
+                                            <select name="invoice[item][{{ key }}][discounttype]" class="custom-select border-light item-discounttype">
+                                                <option value="1"{% if value.discounttype == '1' %} selected{% endif %}>%</option>
+                                                <option value="2"{% if value.discounttype == '2' %} selected{% endif %}>{{ lang.text_flat }}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <textarea type="text" name="invoice[item][{{ key }}][discount]" class="item-discount">{{ value.discount }}</textarea>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="invoice[item][{{ key }}][discountvalue]" class="item-discountvalue" value="{{ value.discountvalue }}">
+                                </td>
+                                <td class="invoice-tax">
+                                    {% for tax in value.tax %}
+                                        <p class="badge badge-light badge-sm badge-pill">{{ tax.name }}
+                                            <input type="text" name="invoice[item][{{ key }}][tax][{{ loop.index0 }}][tax_price]" class="single-tax-price" value="{{ tax.tax_price }}" readonly>
+                                            <input type="hidden" name="invoice[item][{{ key }}][tax][{{ loop.index0 }}][id]" class="invoice-tax-id" value="{{ tax.id }}"> 
+                                            <input type="hidden" name="invoice[item][{{ key }}][tax][{{ loop.index0 }}][name]" value="{{ tax.name }}">
+                                            <input type="hidden" class="invoice-tax-rate" name="invoice[item][{{ key }}][tax][{{ loop.index0 }}][rate]" value="{{ tax.rate }}">
+                                        </p>                                        
+                                    {% endfor %}
+                                    <input type="hidden" name="invoice[item][{{ key }}][taxprice]" class="item-tax-price" value="{{ value.taxprice }}" readonly>
+                                </td>
+                                <td>
+                                    <textarea type="text" name="invoice[item][{{ key }}][price]" class="item-total-price" readonly>{{ value.price }}</textarea>
+                                    <input type="hidden" class="item-price" value="{{ value.price }}">
+                                </td>
+                                <td>
+                                    <a class="badge badge-warning badge-sm badge-pill add-taxes m-1">{{ lang.text_add_taxes }}</a>
+                                    <a class="badge badge-danger badge-sm badge-pill delete m-1">{{ lang.text_delete }}</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr class="item-row">
+                                <td class="">
+                                    <textarea name="invoice[item][0][name]" class="item-name"></textarea>
+                                </td>
+                                <td class="invoice-item">
+                                    <textarea name="invoice[item][0][descr]" class="item-descr"></textarea>
+                                </td>
+                                <td class="">
+                                    <textarea type="text" name="invoice[item][0][quantity]" class="item-quantity">1</textarea>
+                                </td>
+                                <td class="">
+                                    <textarea type="text" name="invoice[item][0][cost]" class="item-cost"></textarea>
+                                </td>
+                                <td class="">
+                                    <div class="row no-gutters">
+                                        <div class="col">
+                                            <select name="invoice[item][0][discounttype]" class="custom-select border-light item-discounttype">
+                                                <option value="1">%</option>
+                                                <option value="2">{{ lang.text_flat }}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <textarea type="text" name="invoice[item][0][discount]" class="item-discount">0.00</textarea>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="invoice[item][0][discountvalue]" class="item-discountvalue" value="0.00">
+                                </td>
+                                <td class="invoice-tax">
+                                    <input type="hidden" name="invoice[item][0][taxprice]" class="item-tax-price" value="" readonly>
+                                </td>
+                                <td class="">
+                                    <textarea type="text" name="invoice[item][0][price]" class="item-total-price" readonly></textarea>
+                                    <input type="hidden" class="item-price">
+                                </td>
+                                <td>
+                                    <a class="badge badge-warning badge-sm badge-pill add-taxes m-1">{{ lang.text_add_taxes }}</a>
+                                    <a class="badge badge-danger badge-sm badge-pill delete m-1">{{ lang.text_delete }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4" class="p-2">
+                                <div class="add-items d-inline-block">
+                                    <a class="btn btn-success btn-sm btn-pill m-1"><i class="las la-plus mr-1"></i> {{ lang.text_add_item }}</a>
+                                </div>
+                            </td>
+                            <td colspan="2" class="total-line">
+                                <label>{{ lang.text_sub_total }}</label>
+                            </td>
+                            <td colspan="2" class="total-value">
+                                <input type="text" name="invoice[subtotal]" class="form-transparent sub-total" value="{{ result.subtotal }}" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="blank"></td>
+                            <td colspan="2" class="total-line">
+                                <label>{{ lang.text_discount }}</label>
+                            </td>
+                            <td colspan="2" class="total-value">
+                                <input type="text" name="invoice[discount_value]" class="form-transparent total-discount" value="{{ result.discount_value }}" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="blank"></td>
+                            <td colspan="2" class="total-line">
+                                <label>{{ lang.text_tax }}</label>
+                            </td>
+                            <td colspan="2" class="total-value">
+                                <input type="text" name="invoice[tax]" class="form-transparent tax-total" value="{{ result.tax }}" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="blank">
+                            </td>
+                            <td colspan="2" class="total-line">
+                                <label>{{ lang.text_total }}</label>
+                            </td>
+                            <td colspan="2" class="total-value">
+                                <input type="text" name="invoice[amount]" class="form-transparent total-amount" value="{{ result.amount }}" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="blank">
+                            </td>
+                            <td colspan="2" class="total-line">
+                                <label>{{ lang.text_paid }}</label>
+                            </td>
+                            <td colspan="2" class="total-value">
+                                <input type="text" name="invoice[paid]" class="form-transparent paid-amount" value="{{ result.paid }}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="blank">
+                            </td>
+                            <td colspan="2" class="total-line">
+                                <label>{{ lang.text_due }}</label>
+                            </td>
+                            <td colspan="2" class="total-value">
+                                <input type="text" name="invoice[due]" class="form-transparent due-amount" value="{{ result.due }}" readonly>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_customer_note }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-paragraph"></i></span>
+                            </div>
+                            <textarea class="form-control" name="invoice[note]" rows="3">{% if result.id %}{{ result.note }}{% else %}{{ common.info.invoice.customernote }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_terms_Conditions }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="las la-paragraph"></i></span>
+                            </div>
+                            <textarea class="form-control" name="invoice[tc]" rows="3">{% if result.id %}{{ result.tc }}{% else %}{{ common.info.invoice.tc }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_want_payment_info_on_invoice }}</label>
+                        <div>
+                            <div class="custom-control custom-radio custom-radio-1 d-inline-block">
+                                <input type="radio" name="invoice[want_payment]" class="custom-control-input" value="1" id="paymentinfo-yes"{% if result.want_payment == '1' %} checked{% endif %}>
+                                <label class="custom-control-label" for="paymentinfo-yes">{{ lang.text_yes }}</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-radio-1 d-inline-block">
+                                <input type="radio" name="invoice[want_payment]" class="custom-control-input" value="0" id="paymentinfo-no"{% if result.want_payment == '0' %} checked{% endif %}>
+                                <label class="custom-control-label" for="paymentinfo-no">{{ lang.text_no }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-form-label">{{ lang.text_want_signature_on_invoice }}</label>
+                        <div>
+                            <div class="custom-control custom-radio custom-radio-1 d-inline-block">
+                                <input type="radio" name="invoice[want_signature]" class="custom-control-input" value="1" id="signature-yes"{% if result.want_signature == '1' %} checked{% endif %}>
+                                <label class="custom-control-label" for="signature-yes">{{ lang.text_yes }}</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-radio-1 d-inline-block">
+                                <input type="radio" name="invoice[want_signature]" class="custom-control-input" value="0" id="signature-no"{% if result.want_signature == '0' %} checked{% endif %}>
+                                <label class="custom-control-label" for="signature-no">{{ lang.text_no }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill invoice-submit">{{ lang.text_save }}</button>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="invoice[id]" value="{{ result.id }}">
+        <input type="hidden" class="lang_add_tax" value="{{ lang.text_add_taxes }}">
+        <input type="hidden" class="lang_delete" value="{{ lang.text_delete }}">
+        <input type="hidden" class="lang_flat" value="{{ lang.text_flat }}">
+    </div>
+</form>
+
+<div class="modal fade" id="addTax">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ lang.text_tax }}</h5>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                {% for value in taxes %}
+                    <div class="custom-control custom-checkbox custom-checkbox-1 mb-3">
+                        <input type="checkbox" class="custom-control-input" id="inv-taxes-{{ value.id }}" value="{{ value.id }}" data-rate="{{ value.rate }}" data-name="{{ value.name }}" name="modaltax">
+                        <label class="custom-control-label" for="inv-taxes-{{ value.id }}">{{ value.name~'=>'~value.rate~'%' }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-gradient btn-pill add-modal-taxes">{{ lang.text_add_taxes }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="public/js/invoice.js"></script>
+{{ include('common/footer.twig') }}

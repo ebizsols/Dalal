@@ -1,0 +1,86 @@
+{{ include('common/header.twig') }}
+<!-- Project list page start -->
+<div class="panel panel-default">
+    <div class="panel-head">
+        <div class="panel-title">
+            <i class="las la-calculator panel-head-icon"></i>
+            <span class="panel-title-text">{{ page_title }}</span>
+        </div>
+        <div class="panel-action">
+            <div class="dropdown export-dropdown d-inline-block mr-2">
+                <a class="btn btn-white btn-sm btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-cloud-download-alt text-primary pr-1"></i> <span>{{ lang.text_export }}</span> <i class="las la-angle-down pl-2"></i></a>
+                <ul class="dropdown-menu dropdown-menu-right export-button">
+                    <li><a href="#" class="excel"><i class="las la-file-excel pr-2"></i>{{ lang.text_excel }}</a></li>
+                    <li><a href="#" class="csv"><i class="las la-file-csv pr-2"></i>{{ lang.text_csv }}</a></li>
+                    <li><a href="#" class="print"><i class="las la-print pr-2"></i>{{ lang.text_print }}</a></li>
+                    <li><a href="#" class="copy"><i class="las la-copy pr-2"></i>{{ lang.text_copy }}</a></li>
+                </ul>
+            </div>
+            <div class="btn btn-white btn-sm btn-pill text-left mr-2">
+                <i class="las la-filter text-danger mr-1"></i>
+                <input type="text" class="table-date-range" data-start="{{ period.start|date(common.info.date_format) }}" data-end="{{ period.end|date(common.info.date_format) }}" data-route="quotes">
+            </div>
+            {% if page_add %}
+                <a href="{{ common.url_route }}quote/add" class="btn btn-primary btn-outline btn-gradient btn-pill btn-sm"><i class="las la-plus mr-1"></i> {{ lang.text_new_quote }}</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-align-middle table-bordered table-striped datatable-table" width="100%">
+                <thead>
+                    <tr class="table-heading">
+                        <th>#</th>
+                        <th>{{ lang.text_project_name }}</th>
+                        <th>{{ lang.text_customer }}</th>
+                        <th>{{ lang.text_amount }}</th>
+                        <th>{{ lang.text_quote_date }}</th>
+                        <th>{{ lang.text_expiry_date }}</th>
+                        <th>{{ lang.text_status }}</th>
+                        {% if page_view or page_edit or page_delete %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in result %}
+                        <tr>
+                            <td class="text-dark">{{ common.info.quote.prefix~"%05d"|format(value.id) }}</td>
+                            <td>{{ value.project_name }}</td>
+                            <td><a href="{{ common.url_route }}contact/edit&id={{ value.customer }}" class="text-primary" target="_blank">{{ value.company }}</a></td>
+                            <td>{{ value.abbr~value.amount }}</td>
+                            <td><span class="badge badge-pill badge-light">{{ value.date|date(common.info.date_format) }}</span></td>
+                            <td><span class="badge badge-pill badge-light">{{ value.expiry|date(common.info.date_format) }}</span></td>
+                            <td>
+                                {% if value.status == '0' %}
+                                    <span class="badge badge-danger badge-pill">{{ lang.text_draft }}</span>
+                                {% elseif value.status == '1' %}
+                                    <span class="badge badge-info badge-pill">{{ lang.text_published }}</span>
+                                {% elseif value.status == '2' %}
+                                    <span class="badge badge-primary badge-pill">{{ lang.text_accepted }}</span>
+                                {% elseif value.status == '3' %}
+                                    <span class="badge badge-default badge-pill">{{ lang.text_dead }}</span>
+                                {% endif %}
+                            </td>
+                            {% if page_view or page_edit or page_delete %}
+                                <td class="table-action">
+                                    {% if page_view %}
+                                        <a href="{{ common.url_route }}quote/view&id={{ value.id }}" class="btn btn-dark btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_view }}"><i class="las la-laptop"></i></a>
+                                    {% endif %}
+                                    {% if page_edit %}
+                                        <a href="{{ common.url_route }}quote/edit&id={{ value.id }}" class="btn btn-primary btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_edit }}"><i class="las la-edit"></i></a>
+                                    {% endif %}
+                                    {% if page_delete %}
+                                        <a class="btn btn-danger btn-circle btn-outline btn-outline-1x table-delete" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% if page_delete %}{{ include('common/delete-modal.twig') }}{% endif %}
+    {{ include('common/footer.twig') }}

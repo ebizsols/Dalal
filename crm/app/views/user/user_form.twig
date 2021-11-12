@@ -1,0 +1,181 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<input type="hidden" name="_token" value="{{ common.token }}">
+		<div class="panel-head">
+			<div class="panel-title">
+				<i class="las la-user-tie panel-head-icon"></i>
+				<span class="panel-title-text">{{ page_title }}</span>
+			</div>
+			<div class="panel-action">
+				<button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+				<a href="{{ common.url_route }}user" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+			</div>  
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_username }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-user"></i></span>
+							</div>
+							<input type="text" name="user[username]" class="form-control" value="{{ result.user_name }}" placeholder="{{ lang.text_username }}" required>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_user_role }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-users"></i></span>
+							</div>
+							<select class="custom-select" name="user[role]" required>
+								<option value="">{{ lang.text_user_role }}</option>
+								{% for value in role %}
+									{% if value.id > 1 %}
+										<option value="{{ value.id }}"{% if result.user_role == value.id %} selected{% endif %}>{{ value.name }}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_email_address }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-envelope"></i></span>
+							</div>
+							<input type="email" name="user[email]" class="form-control" value="{{ result.email }}" placeholder="{{ lang.text_email_address }}" required>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_first_name }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-user"></i></span>
+							</div>
+							<input type="text" name="user[firstname]" class="form-control" value="{{ result.firstname }}" placeholder="{{ lang.text_first_name }}" required>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_last_name }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-user"></i></span>
+							</div>
+							<input type="text" name="user[lastname]" class="form-control" value="{{ result.lastname }}" placeholder="{{ lang.text_last_name }}" required>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_mobile_number }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-mobile"></i></span>
+							</div>
+							<input type="number" name="user[mobile]" class="form-control" value="{{ result.mobile }}" placeholder="{{ lang.text_mobile_number }}" required>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_date_of_birth }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-calendar"></i></span>
+							</div>
+							<input type="text" name="user[meta][dob]" class="form-control date" value="{% if result.meta.dob %}{{ result.meta.dob|date(common.info.date_format) }}{% endif %}" placeholder="{{ lang.text_date_of_birth }}">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_status }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-check-square"></i></span>
+							</div>
+							<select class="custom-select mb-2 mr-sm-2 mb-sm-0" name="user[status]" required>
+								<option value="1"{% if result.status == '1' %} selected{% endif %}>{{ lang.text_active }}</option>
+								<option value="0"{% if result.status == '0' %} selected{% endif %}>{{ lang.text_inactive }}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="br-bottom-1x mt-4 mb-5"></div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_address_line_1 }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-map-marker-alt"></i></span>
+							</div>
+							<input type="text" name="user[meta][address1]" class="form-control" value="{{ result.meta.address1 }}" placeholder="{{ lang.text_address_line_1 }}">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_address_line_2 }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-map-marker-alt"></i></span>
+							</div>
+							<input type="text" name="user[meta][address2]" class="form-control" value="{{ result.meta.address2 }}" placeholder="{{ lang.text_address_line_2 }}">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_address_city }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-map-marker-alt"></i></span>
+							</div>
+							<input type="text" name="user[meta][city]" class="form-control" value="{{ result.meta.city }}" placeholder="{{ lang.text_address_city }}">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_address_country }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-map"></i></span>
+							</div>
+							<input type="text" name="user[meta][country]" class="form-control" value="{{ result.meta.country }}" placeholder="{{ lang.text_country }}">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_address_postal }}</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="las la-map-pin"></i></span>
+							</div>
+							<input type="text" name="user[meta][pin]" class="form-control" value="{{ result.meta.pin }}" placeholder="{{ lang.text_address_postal }}">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="id" value="{{ result.user_id }}">
+		<div class="panel-footer text-center">
+			<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+		</div>
+	</div>
+</form>
+{{ include('common/footer.twig') }}

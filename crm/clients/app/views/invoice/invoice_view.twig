@@ -1,0 +1,290 @@
+{{ include('common/header.twig') }}
+<link rel="stylesheet" href="public/css/jquery.fancybox.min.css" />
+<div class="row">
+	<div class="col-lg-8">
+		<div class="panel panel-default">
+			<div class="panel-head">
+				<div class="panel-title">
+					<i class="las la-file-invoice panel-head-icon"></i>
+					<span class="panel-title-text">{{ page_title }}</span>
+				</div>
+				<div class="panel-action">
+					<a href="{{ common.url_route }}invoice/pdf&id={{ result.id }}" class="btn btn-danger btn-sm btn-outline btn-pill btn-gradient" target="_blank"><i class="las la-file-pdf mr-1"></i> {{ lang.text_pdf }}</a>
+					{% if result.due > '0' %}
+						<a href="{{ common.url_route }}invoice/paynow&invoice={{ result.id }}" class="btn btn-info btn-sm btn-outline btn-pill btn-gradient"><i class="las la-money-check mr-1"></i> {{ lang.text_pay_now }}</a>
+					{% endif %}
+				</div>
+			</div>
+			<div class="panel-wrapper">
+				<div class="inv-template">
+					<div class="inv-template-bdy p-4">
+						<div class="company table-responsive">
+							<table>
+								<tbody>
+									<tr>
+										<td class="info">
+											<div class="logo"><img src="{{ common.info.logo }}" alt="logo"></div>
+											<div class="name">{{ common.info.legal_name }}</div>
+											<div class="text">{{ common.info.address|join(', ') }}</div>
+										</td>
+										<td class="text-right">
+											<div class="title">{{ lang.text_invoice }}</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="meta table-responsive">
+							<table>
+								<tbody>
+									<tr>
+										<td class="bill-to v-aling-bottom">
+											<div class="heading">{{ lang.text_bill_to }}</div>
+											<div class="title">{{ result.company }}</div>
+											<div class="text">{{ result.email }}</div>
+											<div class="text">{{ result.address|join(', ') }}</div>
+										</td>
+										<td class="info v-aling-bottom">
+											<table class="text-right">
+												<tbody>
+													<tr>
+														<td class="text">#</td>
+														<td class="text w-min-130">{{ common.info.invoice.prefix~"%05d"|format(result.id) }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_invoice_date }}</td>
+														<td class="text w-min-130">{{ result.invoicedate|date(common.info.date_format) }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_due_date }}</td>
+														<td class="text w-min-130">{{ result.duedate|date(common.info.date_format) }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_payment_method }}</td>
+														<td class="text w-min-130">{{ result.payment }}</td>
+													</tr>
+													<tr>
+														<td class="text">{{ lang.text_status }}</td>
+														<td class="text w-min-130">
+															{% if result.status == 'Paid' %}
+																{{ lang.text_paid }}
+															{% elseif result.status == 'Unpaid' %}
+																{{ lang.text_unpaid }}
+															{% elseif result.status == 'Pending' %}
+																{{ lang.text_pending }}
+															{% elseif result.status == 'In Process' %}
+																{{ lang.text_in_process }}
+															{% elseif result.status == 'Cancelled' %}
+																{{ lang.text_cancelled }}
+															{% elseif result.status == 'Other' %}
+																{{ lang.text_other }}
+															{% elseif result.status == 'Partially Paid' %}
+																{{ lang.text_partially_paid }}
+															{% else %}
+																{{ lang.text_unknown }}
+															{% endif %}
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="item table-responsive">
+							<table>
+								<thead>
+									<tr>
+										<th>{{ lang.text_item_and_description }}</th>
+										<th>{{ lang.text_quantity }}</th>
+										<th>{{ lang.text_unit_cost }}</th>
+										<th>{{ lang.text_discount }}</th>
+										<th>{{ lang.text_tax }}</th>
+										<th>{{ lang.text_price }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for value in result.items %}
+										<tr>
+											<td class="title"><p>{{ value.name }}</p><span>{{ value.descr }}</span></td>
+											<td>{{ value.quantity }}</td>
+											<td>{{ result.currency_abbr~' '~value.cost }}</td>
+											<td class="discount">{{ result.currency_abbr }} {% if value.discountvalue %}{{ value.discountvalue }}{% else %}0{% endif %}</td>
+											<td class="tax">
+												{% for tax in value.tax %}
+													<div><span>{{ result.currency_abbr~' '~tax.tax_price }}</span><span> ({{ tax.name }})</span></div>
+												{% endfor %}
+											</td>
+											<td>{{ result.currency_abbr~' '~value.price }}</td>
+										</tr>
+									{% endfor %}
+									<tr class="total">
+										<td rowspan="6" colspan="3" class="blank">
+											{% if result.want_payment %}
+												<div class="payment">
+													<div class="title">{{ lang.text_payment_info }}</div>
+													<table>
+														<tbody>
+															<tr>
+																<td>{{ lang.text_account_hash }}</td>
+																<td>{{ common.info.invoice.accountnumber }}</td>
+															</tr>
+															<tr>
+																<td>{{ lang.text_account_name }}</td>
+																<td>{{ common.info.invoice.accountname }}</td>
+															</tr>
+															<tr>
+																<td>{{ lang.text_bank_name }}</td>
+																<td>{{ common.info.invoice.bankname }}</td>
+															</tr>
+															<tr>
+																<td>{{ lang.text_bank_details }}</td>
+																<td>{{ common.info.invoice.bankdetails }}.</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											{% endif %}
+										</td>
+										<td class="title">{{ lang.text_sub_total }}</td>
+										<td colspan="2" class="value">{{ result.currency_abbr~' '~result.subtotal }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_discount }}</td>
+										<td colspan="2" class="value">{{ result.currency_abbr~' '~result.discount_value }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_tax }}</td>
+										<td colspan="2" class="value">{{ result.currency_abbr~' '~result.tax }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_total }}</td>
+										<td colspan="2" class="value">{{ result.currency_abbr~' '~result.amount }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_paid }}</td>
+										<td colspan="2" class="value">{{ result.currency_abbr~' '~result.paid }}</td>
+									</tr>
+									<tr class="total">
+										<td class="title">{{ lang.text_due }}</td>
+										<td colspan="2" class="value">{{ result.currency_abbr~' '~result.due }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="note table-responsive">
+							<table>
+								<tbody>
+									<tr>
+										<td class="block v-align-top">
+											<span>{{ lang.text_customer_note }}</span>
+											<p>{{ result.note }}</p>
+										</td>
+										<td class="block v-align-top">
+											<span>{{ lang.text_terms_Conditions }}</span>
+											<p>{{ result.tc }}</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						{% if result.want_signature %}
+							<div class="bottom pr-30">
+								<table>
+									<tbody>
+										<tr>
+											<td class="sign">
+												{% if common.info.signature and common.info.signature is ondisk %}
+													<img src="../public/uploads/{{ common.info.signature }}">
+												{% else %}
+													<div class="sign_white"></div>
+												{% endif %}
+												<div class="text-right">{{ lang.text_authorised_sign }}</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-head">
+						<div class="panel-title">
+							<i class="las la-credit-card panel-head-icon"></i>
+							<span class="panel-title-text">{{ lang.text_payment_history }}</span>
+						</div>
+						<div class="panel-action"></div>
+					</div>
+					<div class="panel-body">
+						<table class="table table-bordered font-12">
+							<thead>
+								<tr>
+									<th>{{ lang.text_date }}</th>
+									<th>{{ lang.text_method }}</th>
+									<th>{{ lang.text_amount }}</th>
+								</tr>
+							</thead>
+							<tbody>{% set total = 0 %}
+								{% for value in payments %}
+									<tr>
+										<td>{{ value.payment_date|date(common.info.date_format) }}</td>
+										<td>
+											{% if value.is_online == '1' %}
+												{{ value.gateway }}
+											{% else %}
+												{{ value.method_name }}
+											{% endif %}
+										</td>
+										<td>{{ result.currency_abbr~value.amount }}</td>
+									</tr>{% set total = total + value.amount %}
+								{% else %}
+									<tr>
+										<td colspan="3">{{ lang.text_no_payment_history }}</td>
+									</tr>
+								{% endfor %}
+								<tr>
+									<td colspan="2" class="text-right">{{ lang.text_total }}</td>
+									<td>{{ result.currency_abbr~total }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-head">
+						<div class="panel-title">
+							<i class="las la-paperclip panel-head-icon"></i>
+							<span class="panel-title-text">{{ lang.text_attachments }}</span>
+						</div>
+						<div class="panel-action"></div>
+					</div>
+					<div class="panel-body">
+						<div class="attached-files">
+							{% for value in attachments %}
+								<div class="attached-files-block mb-3">
+									{% if value.ext == 'pdf' %}
+										<a href="../public/uploads/attachments/{{ value.file_name }}" data-fancybox="gallery"><i class="las la-file-pdf"></i></a>
+									{% else %}
+										<a href="../public/uploads/attachments/{{ value.file_name }}"  data-fancybox="gallery"><img src="../public/uploads/attachments/{{ value.file_name }}" alt=""></a>
+									{% endif %}
+								</div>
+							{% endfor %}
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

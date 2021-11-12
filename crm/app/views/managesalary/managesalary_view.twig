@@ -1,0 +1,112 @@
+{{ include('common/header.twig') }}
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="user-avtar">
+					{% if result.picture and result.picture is ondisk %}
+						<img class="img-fluid img-thumbnail" src="public/uploads/{{ result.picture }}">
+					{% else %}
+						<span>{{ result.firstname|split('')[0] }}</span>
+					{% endif %}
+				</div>
+				<div class="user-details pt-2  pb-2 text-center">
+					<h2 class="font-20">{{ result.firstname~' '~result.lastname }}</h2>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td>{{ lang.text_email_address }}</td>
+								<td>{{ result.email }}</td>
+							</tr>
+							<tr>
+								<td>{{ lang.text_mobile_number }}</td>
+								<td>{{ result.mobile }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="panel panel-default"> 
+			<div class="panel-head">
+				<div class="panel-title">
+					<i class="las la-wallet panel-head-icon"></i>
+					<span class="panel-title-text">{{ page_title }}</span>
+				</div>
+				<div class="panel-action">
+					{% if page_history %}
+						<a href="{{ common.url_route~'managesalary/history&id='~result.user_id }}" class="btn btn-warning btn-sm btn-gradient btn-pill"><i class="las la-history pr-2"></i>{{ lang.text_payment_history }}</a>
+					{% endif %}
+					{% if page_edit %}
+						<a href="{{ common.url_route~'managesalary/edit&id='~result.user_id }}" class="btn btn-primary btn-sm btn-gradient btn-pill mr-2"><i class="las la-edit mr-2"></i>{{ lang.text_edit }}</a>
+					{% endif %}
+				</div>
+			</div>
+			<div class="panel-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td>{{ lang.text_salary_grade }}</td>
+							<td>{{ salary.grade }}</td>
+						</tr>
+						<tr>
+							<td>{{ lang.text_basic_salary }}</td>
+							<td>{{ salary.abbr~salary.basic_salary }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row">
+					<div class="col-md-6">
+						<label class="col-form-label mt-3 mb-0">{{ lang.text_allowances }}</label>
+						<table class="table table-bordered table-striped">
+							<tbody>
+								{% for value in salary.allowance %}
+									<tr>
+										<td>{{ value.label }}</td>
+										<td>{{ salary.abbr~value.value }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6">
+						<label class="col-form-label mt-3 mb-0">{{ lang.text_deduction }}</label>
+						<table class="table table-bordered table-striped">
+							<tbody>
+								{% for value in salary.deduction %}
+									<tr>
+										<td>{{ value.label }}</td>
+										<td>{{ salary.abbr~value.value }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<label class="col-form-label mt-3 mb-0">{{ lang.text_total_salary_details }}</label>
+				<table class="table table-bordered table-striped">
+					<tbody>
+						<tr>
+							<td>{{ lang.text_gross_salary }}</td>
+							<td>{{ salary.abbr~salary.gross_salary }}</td>
+						</tr>
+						<tr>
+							<td>{{ lang.text_total_deduction }}</td>
+							<td>{{ salary.abbr~salary.total_deduction }}</td>
+						</tr>
+						<tr>
+							<td>{{ lang.text_net_salary }}</td>
+							<td>{{ salary.abbr~salary.net_salary }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

@@ -1,0 +1,46 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post">
+	<input type="hidden" name="_token" value="{{ common.token }}">
+	<div class="panel panel-default">
+		<div class="panel-head">
+			<div class="panel-title">
+				<i class="las la-users panel-head-icon"></i>
+				<span class="panel-title-text">{{ page_title }}</span>
+			</div>
+			<div class="panel-action">
+                <button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                <a href="{{ common.url_route }}subscriber" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-form-label">{{ lang.text_email_address }} <span class="form-required">*</span></label>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="las la-envelope"></i></span>
+					</div>
+					<input type="text" name="subscriber[mail]" class="form-control" value="{{ result.email }}" placeholder="{{ lang.text_email_address }} . . .">
+				</div>
+			</div>
+			{% if result.id %}
+				<div class="form-group">
+					<label class="col-form-label">{{ lang.text_status }}</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="las la-check-square"></i></span>
+						</div>
+						<select name="subscriber[status]" class="custom-select">
+							<option value="1" {{ result.status == '1' ? 'selected' : false }}>{{ lang.text_active }}</option>
+							<option value="0" {{ result.status == '0' ? 'selected' : false }}>{{ lang.text_inactive }}</option>
+						</select>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+		<input type="hidden" name="subscriber[id]" value="{{ result.id }}">
+		<div class="panel-footer text-center">
+			<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+		</div>
+	</div>
+</form>
+{{ include('common/footer.twig') }}

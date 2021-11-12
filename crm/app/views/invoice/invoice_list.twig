@@ -1,0 +1,125 @@
+{{ include('common/header.twig') }}
+<!-- Invoice list page start -->
+<div class="panel panel-default">
+    <div class="panel-head">
+        <div class="panel-title">
+            <i class="las la-file-invoice panel-head-icon"></i>
+            <span class="panel-title-text">{{ page_title }}</span>
+        </div>
+        <div class="panel-action">
+            <div class="dropdown export-dropdown d-inline-block mr-2">
+                <a class="btn btn-white btn-sm btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-cloud-download-alt text-primary pr-1"></i> <span>{{ lang.text_export }}</span> <i class="las la-angle-down pl-2"></i></a>
+                <ul class="dropdown-menu dropdown-menu-right export-button">
+                    <li><a href="#" class="excel"><i class="las la-file-excel pr-2"></i>{{ lang.text_excel }}</a></li>
+                    <li><a href="#" class="csv"><i class="las la-file-csv pr-2"></i>{{ lang.text_csv }}</a></li>
+                    <li><a href="#" class="print"><i class="las la-print pr-2"></i>{{ lang.text_print }}</a></li>
+                    <li><a href="#" class="copy"><i class="las la-copy pr-2"></i>{{ lang.text_copy }}</a></li>
+                </ul>
+            </div>
+            <div class="btn btn-white btn-sm btn-pill text-left mr-2">
+                <i class="las la-filter text-danger mr-1"></i>
+                <input type="text" class="table-date-range" data-start="{{ period.start|date(common.info.date_format) }}" data-end="{{ period.end|date(common.info.date_format) }}" data-route="invoices">
+            </div>
+            {% if page_add %}
+                <a href="{{ common.url_route }}invoice/add" class="btn btn-primary btn-outline btn-gradient btn-pill btn-sm"><i class="las la-plus mr-1"></i> {{ lang.text_new_invoice }}</a>  
+            {% endif %}
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped datatable-table" width="100%">
+                <thead>
+                    <tr class="table-heading">
+                        <th>#</th>
+                        <th>{{ lang.text_customer }}</th>
+                        <th>{{ lang.text_amount }}</th>
+                        <th>{{ lang.text_due }}</th>
+                        <th>{{ lang.text_invoice_date }}</th>
+                        <th>{{ lang.text_due_date }}</th>
+                        <th>{{ lang.text_status }}</th>
+                        {% if page_view or page_copy or page_edit or page_delete %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in result %}
+                        <tr>
+                            <td class="text-dark">{{ common.info.invoice.prefix~"%05d"|format(value.id) }}</td>
+                            <td><a href="{{ common.url_route }}contact/view&id={{ value.customer }}" class="text-primary" target="_blank">{{ value.company }}</a></td>
+                            <td>{{ value.abbr~value.amount }}</td>
+                            <td>{{ value.abbr~value.due }}</td>
+                            <td>{{ value.invoicedate|date(common.info.date_format) }}</td>
+                            <td>{{ value.duedate|date(common.info.date_format) }}</td>
+                            <td>
+                                {% if value.inv_status == '0' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_draft }}</span>
+                                {% else %}
+                                    {% if value.status == 'Paid' %}
+                                        <span class="badge badge-Paid badge-pill">{{ lang.text_paid }}</span>
+                                    {% elseif value.status == 'Unpaid' %}
+                                        <span class="badge badge-Unpaid badge-pill">{{ lang.text_unpaid }}</span>
+                                    {% elseif value.status == 'Pending' %}
+                                        <span class="badge badge-Pending badge-pill">{{ lang.text_pending }}</span>
+                                    {% elseif value.status == 'In Process' %}
+                                        <span class="badge badge-In-Process badge-pill">{{ lang.text_in_process }}</span>
+                                    {% elseif value.status == 'Cancelled' %}
+                                        <span class="badge badge-Cancelled badge-pill">{{ lang.text_cancelled }}</span>
+                                    {% elseif value.status == 'Other' %}
+                                        <span class="badge badge-Other badge-pill">{{ lang.text_other }}</span>
+                                    {% elseif value.status == 'Partially Paid' %}
+                                        <span class="badge badge-Partially-Paid badge-pill">{{ lang.text_partially_paid }}</span>
+                                    {% else %}
+                                        <span class="badge badge-Unknown badge-pill">{{ lang.text_unknown }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            {% if page_view or page_copy or page_edit or page_delete %}
+                                <td class="table-action">
+                                    {% if page_view %}
+                                        <a href="{{ common.url_route }}invoice/view&id={{ value.id }}" class="btn btn-dark btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_view }}"><i class="las la-laptop"></i></a>
+                                    {% endif %}
+                                    {% if page_copy %}
+                                        <a class="btn btn-warning btn-circle btn-outline btn-outline-1x table-copy" data-toggle="tooltip" title="{{ lang.text_copy }}"><input type="hidden" value="{{ value.id }}"><i class="las la-copy"></i></a>
+                                    {% endif %}
+                                    {% if page_edit %}
+                                        <a href="{{ common.url_route }}invoice/edit&id={{ value.id }}" class="btn btn-primary btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_edit }}"><i class="las la-edit"></i></a>
+                                    {% endif %}
+                                    {% if page_delete %}
+                                        <a class="btn btn-danger btn-circle btn-outline btn-outline-1x table-delete" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% if page_copy %}
+    <!-- Cpoy Modal -->
+    <div id="copy-card" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ lang.text_confirm_copy }}</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="delete-card-ttl">{{ lang.text_are_you_sure_you_want_to_copy }}</p>
+                </div>
+                <div class="modal-footer">
+                    <form action="{{ common.url_route }}invoice/copy" method="post">
+                        <input type="hidden" class="copy-card-form" value="" name="id">
+                        <input type="hidden" value="{{ common.token }}" name="_token">
+                        <button type="submit" class="btn btn-danger btn-gradient btn-pill" name="submit">{{ lang.text_copy }}</button>
+                    </form>
+                    <button type="button" class="btn btn-default btn-gradient btn-pill" data-dismiss="modal">{{ lang.text_close }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% if page_delete %}{{ include('common/delete-modal.twig') }}{% endif %}
+    {{ include('common/footer.twig') }}

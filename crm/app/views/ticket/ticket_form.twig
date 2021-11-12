@@ -1,0 +1,279 @@
+{{ include('common/header.twig') }}
+<form action="{{ action }}" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-8">
+            <input type="hidden" name="id" value="{{ result.id }}">
+            <div class="panel panel-default">
+                <div class="panel-head">
+                    <div class="panel-title">
+                        <i class="las la-ticket-alt panel-head-icon"></i>
+                        <span class="panel-title-text">{{ page_title }}</span>
+                    </div>
+                    <div class="panel-action">
+                        <button type="submit" class="btn btn-primary btn-gradient btn-icon" name="submit" data-toggle="tooltip" title="{{ lang.text_save }}"><i class="las la-save"></i></button>
+                        <a href="{{ common.url_route }}tickets" class="btn btn-white btn-icon" data-toggle="tooltip" title="{{ lang.text_back_to_list }}"><i class="las la-reply"></i></a>
+                    </div>  
+                </div>
+                <div class="panel-wrapper">
+                    <input type="hidden" name="_token" value="{{ common.token }}">
+                    {% if result is empty %}
+                        <div class="pt-3 pl-3 pr-3">
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_subject }}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text"><i class="las la-user"></i></span></div>
+                                    <input type="text" name="ticket[subject]" class="form-control" placeholder="{{ lang.text_subject }}">
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="chat p-3">
+                            <ul class="chat-history">
+                                {% for value in messages %}
+                                    {% if value.message_by == '1' %}
+                                        <li class="my-message text-right">
+                                            <div class="message-data">
+                                                <span class="message-data-time">{{ value.date_of_joining }}</span>
+                                                <span class="message-data-name ml-2">{{ value.user }}</span>
+                                            </div>
+                                            <div class="message">
+                                                <span class="d-block">{{ value.message|html_entity_decode }}</span>
+                                                {% if value.attached %}{% set attachments = value.attached|json_decode %}
+                                                    {% for attached_value in attachments %}
+                                                        <a href="{{ common.url_route }}ticket/fileDownload&name={{ attached_value|url_encode }}" class="attached-file">{{ attached_value }}</a>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="other-message">
+                                            <div class="message-data">
+                                                <span class="message-data-name mr-2">{{ result.name }}</span>
+                                                <span class="message-data-time">{{ value.date_of_joining }}</span>
+                                            </div>
+                                            <div class="message text-left">
+                                                <span class="d-block">{{ value.message|html_entity_decode }}</span>
+                                                {% if value.attached %}{% set attachments = value.attached|json_decode %}
+                                                    {% for attached_value in attachments %}
+                                                        <a href="{{ common.url_route }}ticket/fileDownload&name={{ attached_value|url_encode }}" class="attached-file">{{ attached_value }}</a>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </li>   
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% if result.status == '0' or result.id is empty %}
+                        <div class="p-3">
+                            <div class="form-group row align-items-start">
+                                <div class="col-12">
+                                    <label class="col-form-label">{{ lang.text_post_reply }}</label>
+                                    <textarea name="ticket[descr]" class="mail-summernote" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-sm-8 form-group">
+                                    <label class="col-form-label">{{ lang.text_attachments }}</label>
+                                    <div class="attachments">
+                                        <div class="custom-file">
+                                            <label class="custom-file-label" for="attachments_file_1">{{ lang.text_choose_file }}</label>
+                                            <input type="file" name="filename[]" accept="application/pdf, image/gif, image/jpeg, image/png" class="custom-file-input ticket-attachments" size="20" onchange="" id="attachments_file_1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 text-right">
+                                    <a class="btn btn-outline btn-primary btn-pill btn-outline-1x btn-sm" id="add-more-file">{{ lang.text_add_more_file }}</a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">{{ lang.text_ticket_status }}</label>
+                                <div class="custom-control custom-checkbox custom-checkbox-1">
+                                    <input type="checkbox" name="ticket[status]" class="custom-control-input" id="ticket-close" value="1">
+                                    <label class="custom-control-label" for="ticket-close">{{ lang.text_close_on_reply }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-head">
+                    <div class="panel-title">
+                        <i class="las la-address-book panel-head-icon"></i>
+                        <span class="panel-title-text">{{ lang.text_ticket_info }}</span>
+                    </div>
+                    <div class="panel-action">
+                    </div>  
+                </div>
+                <div class="panel-wrapper p-3">
+                    {% if result is empty %}
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_name }} <span class="form-required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-user"></i></span></div>
+                                <input type="text" name="ticket[name]" class="form-control customer-name" placeholder="{{ lang.text_name }}" required>
+                                <input type="hidden" name="ticket[customer]" class="customer-id">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_email_address }} <span class="form-required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-envelope"></i></span></div>
+                                <input type="text" name="ticket[email]" class="form-control customer-mail" placeholder="{{ lang.text_email_address }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_mobile_number }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-mobile"></i></span></div>
+                                <input type="text" name="ticket[mobile]" class="form-control customer-mobile" placeholder="{{ lang.text_mobile_number }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_department }} <span class="form-required">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-igloo"></i></span></div>
+                                <select name="ticket[department]" class="custom-select" required>
+                                    {% for value in departments %}
+                                        <option value="{{ value.id }}"{% if value.id == result.departments %} selected{% endif %}>{{ value.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_priority }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-flag"></i></span></div>
+                                <select name="ticket[priority]" class="custom-select">
+                                    <option value="Low">{{ lang.text_low }}</option>
+                                    <option value="Medium">{{ lang.text_medium }}</option>
+                                    <option value="High">{{ lang.text_high }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="ticket-info table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>ID</td>
+                                        <td>#{{ result.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ lang.text_subject }}</td>
+                                        <td>{{ result.subject }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ lang.text_name }}</td>
+                                        <td>{{ result.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ lang.text_email_address }}</td>
+                                        <td>{{ result.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ lang.text_priority }}</td>
+                                        <td>
+                                            {% if result.priority == 'Low' %}
+                                                <span class="badge badge-Low badge-sm badge-pill">{{ lang.text_low }}</span>
+                                            {% elseif result.priority == 'Medium' %}
+                                                <span class="badge badge-Medium badge-sm badge-pill">{{ lang.text_medium }}</span>
+                                            {% else %}
+                                                <span class="badge badge-High badge-sm badge-pill">{{ lang.text_high }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ lang.text_department }}</td>
+                                        <td>{{ result.department }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ lang.text_last_updated }}</td>
+                                        <td>{{ result.last_updated|date(common.info.date_format~' H:i:s') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ lang.text_created_date }}</td>
+                                        <td>{{ result.date_of_joining|date(common.info.date_format~' H:i:s') }}</td>
+                                    </tr>
+                                    {% if result.status == '1' %}
+                                        <tr>
+                                            <td>{{ lang.text_status }}</td>
+                                            <td>
+                                                {% if result.status == '1' %}
+                                                    {{ lang.text_closed }}
+                                                {% else %}
+                                                    {{ lang.text_open }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-head">
+                    <div class="panel-title">
+                        <i class="icon-info panel-head-icon"></i>
+                        <span class="panel-title-text">For Office</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group customer-search">
+                        <label class="col-form-label">Staff</label>
+                        {% if admin %}
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-user-tie"></i></span></div>
+                                <select name="ticket[staff]" class="custom-select">
+                                    <option value="">{{ lang.text_none }}</option>
+                                    {% for value in staff %}                                
+                                        <option value="{{ value.user_id }}"{% if value.user_id == result.user_id %} selected{% endif %}>{{ value.name~' ('~value.user_name~')' }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% else %}
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="las la-user-tie"></i></span></div>
+                                <input type="text" class="form-control" value="{{ common.user.firstname~' '~common.user.lastname~' ('~common.user.role~')' }}" readonly>
+                            </div>
+                            <input type="hidden" name="ticket[staff]" value="{{ common.user.user_id }}">
+                        {% endif %}   
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Remark</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i class="las la-paragraph"></i></span></div>
+                            <textarea name="ticket[remark]" class="form-control">{{ result.remark }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="col-12">
+            <div class="panel panel-default">
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<input type="hidden" class="lang-choose_file" value="{{ lang.text_choose_file }}">
+<input type="hidden" class="lang-text_file_size_exceeds_2_MB" value="{{ lang.text_file_size_exceeds_2_MB }}">
+
+<!-- include summernote css/js-->
+<link href="public/css/summernote-bs4.css" rel="stylesheet">
+<script type="text/javascript" src="public/js/summernote-bs4.min.js"></script>
+<script type="text/javascript" src="public/js/custom.summernote.js"></script>
+
+{{ include('common/footer.twig') }}

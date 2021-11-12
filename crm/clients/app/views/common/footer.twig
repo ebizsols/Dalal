@@ -1,0 +1,14 @@
+</div>	
+<div class="footer">
+	<p>© Pepdev All Rights Reserved.</p>
+</div>
+<input type="hidden" id="datatable_no_records" value="{{ lang.text_no_records_available }}">
+<input type="hidden" id="datatable_showing_page" value="{{ lang.text_showing_page_of }}">
+</div>
+<!-- Set Confirmation Message on create, update and delete -->
+{% if common.message %}
+	<input type="hidden" class="alert-message" value="{{ common.message|json_encode()|e }}">
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+{{ include('common/header.twig') }}
+<!-- Project list page start -->
+<div class="content">
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <div class="panel-title">
+                <i class="las la-calculator panel-head-icon"></i>
+                <span class="panel-title-text">{{ page_title }}</span>
+            </div>
+            <div class="panel-action"></div>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped datatable-table">
+                    <thead>
+                        <tr class="table-heading">
+                            <th>#</th>
+                            <th>{{ lang.text_project_name }}</th>
+                            <th>{{ lang.text_customer }}</th>
+                            <th>{{ lang.text_quote_date }}</th>
+                            <th>{{ lang.text_expiry_date }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for value in result %}
+                            <tr>
+                                <td><a href="{{ common.url_route }}quote/view&id={{ value.id }}" class="text-primary">{{ common.info.quote.prefix~"%05d"|format(value.id) }}</a></td>
+                                <td>{{ value.project_name }}</td>
+                                <td>{{ value.company }}</td>
+                                <td>{{ value.date|date(common.info.date_format) }}</td>
+                                <td>{{ value.expiry|date(common.info.date_format) }}</td>
+                                <td class="table-action">
+                                    <a href="{{ common.url_route }}quote/view&id={{ value.id }}" class="btn btn-primary btn-outline btn-pill btn-sm" data-toggle="tooltip" title="{{ lang.text_view }}"><i class="las la-laptop font-16"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{ include('common/footer.twig') }}

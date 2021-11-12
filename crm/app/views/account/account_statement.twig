@@ -1,0 +1,62 @@
+{{ include('common/header.twig') }}{% set credit = 0 %}{% set debit = 0 %}
+
+<div class="panel panel-default">
+	<div class="panel-head">
+		<div class="panel-title">
+			<i class="las la-landmark panel-head-icon"></i>
+			<span class="panel-title-text">{{ page_title }}</span>
+		</div>
+		<div class="panel-action">
+			<div class="dropdown export-dropdown d-inline-block mr-2">
+				<a class="btn btn-white btn-sm btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-cloud-download-alt text-primary pr-1"></i> <span>{{ lang.text_export }}</span> <i class="las la-angle-down pl-2"></i></a>
+				<ul class="dropdown-menu dropdown-menu-right export-button">
+					<li><a href="#" class="excel"><i class="las la-file-excel pr-2"></i>{{ lang.text_excel }}</a></li>
+					<li><a href="#" class="csv"><i class="las la-file-csv pr-2"></i>{{ lang.text_csv }}</a></li>
+					<li><a href="#" class="print"><i class="las la-print pr-2"></i>{{ lang.text_print }}</a></li>
+					<li><a href="#" class="copy"><i class="las la-copy pr-2"></i>{{ lang.text_copy }}</a></li>
+				</ul>
+			</div>
+			<div class="btn btn-white btn-sm btn-pill text-left mr-2">
+				<i class="las la-filter text-danger mr-1"></i>
+				<input type="text" class="table-date-range" data-start="{{ period.start|date(common.info.date_format) }}" data-end="{{ period.end|date(common.info.date_format) }}" data-route="account/statement&id={{account.id}}">
+			</div>
+		</div>
+	</div>	
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-middle table-bordered table-striped datatable-count-table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>{{ lang.text_date }}</th>
+						<th>{{ lang.text_description }}</th>
+						<th>{{ lang.text_debit }}</th>
+						<th>{{ lang.text_credit }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for value in result %}
+						<tr>
+							<td>{{ loop.index }}</td>
+							<td>{{ value.date|date(common.info.date_format) }}</td>
+							<td>{{ value.description }}</td>
+							<td>{{ account.abbr~' '~value.debit }}{% set debit = debit + value.debit %}</td>
+							<td>{{ account.abbr~' '~value.credit }}{% set credit = credit + value.credit %}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+				<tfoot>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
+<input type="hidden" class="common_currency" value="{{ account.abbr }}">
+{{ include('common/footer.twig') }}

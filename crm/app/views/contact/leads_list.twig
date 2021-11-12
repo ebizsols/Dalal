@@ -1,0 +1,91 @@
+{{ include('common/header.twig') }}
+<!-- Lead list page start -->
+<div class="panel panel-default">
+    <div class="panel-head">
+        <div class="panel-title">
+            <i class="las la-bullhorn panel-head-icon"></i>
+            <span class="panel-title-text">{{ page_title }}</span>
+        </div>
+        <div class="panel-action">
+            <div class="dropdown export-dropdown d-inline-block mr-2">
+                <a class="btn btn-white btn-sm btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-cloud-download-alt text-primary pr-1"></i> <span>{{ lang.text_export }}</span> <i class="las la-angle-down pl-2"></i></a>
+                <ul class="dropdown-menu dropdown-menu-right export-button">
+                    <li><a href="#" class="excel"><i class="las la-file-excel pr-2"></i>{{ lang.text_excel }}</a></li>
+                    <li><a href="#" class="csv"><i class="las la-file-csv pr-2"></i>{{ lang.text_csv }}</a></li>
+                    <li><a href="#" class="print"><i class="las la-print pr-2"></i>{{ lang.text_print }}</a></li>
+                    <li><a href="#" class="copy"><i class="las la-copy pr-2"></i>{{ lang.text_copy }}</a></li>
+                </ul>
+            </div>
+            {% if page_add %}
+                <a href="{{ common.url_route }}lead/add" class="btn btn-primary btn-outline btn-gradient btn-pill btn-sm"><i class="las la-plus mr-1"></i> {{ lang.text_new_lead }}</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-align-middle table-striped datatable-table" width="100%">
+                <thead>
+                    <tr class="table-heading">
+                        <th class="table-srno">#</th>
+                        <th>{{ lang.text_company }}</th>
+                        <th>{{ lang.text_status }}</th>
+                        <th>{{ lang.text_expiry_date }}</th>
+                        <th>{{ lang.text_created_date }}</th>
+                        {% if page_edit or page_delete %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in result %}
+                        <tr>
+                            <td class="table-srno">{{ loop.index }}</td>
+                            <td>
+                                <a class="text-primary">{{ value.company }}</a>
+                                <p class="m-0">{{ value.email }}</p>
+                                <p class="m-0">{{ value.phone }}</p>
+                            </td>
+                            <td>
+                                {% if value.status == '1' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_new }}</span>
+                                {% elseif value.status == '2' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_attempted }}</span>
+                                {% elseif value.status == '3' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_not_attempted }}</span>
+                                {% elseif value.status == '4' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_working }}</span>
+                                {% elseif value.status == '5' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_contacted }}</span>
+                                {% elseif value.status == '6' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_converted_qualified }}</span>
+                                {% elseif value.status == '7' %}
+                                    <span class="badge badge-light badge-pill">{{ lang.text_disqualified }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if date(value.expire) > date() %}
+                                    <span class="badge badge-light badge-pill">{{ value.expire|date(common.info.date_format) }}</span>
+                                {% else %}
+                                    <span class="badge badge-danger badge-pill">{{ value.expire|date(common.info.date_format) }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ value.date_of_joining|date(common.info.date_format) }}</td>
+                            {% if page_edit or page_delete %}
+                                <td class="table-action">
+                                    {% if page_edit %}
+                                        <a href="{{ common.url_route }}lead/edit&id={{ value.id }}" class="btn btn-primary btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_edit }}"><i class="las la-edit"></i></a>
+                                    {% endif %}
+                                    {% if page_delete %}
+                                        <a class="btn btn-danger btn-circle btn-outline btn-outline-1x table-delete" data-toggle="tooltip" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% if page_delete %}{{ include('common/delete-modal.twig') }}{% endif %}
+    {{ include('common/footer.twig') }}

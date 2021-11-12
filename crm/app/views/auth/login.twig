@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>{{ common.name }} | {{ lang.text_login }}</title>
+	<link rel="icon" type="image/x-icon" href="{{ theme.favicon }}">
+	<link rel="stylesheet" href="public/css/style.min.css" />
+	<script src="public/js/vendor.min.js"></script>
+	<script src="public/js/custom.js"></script>
+</head>
+<body>
+	<div class="lgn-background">
+		<div class="lgn-wrapper">
+			<div class="lgn-logo text-center">
+				<a href="{{ common.url }}"><img src="{{ theme.logo }}" alt="{{ common.name }}"></a>
+				<p class="lgn-type">{{ lang.text_admin_portal }}</p>
+			</div>
+			<div id="login-form" class="lgn-form ">
+				<form class="form-vertical" action="{{ action }}" method="post">
+					{% if success %}
+					<div class="alert alert-success alert-dismissable">{{ success }}<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a></div>
+					{% endif %}
+					{% if error %}
+					<div class="alert alert-danger alert-dismissable">{{ error }}<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a></div>
+					{% endif %}
+					<input type="hidden" name="_token" value="{{ token }}">
+					<div class="lgn-input form-group">
+						<label class="col-form-label col-sm-12">{{ lang.text_username }}</label>
+						<div class="col-sm-12">
+							<input class="form-control" type="text" name="username" value="" id="lgn-mail" placeholder="{{ lang.text_username }}" autocomplete="off">
+						</div>
+					</div>
+					<div class="lgn-input form-group">
+						<label class="col-form-label col-sm-12">{{ lang.text_password }}</label>
+						<div class="col-sm-12">
+							<input type="password" name="password" id="lgn-pass" value="" class="form-control" placeholder="{{ lang.text_password }}" autocomplete="off">
+						</div>	
+					</div>
+					<div class="lgn-input form-group">
+						<label class="col-form-label col-sm-12">{{ lang.text_what_is~' '~random(1, 9)~' '~lang.text_plus~' '~random(1, 30) }} = </label>
+						<div class="col-sm-12">
+							<input type="text" id="lgn-bot" class="form-control" placeholder="?" autocomplete="off">
+						</div>
+					</div>
+					<div class="lgn-forgot">
+						<a href="{{ common.url_route }}forgotpassword">{{ lang.text_forgotten_password }}</a>
+					</div>
+					<div class="lgn-submit">
+						<button type="submit" id="lgn-submit" class="btn btn-primary btn-pill btn-lg" name="login">{{ lang.text_login }}</button>
+					</div>
+				</form>
+			</div>
+			<div class="lgn-footer">
+				<p>{{ lang.text_are_you_client }}</p>
+				<a href="{{ common.url~'clients/'~common.dir_route }}/login">{{ lang.text_client_login }}</a>
+			</div>	
+		</div>
+	</div>
+	<script type="text/javascript" id="cookieinfo"
+	data-bg="#282a3c"
+	data-fg="#FFFFFF"
+	data-link="#F1D600"
+	data-cookie="UseCookie"
+	data-text-align="left"
+	data-message="{{ lang.text_cookie_message }}"
+    data-close-text="Got it!"
+    data-font-family="Poppins, sans-serif"
+    data-moreinfo="http://wikipedia.org/wiki/HTTP_cookie"
+    src="//cookieinfoscript.com/js/cookieinfo.min.js"></script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,117 @@
+{{ include('common/header.twig') }}
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="user-avtar">
+					{% if result.picture and result.picture is ondisk %}
+						<img class="img-fluid img-thumbnail" src="public/uploads/{{ result.picture }}">
+					{% else %}
+						<span>{{ result.firstname|split('')[0] }}</span>
+					{% endif %}
+				</div>
+				<div class="user-details pt-2  pb-2 text-center">
+					<h2 class="font-20">{{ result.firstname~' '~result.lastname }}</h2>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td>{{ lang.text_email_address }}</td>
+								<td>{{ result.email }}</td>
+							</tr>
+							<tr>
+								<td>{{ lang.text_mobile_number }}</td>
+								<td>{{ result.mobile }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="panel panel-default"> 
+			<div class="panel-head">
+				<div class="panel-title">{{ page_title }}</div>
+				<div class="panel-action">
+					{% if page_pdf %}
+						<a href="{{ common.url_route~'managesalary/history/pdf&id='~result.id }}" class="btn btn-danger btn-gradient btn-sm btn-pill" target="_blank"><i class="las la-file-pdf mr-1"></i>{{ lang.text_pdf_preview }}</a>
+					{% endif %}
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="row align-items-center">
+					<div class="col-4"><p class="font-12 text-dark">{{ lang.text_salary_grade }}</p></div>
+					<div class="col-8"><p class="font-12 text-primary">{{ result.salarytemplate.grade }}</p></div>
+					<div class="col-4"><p class="font-12 text-dark">{{ lang.text_basic_salary }}</p></div>
+					<div class="col-8"><p class="font-12 text-dark">{{ result.salarytemplate.abbr~result.salarytemplate.basic_salary }}</p></div>
+					<div class="col-4"><p class="font-12 text-dark">{{ lang.text_month }}</p></div>
+					<div class="col-8"><p class="font-12 text-dark">{{ result.month_year|date(common.info.date_my_format) }}</p></div>
+					<div class="col-4"><p class="font-12 text-dark">{{ lang.text_date }}</p></div>
+					<div class="col-8"><p class="font-12 text-dark">{{ result.date_of_joining|date(common.info.date_format) }}</p></div>
+					<div class="col-4"><p class="font-12 text-dark">{{ lang.text_payment_method }}</p></div>
+					<div class="col-8"><p class="font-12 text-dark">{{ result.payment_method }}</p></div>
+				</div>
+				<div class="row align-items-start">
+					<div class="col-md-6">
+						<label class="col-form-label mt-1 mb-0">{{ lang.text_allowances }}</label>
+						<table class="table table-bordered table-striped">
+							<tbody>
+								{% for value in result.salarytemplate.allowance %}
+									<tr>
+										<td>{{ value.label }}</td>
+										<td>{{ result.salarytemplate.abbr~value.value }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6">
+						<label class="col-form-label mt-1 mb-0">{{ lang.text_deduction }}</label>
+						<table class="table table-bordered table-striped">
+							<tbody>
+								{% for value in result.salarytemplate.deduction %}
+									<tr>
+										<td>{{ value.label }}</td>
+										<td>{{ result.salarytemplate.abbr~value.value }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<label class="col-form-label mt-3 mb-0">{{ lang.text_total_salary_details }}</label>
+				<table class="table table-bordered table-striped">
+					<tbody>
+						<tr>
+							<td>{{ lang.text_gross_salary }}</td>
+							<td>{{ result.salarytemplate.abbr~result.salarytemplate.gross_salary }}</td>
+						</tr>
+						<tr>
+							<td>{{ lang.text_total_deduction }}</td>
+							<td>{{ result.salarytemplate.abbr~result.salarytemplate.total_deduction }}</td>
+						</tr>
+						<tr>
+							<td>{{ lang.text_net_salary }}</td>
+							<td>{{ result.salarytemplate.abbr~result.salarytemplate.net_salary }}</td>
+						</tr>
+						<tr>
+							<td>{{ lang.text_advance }}</td>
+							<td>{{ result.salarytemplate.abbr~result.advance }}</td>
+						</tr>
+						<tr>
+							<td>{{ lang.text_deduction }}</td>
+							<td>{{ result.salarytemplate.abbr~result.deduction }}</td>
+						</tr>
+						<tr>
+							<td class="text-dark font-500">{{ lang.text_payment_amount }}</td>
+							<td class="text-primary">{{ result.salarytemplate.abbr~result.amount }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

@@ -1,0 +1,168 @@
+{{ include('common/header.twig') }}
+<div class="row">
+	<div class="col-lg-12 col-xl-8">
+		<div class="panel panel-default">
+			<div class="panel-head">
+				<div class="panel-title">
+					<i class="las la-calculator panel-head-icon"></i>
+					<span class="panel-title-text">{{ page_title }}</span>
+				</div>
+				<div class="panel-action">
+					{% if result.invoice is empty or result.invoice == '0' %}
+						{% if page_convert %}
+							<a href="{{ common.url_route }}quote/autoinvoice&id={{ result.id }}" class="btn btn-secondary btn-sm btn-outline btn-gradient btn-pill"><i class="las la-file-invoice mr-1"></i>{{ lang.text_convert_to_invoice }}</a>
+						{% endif %}
+					{% elseif page_invoice_view %}
+						<a href="{{ common.url_route }}invoice/view&id={{ result.invoice }}" class="btn btn-primary btn-sm btn-outline btn-gradient btn-pill"><i class="las la-file-invoice mr-1"></i>{{ lang.text_quotation_invoiced }}</a>
+					{% endif %}
+					{% if page_pdf %}
+						<a href="{{ common.url_route }}quote/pdf&id={{ result.id }}" class="btn btn-danger btn-sm btn-outline btn-gradient btn-pill" target="_blank"><i class="las la-file-pdf mr-1"></i> {{ lang.text_pdf }}</a>
+					{% endif %}
+					{% if page_edit %}
+						<a href="{{ common.url_route }}quote/edit&id={{ result.id }}" class="btn btn-info btn-sm btn-outline btn-gradient btn-pill"><i class="las la-edit mr-1"></i> {{ lang.text_edit }}</a>
+					{% endif %}
+				</div>
+			</div>
+			<div class="panel-wrapper">
+				<div class="inv-template-bdy table-responsive p-4">
+					<div class="company">
+						<table>
+							<tbody>
+								<tr>
+									<td class="info">
+										<div class="logo"><img src="{{ common.info.logo }}" alt="logo"></div>
+										<div class="name">{{ common.info.legal_name }}</div>
+										<div class="text">{{ common.info.address|join(', ') }}</div>
+									</td>
+									<td class="text-right">
+										<div class="title">{{ lang.text_quotation }}</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="meta">
+						<table>
+							<tbody>
+								<tr>
+									<td class="bill-to v-aling-bottom">
+										<div class="heading">{{ lang.text_quote_to }}</div>
+										<div class="title">{{ result.company }}</div>
+										<div class="text">{{ result.email }}</div>
+										<div class="text">{{ result.address|join(', ') }}</div>
+									</td>
+									<td class="info v-aling-bottom">
+										<table class="text-right">
+											<tbody>
+												<tr>
+													<td class="text">#</td>
+													<td class="text w-min-130">{{ common.info.quote.prefix~"%05d"|format(result.id) }}</td>
+												</tr>
+												<tr>
+													<td class="text">{{ lang.text_quote_date }}</td>
+													<td class="text w-min-130">{{ result.date|date(common.info.date_format) }}</td>
+												</tr>
+												<tr>
+													<td class="text">{{ lang.text_expiry_date }}</td>
+													<td class="text w-min-130">{{ result.expiry|date(common.info.date_format) }}</td>
+												</tr>
+												<tr>
+													<td class="text">{{ lang.text_payment_method }}</td>
+													<td class="text w-min-130">{{ result.payment_method }}</td>
+												</tr>
+												<tr>
+													<td class="text">{{ lang.text_status }}</td>
+													<td class="text w-min-130">
+														{% if result.status == '0' %}
+															{{ lang.text_draft }}
+														{% elseif result.status == '1' %}
+															{{ lang.text_published }}
+														{% elseif result.status == '2' %}
+															{{ lang.text_accepted }}
+														{% elseif result.status == '3' %}
+															{{ lang.text_dead }}
+														{% endif %}
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="proposal">
+						<span class="subject">{{ result.project_name }}</span>
+						{% if result.proposal %}
+							<div class="proposal-content">{{ result.proposal|html_entity_decode }}</div>
+						{% endif %}
+					</div>
+					<div class="item">
+						<table>
+							<thead>
+								<tr>
+									<th>{{ lang.text_item_and_description }}</th>
+									<th>{{ lang.text_quantity }}</th>
+									<th>{{ lang.text_unit_cost }}</th>
+									<th>{{ lang.text_discount }}</th>
+									<th>{{ lang.text_tax }}</th>
+									<th>{{ lang.text_price }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for value in result.items %}
+									<tr>
+										<td class="title"><p>{{ value.name }}</p><span>{{ value.descr }}</span></td>
+										<td>{{ value.quantity }}</td>
+										<td>{{ result.currency_abbr~' '~value.cost }}</td>
+										<td>{{ result.currency_abbr }} {% if value.discountvalue %}{{ value.discountvalue }}{% else %}0{% endif %}</td>
+										<td class="tax">
+											{% for tax in value.tax %}
+												<div><span>{{ result.currency_abbr~' '~tax.tax_price }}</span><span> ({{ tax.name }})</span></div>
+											{% endfor %}
+										</td>
+										<td>{{ result.currency_abbr~' '~value.price }}</td>
+									</tr>
+								{% endfor %}
+								<tr class="total">
+									<td rowspan="4" colspan="4" class="blank"></td>
+									<td class="title">{{ lang.text_sub_total }}</td>
+									<td class="value">{{ result.currency_abbr~' '~result.subtotal }}</td>
+								</tr>
+								<tr class="total">
+									<td class="title">{{ lang.text_discount }}</td>
+									<td class="value">{{ result.currency_abbr~' '~result.discount_value }}</td>
+								</tr>
+								<tr class="total">
+									<td class="title">{{ lang.text_tax }}</td>
+									<td class="value">{{ result.currency_abbr~' '~result.tax }}</td>
+								</tr>
+								<tr class="total">
+									<td class="title">{{ lang.text_total }}</td>
+									<td class="value">{{ result.currency_abbr~' '~result.amount }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="note">
+						<table>
+							<tbody>
+								<tr>
+									<td class="block v-align-top">
+										<span>{{ lang.text_customer_note }}</span>
+										<p>{{ result.note }}</p>
+									</td>
+									<td class="block v-align-top">
+										<span>{{ lang.text_terms_Conditions }}</span>
+										<p>{{ result.tc }}</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

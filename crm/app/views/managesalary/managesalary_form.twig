@@ -1,0 +1,65 @@
+{{ include('common/header.twig') }}
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="user-avtar">
+					{% if result.picture and result.picture is ondisk %}
+						<img class="img-fluid img-thumbnail" src="public/uploads/{{ result.picture }}">
+					{% else %}
+						<span>{{ result.firstname|split('')[0] }}</span>
+					{% endif %}
+				</div>
+				<div class="user-details pt-2  pb-2 text-center">
+					<h2 class="font-20">{{ result.firstname~' '~result.lastname }}</h2>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td>{{ lang.text_email_address }}</td>
+								<td>{{ result.email }}</td>
+							</tr>
+							<tr>
+								<td>{{ lang.text_mobile_number }}</td>
+								<td>{{ result.mobile }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="panel panel-default"> 
+			<div class="panel-head">
+				<div class="panel-title">
+					<i class="las la-wallet panel-head-icon"></i>
+					<span class="panel-title-text">{{ page_title }}</span>
+				</div>
+			</div>
+			<form action="{{ action }}" method="post">
+				<div class="panel-body">
+					<input type="hidden" name="_token" value="{{ common.token }}">
+					<input type="hidden" name="id" value="{{ result.user_id }}">
+					<div class="form-group">
+						<label class="col-form-label">{{ lang.text_salary_template }} <span class="form-required">*</span></label>
+						<div class="input-group">
+							<div class="input-group-prepend"><span class="input-group-text"><i class="las la-mobile"></i></span></div>
+							<select name="salarytemplate" class="custom-select" required>
+								<option value="">{{ lang.text_select_salary_template }}</option>
+								{% for value in salarytemplate %}
+									<option value="{{ value.id }}" {{ value.id == result.salarytemplate_id ? 'selected' : false }}>{{ value.grade }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer text-center">
+					<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

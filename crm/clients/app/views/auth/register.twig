@@ -1,0 +1,87 @@
+{{ include('auth/auth_header.twig') }}
+<div id="login-form" class="lgn-form ">
+	<form class="form-vertical" action="{{ action }}" method="post">
+		{% if success %}
+			<div class="alert alert-success alert-dismissable">
+				{{ success }}
+				<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+			</div>
+		{% endif %}
+		{% if error %}
+			<div class="alert alert-danger alert-dismissable">
+				{{ error }}
+				<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+			</div>
+		{% endif %}
+		<input type="hidden" name="_token" value="{{ token }}">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="lgn-input form-group">
+					<label class="control-label col-sm-12">{{ lang.text_first_name }}</label>
+					<div class="col-sm-12">
+						<input class="form-control" type="text" name="fname" id="lgn-name" placeholder="Enter {{ lang.text_first_name }}" autocomplete="off" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="lgn-input form-group">
+					<label class="control-label col-sm-12">{{ lang.text_last_name }}</label>
+					<div class="col-sm-12">
+						<input class="form-control" type="text" name="lname" id="lgn-lastname" placeholder="Enter {{ lang.text_last_name }}" autocomplete="off" required>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="lgn-input form-group">
+					<label class="control-label col-sm-12">{{ lang.text_email_address }}</label>
+					<div class="col-sm-12">
+						<input class="form-control" type="email" name="mail" id="lgn-mail" placeholder="Enter {{ lang.text_email_address }}" autocomplete="off" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="lgn-input form-group">
+					<label class="control-label col-sm-12">{{ lang.text_mobile_number }}</label>
+					<div class="col-sm-12">
+						<input class="form-control" type="number" name="mobile" id="lgn-number" placeholder="Enter {{ lang.text_mobile_number }}" autocomplete="off" required>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">	
+				<div class="lgn-input form-group">
+					<label class="control-label col-sm-12">{{ lang.text_password }}</label>
+					<div class="col-sm-12">
+						<input type="password" name="password" id="lgn-pass" class="form-control" placeholder="{{ lang.text_password }}" autocomplete="off">
+					</div>	
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="lgn-input form-group">
+					<label class="control-label col-sm-12">{{ lang.text_confirm_password }}</label>
+					<div class="col-sm-12">
+						<input type="password" name="confirmpassword" id="lgn-cnfrmpasspass" class="form-control" placeholder="{{ lang.text_confirm_password }}" autocomplete="off">
+					</div>	
+				</div>
+			</div>
+		</div>
+		<div class="lgn-input form-group">
+			<label class="control-label col-sm-12">{{ lang.text_what_is~' '~random(1, 10)~' '~lang.text_plus~' '~random(1, 30) }} = </label>
+			<div class="col-sm-12">
+				<input type="text" id="lgn-bot" class="form-control" placeholder="Answer" autocomplete="off">
+			</div>
+		</div>
+		<div class="lgn-forgot">
+			<a href="{{ common.url_route }}login">{{ lang.text_login }}</a>
+		</div>
+		<div class="lgn-submit">
+			<button type="submit" id="register-submit" class="btn btn-primary btn-pill btn-lg" name="register">{{ lang.text_create_account }}</button>
+		</div>
+	</form>
+</div>
+{{ include('auth/auth_footer.twig') }}
+
+

@@ -1,0 +1,112 @@
+{{ include('common/header.twig') }}
+<!-- Expense Type page start -->
+<div class="panel panel-default">
+    <div class="panel-head">
+        <div class="panel-title">
+            <i class="las la-receipt panel-head-icon"></i>
+            <span class="panel-title-text">{{ page_title }}</span>
+        </div>
+        <div class="panel-action">
+            <div class="dropdown export-dropdown d-inline-block mr-2">
+                <a class="btn btn-white btn-sm btn-pill dropdown-toggle" data-toggle="dropdown"><i class="las la-cloud-download-alt text-primary pr-1"></i> <span>{{ lang.text_export }}</span> <i class="las la-angle-down pl-2"></i></a>
+                <ul class="dropdown-menu dropdown-menu-right export-button">
+                    <li><a href="#" class="excel"><i class="las la-file-excel pr-2"></i>{{ lang.text_excel }}</a></li>
+                    <li><a href="#" class="csv"><i class="las la-file-csv pr-2"></i>{{ lang.text_csv }}</a></li>
+                    <li><a href="#" class="print"><i class="las la-print pr-2"></i>{{ lang.text_print }}</a></li>
+                    <li><a href="#" class="copy"><i class="las la-copy pr-2"></i>{{ lang.text_copy }}</a></li>
+                </ul>
+            </div>
+            {% if page_add %}
+                <a class="btn btn-primary btn-outline btn-gradient btn-pill btn-sm" data-toggle="modal" data-target="#addExpenseModel"><i class="las la-plus mr-1"></i> {{ lang.text_new_expense_type }}</a>
+            {% endif %}
+        </div>  
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-align-middle table-bordered table-striped datatable-table" width="100%">
+                <thead>
+                    <tr class="table-heading">
+                        <th class="table-srno">#</th>
+                        <th>{{ lang.text_expense_type_name }}</th>
+                        <th>{{ lang.text_description }}</th>
+                        <th>{{ lang.text_status }}</th>
+                        {% if page_edit or page_delete %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in result %}
+                        <tr> 
+                            <td class="table-srno">{{ loop.index }}</td>
+                            <td class="text-primary">{{ value.name }}</td>
+                            <td>{{ value.description }}</td>
+                            <td>
+                                {% if value.status == '1' %}
+                                    <span class="label label-pill label-success">{{ lang.text_active }}</span>
+                                {% else %}
+                                    <span class="label label-pill label-danger">{{ lang.text_inactive }}</span>
+                                {% endif %}
+                            </td>
+                            {% if page_edit or page_delete %}
+                                <td class="table-action">
+                                    {% if page_edit %}
+                                        <a class="btn btn-primary btn-circle btn-outline btn-outline-1x edit-expense-type" data-toggle="tooltip" title="{{ lang.text_edit }}" data-name="{{ value.name }}" data-description="{{ value.description }}" data-id="{{ value.id }}" data-status="{{ value.status }}">
+                                            <i class="las la-edit"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if page_delete %}
+                                        <a class="btn btn-danger btn-circle btn-outline btn-outline-1x table-delete" data-toggle="tooltip" data-placement="top" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% if page_add or page_edit %}
+    <input type="hidden" class="lang-new-expense-type" value="{{ lang.text_new_expense_type }}">
+    <input type="hidden" class="lang-edit-expense-type" value="{{ lang.text_edit_expense_type }}">
+    <!-- ADD EDIT MODAL -->
+    <div class="modal fade" id="addExpenseModel" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ lang.text_new_expense_type }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ action }}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_expense_type_name }} <span class="form-required">*</span></label>
+                            <input type="text" class="form-control" name="name" placeholder="{{ lang.text_expense_type_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_description }}</label>
+                            <textarea name="description" class="form-control" rows="3" placeholder="{{ lang.text_description }}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">{{ lang.text_status }}</label>
+                            <select name="status" class="custom-select">
+                                <option value="1">{{ lang.text_active }}</option>
+                                <option value="0">{{ lang.text_inactive }}</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="id">
+                        <input type="hidden" name="_token" value="{{ common.token }}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill">{{ lang.text_save }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% if page_delete %}{{ include('common/delete-modal.twig') }}{% endif %}
+    {{ include('common/footer.twig') }}

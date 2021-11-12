@@ -1,0 +1,16 @@
+{{ include('common/header.twig') }}
+<div class="panel panel-default mt-4"  style="padding: 40px;">
+	<div class="panel-body text-center pt-2">
+		<div class="text-center pt-3">
+			{% if payment_message %}
+				<p class="font-18">{{ payment_message }}</p>
+			{% endif %}
+			<p class="font-14">{{ lang.text_cancel_message }}</p>
+			<div class="pt-4 pb-4">
+				<a href="{{ common.url_route }}dashboard" class="btn btn-outline btn-pill btn-gradient btn-primary mr-3"><i class="las la-tv font-16 mr-2"></i>{{ lang.text_dashboard }}</a>
+				<a href="{{ common.url_route }}invoices" class="btn btn-outline btn-pill btn-gradient btn-warning"><i class="las la-file-invoice font-16 mr-2"></i>{{ lang.text_invoice }}</a>
+			</div>
+		</div>
+	</div>
+</div>
+{{ include('common/footer.twig') }}

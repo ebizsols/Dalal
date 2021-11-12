@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>{{ lang.text_quotation }}</title>
+	<link rel="stylesheet" href="public/css/style-invoice.css" type="text/css">
+</head>
+<body>
+	<div class="inv-template-3">
+		<div class="company pl-30 pr-30">
+			<table>
+				<tbody>
+					<tr>
+						<td class="info">
+							<div class="logo"><img src="{{ common.info.logo }}" alt="logo"></div>
+							<div class="name">{{ common.info.legal_name }}</div>
+							<div class="text">{% if common.info.email %}{{ common.info.email }},{% endif %} {{ common.info.phone }}</div>
+							<div class="text">{{ common.info.address|join(', ') }}</div>
+						</td>
+						<td class="text-right">
+							<div class="title">{{ lang.text_quotation }}</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="meta pl-30 pr-30">
+			<table cellspacing="0">
+				<tr>
+					<td class="bill-to">
+						<div class="">
+							<div class="heading">{{ lang.text_quote_to }}</div>
+							<div class="title">{{ result.company }}</div>
+							<div class="text">{{ result.email }}</div>
+							<div class="text">{{ result.address|join(', ') }}</div>
+						</div>
+					</td>
+					<td class="info">
+						<table>
+							<tbody>
+								<tr>
+									<td class="text text-right"># : </td>
+									<td class="text w-min-130">{{ common.info.quote.prefix~"%05d"|format(result.id) }}</td>
+								</tr>
+								<tr>
+									<td class="text text-right">{{ lang.text_quote_date }} : </td>
+									<td class="text w-min-130">{{ result.date|date(common.info.date_format) }}</td>
+								</tr>
+								<tr>
+									<td class="text text-right">{{ lang.text_expiry_date }} : </td>
+									<td class="text w-min-130">{{ result.expiry|date(common.info.date_format) }}</td>
+								</tr>
+								<tr>
+									<td class="text text-right">{{ lang.text_payment_method }} : </td>
+									<td class="text w-min-130">{{ result.payment_method }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<td class="money">
+						<div class="block">
+							<span>{{ lang.text_amount }}</span>
+							<p style="font-size: 28px">{{ result.currency_abbr~' '~result.amount }}</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="proposal-wrapper">
+			<div class="pl-30 pr-30">
+				<h4 class="subject">{{ result.project_name }}</h4>
+				{% if result.proposal %}
+					<div class="details">{{ result.proposal|html_entity_decode }}</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="pl-30 pr-30">
+			<div class="item">
+				<table cellspacing="0">
+					<thead>
+						<tr>
+							<th>{{ lang.text_item_and_description }}</th>
+							<th>{{ lang.text_quantity }}</th>
+							<th>{{ lang.text_unit_cost }}</th>
+							<th>{{ lang.text_discount }}</th>
+							<th>{{ lang.text_tax }}</th>
+							<th>{{ lang.text_price }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for value in result.items %}
+							<tr class="item-list">
+								<td class="title"><p>{{ value.name }}</p><span>{{ value.descr }}</span></td>
+								<td class="qty">{{ value.quantity }}</td>
+								<td class="cost">{{ result.currency_abbr~' '~value.cost }}</td>
+								<td class="discount">{{ result.currency_abbr }} {% if value.discountvalue %}{{ value.discountvalue }}{% else %}0{% endif %}</td>
+								<td class="tax">
+									{% for tax in value.tax %}
+										<div><span>{{ result.currency_abbr~' '~tax.tax_price }}</span><span> ({{ tax.name }})</span></div>
+									{% endfor %}
+								</td>
+								<td class="price">{{ result.currency_abbr~' '~value.price }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="payment-total">
+				<table>
+					<tr>
+						<td class="customer-note text-left pl-30 pr-30">
+							<p>{{ result.note }}</p>
+						</td>
+						<td>
+							<div class="total">
+								<table cellspacing="0">
+									<tbody>
+										<tr>
+											<td>{{ lang.text_sub_total }}</td>
+											<td>{{ result.currency_abbr~' '~result.subtotal }}</td>
+										</tr>
+										{% if result.discount_value > '0' %}
+											<tr>
+												<td>{{ lang.text_discount }}</td>
+												<td>{{ result.currency_abbr~' '~result.discount_value }}</td>
+											</tr>
+										{% endif %}
+										<tr>
+											<td>{{ lang.text_tax }}</td>
+											<td>{{ result.currency_abbr~' '~result.tax }}</td>
+										</tr>
+										<tr>
+											<td>{{ lang.text_total }}</td>
+											<td>{{ result.currency_abbr~' '~result.amount }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		{% if result.tc %}
+			<div class="pl-30 pr-30">
+				<div class="tc">
+					<span>{{ lang.text_terms_Conditions }}</span>
+					<p>{{ result.tc }}</p>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+</body>
+</html>

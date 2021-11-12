@@ -1,0 +1,192 @@
+{{ include('common/header.twig') }}
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="user-avtar">
+					{% if staff.picture and staff.picture is ondisk %}
+						<img class="img-fluid img-thumbnail" src="public/uploads/{{ staff.picture }}">
+					{% else %}
+						<span>{{ staff.firstname|split('')[0] }}</span>
+					{% endif %}
+				</div>
+				<div class="user-details pt-2  pb-2 text-center">
+					<h2 class="font-20">{{ staff.firstname~' '~staff.lastname }}</h2>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td>{{ lang.text_email_address }}</td>
+								<td>{{ staff.email }}</td>
+							</tr>
+							<tr>
+								<td>{{ lang.text_mobile_number }}</td>
+								<td>{{ staff.mobile }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="panel panel-default">
+			<div class="panel-head">
+				<div class="panel-title">{{ page_title }}</div>
+				<div class="panel-action"></div>
+			</div>
+			<form action="{{ action }}" class="panel-wrapper" method="post">
+				<input type="hidden" name="_token" value="{{ common.token }}">
+				<input type="hidden" class="staff_id" name="staff_id" value="{{ staff.user_id }}">
+				<input type="hidden" name="salarytemplate_id" value="{{ salary.id }}">
+				<div id="makepayment-container" class="panel-body pb-1">
+					<div class="row">
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_month }} <span class="form-required">*</span></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-calendar"></i></span>
+								</div>
+								<input type="text" name="month_year" class="form-control bg-white mon-payment datetimepicker-input" id="month" placeholder="{{ lang.text_month }}" required readonly>
+							</div>
+						</div>
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_gross_salary }} <span class="form-required">*</span></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-coins"></i></span>
+								</div>
+								<input type="text" name="gross_salary" class="form-control" value="{{ salary.gross_salary }}" readonly required>
+							</div>
+						</div>
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_total_deduction }}</label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-money-bill"></i></span>
+								</div>
+								<input type="text" name="total_deduction" class="form-control" value="{{ salary.total_deduction }}" readonly>
+							</div>
+						</div>
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_net_salary }} <span class="form-required">*</span></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-coins"></i></span>
+								</div>
+								<input type="text" name="amount" class="form-control t-amount" value="{{ salary.net_salary }}" readonly required>
+								<input type="hidden" name="net_salary" value="{{ salary.net_salary }}">
+							</div>
+						</div>
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_advance }}</label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-money-bill-alt"></i></span>
+								</div>
+								<input type="text" name="advance" class="form-control t-advance">
+							</div>
+						</div>
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_deduction }}</label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-money-bill-wave"></i></span>
+								</div>
+								<input type="text" name="deduction" class="form-control t-deduction">
+							</div>
+						</div>
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_payment_amount }} <span class="form-required">*</span></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-wallet"></i></span>
+								</div>
+								<input type="text" name="paid" class="form-control t-total" value="{{ salary.net_salary }}" required>
+							</div>
+						</div>
+						<div class="col-md-6 form-group">
+							<label class="col-form-label">{{ lang.text_payment_method }} <span class="form-required">*</span></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-credit-card"></i></span>
+								</div>
+								<select name="method" class="custom-select" required>
+									{% for value in methods %}
+										<option value="{{ value.id }}">{{ value.name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-md-12 form-group">
+							<label class="col-form-label">{{ lang.text_comments }}</label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="las la-paragraph"></i></span>
+								</div>
+								<input type="text" name="comments" class="form-control" placeholder="{{ lang.text_comments }} . . .">
+							</div>
+						</div>
+						<input type="hidden" name="currency" value="{{ salary.currency_id }}">
+					</div>
+				</div>
+				<div class="panel-footer text-center">
+					<button type="submit" name="submit" class="btn btn-primary btn-gradient btn-pill makepayment-submit" disabled>{{ lang.text_save }}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<style>.ui-datepicker-calendar { display: none; }</style>
+<script type="text/javascript" src="public/js/make-payment.js"></script>
+{% if page_history %}
+	<div class="panel panel-default"> 
+		<div class="panel-head">
+			<div class="panel-title">{{ lang.text_payment_history }}</div>
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table table-align-middle table-bordered table-striped datatable-table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>{{ lang.text_month }}</th>
+							<th>{{ lang.text_date }}</th>
+							<th>{{ lang.text_net_salary }}</th>
+							<th>{{ lang.text_payment_amount }}</th>
+							{% if page_history_view or page_history_delete %}
+								<th></th>
+							{% endif %}
+						</tr>
+					</thead>
+					<tbody>
+						{% for value in history %}
+							<tr>
+								<td>{{ loop.index }}</td>
+								<td>{{ value.month_year|date(common.info.date_my_format) }}</td>
+								<td>{{ value.date_of_joining|date(common.info.date_format) }}</td>
+								<td>{{ value.abbr~value.net_salary }}</td>
+								<td>{{ value.abbr~value.amount }}</td>
+								{% if page_history_view or page_history_delete %}
+									<td class="table-action">
+										{% if page_history_view %}
+											<a href="{{ common.url_route~'managesalary/history/view&id='~value.id }}" class="btn btn-primary btn-circle btn-outline btn-outline-1x" data-toggle="tooltip" title="{{ lang.text_view }}"><i class="las la-laptop"></i></a>
+										{% endif %}
+										{% if page_history_delete %}
+											<a class="btn btn-danger btn-circle btn-outline btn-outline-1x table-delete" data-toggle="tooltip" title="{{ lang.text_delete }}"><i class="las la-trash"></i><input type="hidden" value="{{ value.id }}"></a>
+										{% endif %}
+									</td>
+								{% endif %}
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endif %}
+{% if page_history_delete %}
+	{{ include('common/delete-modal.twig') }}
+{% endif %}
+{{ include('common/footer.twig') }}
