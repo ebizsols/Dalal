@@ -17,11 +17,11 @@ class CreateAgenciesTable extends Migration
             Schema::create('agencies', function (Blueprint $table) {
                 $table->bigIncrements('id');
                 $table->string('title');
-                $table->longText('description')->default(NULL);
-                $table->string('email')->default(NULL);
-                $table->unsignedInteger('avatar_id')->default(NULL);
-                $table->bigInteger('phone')->default(NULL);
-                $table->bigInteger('fax')->default(NULL);
+                $table->longText('description')->nullable()->default(NULL);
+                $table->string('email')->nullable()->default(NULL);
+                $table->unsignedInteger('avatar_id')->nullable()->default(NULL);
+                $table->bigInteger('phone')->nullable()->default(NULL);
+                $table->bigInteger('fax')->nullable()->default(NULL);
                 $table->integer('is_featured')->default(0);
                 $table->enum('status', array('published', 'unpublished'))->default('published');
                 $table->timestamps();
