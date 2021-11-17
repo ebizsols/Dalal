@@ -6,7 +6,9 @@ use Botble\Base\Events\BeforeEditContentEvent;
 use Botble\Agency\Http\Requests\AgencyRequest;
 use Botble\Agency\Repositories\Interfaces\AgencyInterface;
 use Botble\Base\Http\Controllers\BaseController;
+use Botble\Media\Repositories\Interfaces\MediaFileInterface;
 use Illuminate\Http\Request;
+use Botble\Agency\Http\Resources\AgencyResource;
 use Exception;
 use Botble\Agency\Tables\AgencyTable;
 use Botble\Base\Events\CreatedContentEvent;
@@ -17,6 +19,8 @@ use Botble\Agency\Forms\AgencyForm;
 use Botble\Agency\Forms\AssignAgencyForm;
 use Botble\Base\Forms\FormBuilder;
 use Botble\Agency\Http\Requests\AgentRequest;
+use Carbon\Carbon;
+
 
 class AgencyController extends BaseController
 {
@@ -42,7 +46,7 @@ class AgencyController extends BaseController
      */
     public function index(AgencyTable $table)
     {
-        // echo "heelo"; exit;
+        
 
         page_title()->setTitle(trans('plugins/agency::agency.name'));
 
@@ -55,9 +59,13 @@ class AgencyController extends BaseController
      */
     public function create(FormBuilder $formBuilder)
     {
+       
         
         page_title()->setTitle(trans('plugins/agency::agency.create'));
-        return $formBuilder->create(AgencyForm::class)->renderForm();
+        return $formBuilder->
+        create(AgencyForm::class)->renderForm();
+        
+
     }
 
     /**
@@ -68,10 +76,22 @@ class AgencyController extends BaseController
      */
     public function store(AgencyRequest $request, BaseHttpResponse $response)
     {
-        $agency = $this->AgencyRepository->createOrUpdate($request->input());
+        
+        $customRequest = $request->input();
+        if ($request->input('avatar_id')) {
+            
+            $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
+            
+            if ($image) {
+                $customRequest['avatar_id'] = $image->id;
+            }
+        }
+ 
+    
+        $agency = $this->AgencyRepository->createOrUpdate($customRequest);
 
         event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
-        // ECHO "hello"; exit;
+        
         return $response
             ->setPreviousUrl(route('agency.index'))
             ->setNextUrl(route('agency.edit', $agency->id))
@@ -89,12 +109,9 @@ class AgencyController extends BaseController
     public function edit($id, FormBuilder $formBuilder, Request $request)
     {
         $agency = $this->AgencyRepository->findOrFail($id);
-       // echo "<pre>"; print_r($agency); exit;
-
         event(new BeforeEditContentEvent($request, $agency));
-
         page_title()->setTitle(trans('plugins/agency::agency.edit') . ' "' . $agency->name . '"');
-
+       
         return $formBuilder->create(AgencyForm::class, ['model' => $agency])->renderForm();
     }
 
@@ -105,9 +122,21 @@ class AgencyController extends BaseController
      */
     public function update($id, AgencyRequest $request, BaseHttpResponse $response)
     {
-        $agency = $this->AgencyRepository->findOrFail($id);
+        $customRequest = $request->input();
 
-        $agency->fill($request->input());
+        
+        $agency = $this->AgencyRepository->findOrFail($id);
+        $agency->is_featured = ($request->has('is_featured') && $request->is_profile_listing == 'false') ? 0 : 1;
+        
+        if ($request->input('avatar_id')) {
+            $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
+            if ($image) {
+                $agency->avatar_id = $image->id;
+                $customRequest['avatar_id'] = $image->id;
+            }
+        }
+        $agency->is_featured = $request->input('is_featured');
+        $agency->fill($customRequest);
 
         $this->AgencyRepository->createOrUpdate($agency);
 
@@ -163,50 +192,34 @@ class AgencyController extends BaseController
 
         return $response->setMessage(trans('core/base::notices.delete_success_message'));
     }
+    /**
+     * @param Request $request
+     * @param BaseHttpResponse $response
+     */
+    public function getList(Request $request, BaseHttpResponse $response)
+    {
+        $keyword = $request->input('q');
 
-    // agent assignment
+        if (!$keyword) {
+            return $response->setData([]);
+        }
+
+        $data = $this->agencyRepository->getModel()
+            ->where('title', 'LIKE', '%' . $keyword . '%')
+            ->orWhere('description', 'LIKE', '%' . $keyword . '%')
+            ->select(['id', 'name', 'description'])
+            ->take(10)
+            ->get();
+
+        return $response->setData(AgencyResource::collection($data));
+    }
+
+    
     public function assignAgent(request $req, FormBuilder $formBuilder)
     {
         page_title()->setTitle(trans('plugins/agency::agency.create'));
         
         return $formBuilder->create(AssignAgencyForm::class)->renderForm();
-    }
-
-    // /**
-    //  * Insert new Agency into database
-    //  *
-    //  * @param AgencyRequest $request
-    //  * @return BaseHttpResponse
-    //  */
-    // public function saveAgent(AgencyRequest $request, BaseHttpResponse $response)
-    // {
-    //     $agency = $this->AgencyRepository->createOrUpdate($request->input());
-
-    //     event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
-    //     // ECHO "hello"; exit;
-    //     return $response
-    //         ->setPreviousUrl(route('agency.assignAgent'))
-    //         ->setNextUrl(route('agency.saveAgent', $agency->id))
-    //         ->setMessage(trans('core/base::notices.create_success_message'));
-    // }
-
-    /**
-     * Insert new Agency into database
-     *
-     * @param AgencyRequest $request
-     * @return BaseHttpResponse
-     */
-    public function saveAgent(AgentRequest $request, BaseHttpResponse $response)
-    {
-        echo "i am here"; print_r($request->input()); exit;
-        $agency = $this->AgencyRepository->createOrUpdate($request->input());
-
-        event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
-        // ECHO "hello"; exit;
-        return $response
-            ->setPreviousUrl(route('agency.assignAgent'))
-            ->setNextUrl(route('agency.saveAgent', $agency->id))
-            ->setMessage(trans('core/base::notices.create_success_message'));
     }
 
 

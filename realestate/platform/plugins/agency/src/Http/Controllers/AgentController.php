@@ -17,6 +17,8 @@ use Botble\Agency\Forms\AgencyForm;
 use Botble\Agency\Forms\AssignAgencyForm;
 use Botble\Base\Forms\FormBuilder;
 use Botble\Agency\Http\Requests\AgentRequest;
+use Botble\Agency\Models\AgencyAccountRefrence;
+use Illuminate\Support\Facades\DB;
 
 class AgentController extends BaseController
 {
@@ -54,84 +56,31 @@ class AgentController extends BaseController
      */
     public function saveAgent(AgentRequest $request, BaseHttpResponse $response)
     {
-        // echo "i am here"; print_r($request->input()); exit;
+       
+         
         $agentIds = isset($request->assignAgency)?$request->assignAgency:array();
-        $agencyId = isset($request->agencyId)?$request->agencyId:0;
+        $agencyId = isset($request->agencyId)?$request->agencyId:array();
+
+        //delete data before insert
+        $agencyAccountRefrence = new AgencyAccountRefrence();
+        $agencyAccountRefrence->where('agency_id', $agencyId)->delete();
         
+        if(!empty($agentIds)){
+            foreach ($agentIds as $agentId){
 
-        foreach ($agentIds as $agentId){
-
-            $agency = $this->AgentRepository->createOrUpdate([
-                'account_id'=>$agentId, 
-                'agency_id'=>$agencyId
-            ]);
+                $agency = $this->AgentRepository->createOrUpdate([
+                    'account_id'=>$agentId, 
+                    'agency_id'=>$agencyId
+                ]);
+            }
+            event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
         }
-
-        //echo "<pre>"; print_r('check db'); exit;
-
-        event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
-        // ECHO "hello"; exit;
+        
         return $response
-            ->setPreviousUrl(route('agency.assignAgent'))
-            ->setNextUrl(route('agency.saveAgent', $agency->id))
-            ->setMessage(trans('core/base::notices.create_success_message'));
+            ->setNextUrl(route('agency.index'))
+            ->setMessage(trans('plugins/agency::agency.agent'));
+        
     }
 
-    /**
-     * Insert new Agency into database
-     *
-     * @param AgencyRequest $request
-     * @return BaseHttpResponse
-     */
-    public function store(AgentRequest $request, BaseHttpResponse $response)
-    {
-        $agency = $this->AgencyRepository->createOrUpdate($request->input());
-
-        event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
-        // ECHO "hello"; exit;
-        return $response
-            ->setPreviousUrl(route('agency.saveAgent'))
-            ->setNextUrl(route('agency.edit', $agency->id))
-            ->setMessage(trans('core/base::notices.create_success_message'));
-    }
-
-    /**
-     * Show edit form
-     *
-     * @param $id
-     * @param Request $request
-     * @param FormBuilder $formBuilder
-     * @return string
-     */
-    public function edit($id, FormBuilder $formBuilder, Request $request)
-    {
-        $agency = $this->AgentRepository->findOrFail($id);
-       // echo "<pre>"; print_r($agency); exit;
-
-        event(new BeforeEditContentEvent($request, $agency));
-
-        page_title()->setTitle(trans('plugins/agency::agency.edit') . ' "' . $agency->name . '"');
-
-        return $formBuilder->create(AgencyForm::class, ['model' => $agency])->renderForm();
-    }
-
-    /**
-     * @param $id
-     * @param AgencyRequest $request
-     * @return BaseHttpResponse
-     */
-    public function update($id, AgentRequest $request, BaseHttpResponse $response)
-    {
-        $agency = $this->AgencyRepository->findOrFail($id);
-
-        $agency->fill($request->input());
-
-        $this->AgencyRepository->createOrUpdate($agency);
-
-        event(new UpdatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
-
-        return $response
-            ->setPreviousUrl(route('agency.index'))
-            ->setMessage(trans('core/base::notices.update_success_message'));
-    }
+    
 }

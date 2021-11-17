@@ -16,7 +16,7 @@ Route::group(['namespace' => 'Botble\Agency\Http\Controllers', 'middleware' => [
                 'permission' => 'agency.destroy',
             ]);
         });
-        Route::get('agencies/assignAgent', [
+        Route::get('agencies/assignAgent/{id}', [
                 'as'        => 'agency.assignAgent',
                 'uses'      => 'AgentController@assignAgent',
 
@@ -27,11 +27,12 @@ Route::group(['namespace' => 'Botble\Agency\Http\Controllers', 'middleware' => [
             'uses'      => 'AgentController@saveAgent',
 
         ]);
-        Route::get('agencies/saveAgent', [
-        'as'        => 'agency.saveAgent',
-        'uses'      => 'AgentController@saveAgent',
+        // Route::POST('agencies/assignAgent/{id}/edit', [
+        // 'as'        => 'agency.edit',
+        // 'uses'      => 'AgentController@edit',
 
-        ]);
+        // ]);
+        
     });
 
     if (defined('THEME_MODULE_SCREEN_NAME')) {

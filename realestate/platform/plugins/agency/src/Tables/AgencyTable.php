@@ -8,6 +8,7 @@ use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Agency\Repositories\Interfaces\AgencyInterface;
 use Botble\Table\Abstracts\TableAbstract;
 use Html;
+use RvMedia;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Yajra\DataTables\DataTables;
 
@@ -40,7 +41,7 @@ class AgencyTable extends TableAbstract
         if (!Auth::user()->hasAnyPermission(['agency.edit', 'agency.destroy'])) {
             $this->hasOperations = false;
             $this->hasActions = false;
-            // echo "hello";exit;
+            
         }
     }
 
@@ -54,11 +55,16 @@ class AgencyTable extends TableAbstract
     {
         $data = $this->table
             ->eloquent($this->query())
-            ->editColumn('name', function ($item) {
+            ->editColumn('title', function ($item) {
                 if (!Auth::user()->hasPermission('agency.edit')) {
-                    return $item->name;
+                    return $item->title;
+                    
                 }
-                return Html::link(route('agency.edit', $item->id), $item->name);
+                return Html::link(route('agency.edit', $item->id), $item->title);
+            })
+            ->editColumn('avatar_id', function ($item) {
+                return Html::image(RvMedia::getImageUrl($item->avatar->url, 'thumb', false, RvMedia::getDefaultImage()),
+                    $item->name, ['width' => 50]);
             })
             ->editColumn('checkbox', function ($item) {
                 return $this->getCheckbox($item->id);
@@ -94,10 +100,12 @@ class AgencyTable extends TableAbstract
     {
         $query = $this->repository->getModel()->select([
             'id',
-            'name',
+            'title',
+            // 'first_name',
             'created_at',
             'status',
-        ]);
+            'avatar_id',
+        ])->with(['avatar']);
 
         return $this->applyScopes($query);
     }
@@ -113,9 +121,13 @@ class AgencyTable extends TableAbstract
                 'title' => trans('core/base::tables.id'),
                 'width' => '20px',
             ],
-            'name' => [
-                'title' => trans('core/base::tables.name'),
-                'class' => 'text-left',
+            'title' => [
+                'title' => trans('core/base::tables.title'),
+                'width' => '20px',
+            ],
+            'avatar_id'  => [
+                'title' => trans('core/base::tables.image'),
+                'width' => '70px',
             ],
             'created_at' => [
                 'title' => trans('core/base::tables.created_at'),
@@ -159,7 +171,7 @@ class AgencyTable extends TableAbstract
     public function getBulkChanges(): array
     {
         return [
-            'name' => [
+            'title' => [
                 'title'    => trans('core/base::tables.name'),
                 'type'     => 'text',
                 'validate' => 'required|max:120',
@@ -169,10 +181,6 @@ class AgencyTable extends TableAbstract
                 'type'     => 'select',
                 'choices'  => BaseStatusEnum::labels(),
                 'validate' => 'required|in:' . implode(',', BaseStatusEnum::values()),
-            ],
-            'created_at' => [
-                'title' => trans('core/base::tables.created_at'),
-                'type'  => 'date',
             ],
         ];
     }
