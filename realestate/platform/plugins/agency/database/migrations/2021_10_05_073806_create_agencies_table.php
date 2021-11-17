@@ -19,7 +19,7 @@ class CreateAgenciesTable extends Migration
                 $table->string('title');
                 $table->longText('description');
                 $table->string('email');
-                $table->integer('avatar_id');
+                $table->integer('avatar_id')->default('');
                 $table->bigInteger('phone');
                 $table->bigInteger('fax');
                 $table->integer('is_featured');
