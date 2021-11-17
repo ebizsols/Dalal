@@ -9,7 +9,7 @@ use Botble\Agency\Models\Agency;
 use Illuminate\Support\Facades\DB;
 use Botble\RealEstate\Models\Account;
 use Illuminate\Support\Arr;
-use Botble\Agency\Models\AgencyAccountRefrence;
+use Botble\Agency\Models\AgencyAccountReference;
 
 class AssignAgencyForm extends FormAbstract
 {
@@ -21,7 +21,7 @@ class AssignAgencyForm extends FormAbstract
     public function buildForm()
     {
         $agncyId = $this->getRequest()->id;
-        
+
         $account = new Account();
         $accountList = $account->get()->toArray();
         $newAccountList = array();
@@ -32,17 +32,17 @@ class AssignAgencyForm extends FormAbstract
         }
 
         $id = $this->getRequest()->id;
-        $AgencyAccountRefrence = new AgencyAccountRefrence();
-        $AgencyAccountRefrencelisting = $AgencyAccountRefrence->where('agency_id',$id)->get()->toArray();
-        $AgencyAccountRefrencenew = array();
-        foreach ($AgencyAccountRefrencelisting as $something){
-            $AgencyAccountRefrencenew[] = $something['account_id'];
+        $AgencyAccountReference = new AgencyAccountReference();
+        $AgencyAccountReferencelisting = $AgencyAccountReference->where('agency_id',$id)->get()->toArray();
+        $AgencyAccountReferencenew = array();
+        foreach ($AgencyAccountReferencelisting as $something){
+            $AgencyAccountReferencenew[] = $something['account_id'];
         }
-        $this->selectedIds = $AgencyAccountRefrencenew;
-        //echo "<pre>"; print_r($AgencyAccountRefrencenew); exit;
+        $this->selectedIds = $AgencyAccountReferencenew;
+        //echo "<pre>"; print_r($AgencyAccountReferencenew); exit;
 
         $this
-            ->setupModel(new AgencyAccountRefrence)
+            ->setupModel(new AgencyAccountReference)
             ->setValidatorClass(AgentRequest::class)
             ->setUrl(route('agency.saveAgent'))
             ->withCustomFields()
@@ -56,10 +56,10 @@ class AssignAgencyForm extends FormAbstract
 
                 'choices'    => $newAccountList,
                 'selected' => function () { // Allows handling data before passed to view for setting default values. Useful for related models
-                    //$AgencyAccountRefrencenew = array();
+                    //$AgencyAccountReferencenew = array();
                     //echo "<pre>---"; print_r($newAccountList); exit;
-                    //return array_pluck($AgencyAccountRefrencenew, 'id');
-                   //return Arr::pluck($id['AgencyAccountRefrence'], 'id');
+                    //return array_pluck($AgencyAccountReferencenew, 'id');
+                   //return Arr::pluck($id['AgencyAccountReference'], 'id');
                     return $this->selectedIds;
                 }
 

@@ -17,7 +17,7 @@ use Botble\Agency\Forms\AgencyForm;
 use Botble\Agency\Forms\AssignAgencyForm;
 use Botble\Base\Forms\FormBuilder;
 use Botble\Agency\Http\Requests\AgentRequest;
-use Botble\Agency\Models\AgencyAccountRefrence;
+use Botble\Agency\Models\AgencyAccountReference;
 use Illuminate\Support\Facades\DB;
 
 class AgentController extends BaseController
@@ -25,8 +25,8 @@ class AgentController extends BaseController
     /**
      * @var AgentInterface
      */
-   
-    protected $AgentRepository;         
+
+    protected $AgentRepository;
 
     /**
      * AgencyController constructor.
@@ -40,13 +40,13 @@ class AgentController extends BaseController
     public function assignAgent(request $req, FormBuilder $formBuilder)
     {
         // check agency id if exist or not if not then redirect to listing page
-        
+
         page_title()->setTitle(trans('plugins/agency::agency.create'));
-        
+
         return $formBuilder->create(AssignAgencyForm::class)->renderForm();
     }
 
-    
+
 
     /**
      * Insert new Agency into database
@@ -56,31 +56,31 @@ class AgentController extends BaseController
      */
     public function saveAgent(AgentRequest $request, BaseHttpResponse $response)
     {
-       
-         
+
+
         $agentIds = isset($request->assignAgency)?$request->assignAgency:array();
         $agencyId = isset($request->agencyId)?$request->agencyId:array();
 
         //delete data before insert
-        $agencyAccountRefrence = new AgencyAccountRefrence();
-        $agencyAccountRefrence->where('agency_id', $agencyId)->delete();
-        
+        $agencyAccountReference = new AgencyAccountReference();
+        $agencyAccountReference->where('agency_id', $agencyId)->delete();
+
         if(!empty($agentIds)){
             foreach ($agentIds as $agentId){
 
                 $agency = $this->AgentRepository->createOrUpdate([
-                    'account_id'=>$agentId, 
+                    'account_id'=>$agentId,
                     'agency_id'=>$agencyId
                 ]);
             }
             event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
         }
-        
+
         return $response
             ->setNextUrl(route('agency.index'))
             ->setMessage(trans('plugins/agency::agency.agent'));
-        
+
     }
 
-    
+
 }

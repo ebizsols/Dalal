@@ -3,7 +3,7 @@
 namespace Botble\Agency\Providers;
 
 use Botble\Agency\Models\Agency;
-use Botble\Agency\Models\AgencyAccountRefrence;
+use Botble\Agency\Models\AgencyAccountReference;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Botble\Agency\Repositories\Caches\AgencyCacheDecorator;
@@ -30,14 +30,14 @@ class AgencyServiceProvider extends ServiceProvider
 
     public function register()
     {
-    
+
         //echo "agency register"; exit;
         $this->app->bind(AgencyInterface::class, function () {
             return new AgencyCacheDecorator(new AgencyRepository(new agency));
         });
 
         $this->app->bind(AgentInterface::class, function () {
-            return new AgentCacheDecorator(new AgentRepository(new AgencyAccountRefrence));
+            return new AgentCacheDecorator(new AgentRepository(new AgencyAccountReference));
         });
         Helper::autoload(__DIR__ . '/../../helpers');
     }

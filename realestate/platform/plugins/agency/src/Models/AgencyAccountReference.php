@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Botble\RealEstate\Models;
 namespace Botble\Agency\Models;
 
@@ -9,14 +9,14 @@ use RvMedia;
 
 use Botble\Base\Models\BaseModel;
 
-class AgencyAccountRefrence extends BaseModel
+class AgencyAccountReference extends BaseModel
 {
-  protected $fillable = ['agency_id','account_id'];  
+  protected $fillable = ['agency_id','account_id'];
   public $timestamps = false;
   public function getAllData($agencyId)
     {
-         return $this->join('re_accounts', 'agency_account_refrences.agency_id', '=','re_accounts.id')
-              ->select('re_accounts.email','agency_account_refrences.account_id')
+         return $this->join('re_accounts', 'agency_account_references.agency_id', '=','re_accounts.id')
+              ->select('re_accounts.email','agency_account_references.account_id')
              ->where('agencyaccountrefrence.agency_id','=',$agencyId)
               ->get();
     }
@@ -28,6 +28,6 @@ class AgencyAccountRefrence extends BaseModel
 //    {
 //        return $this->hasMany(Account::class, 'agency_id');
 //    }
-    
+
 }
 
