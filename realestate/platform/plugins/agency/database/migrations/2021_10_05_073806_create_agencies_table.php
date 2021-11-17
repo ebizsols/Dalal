@@ -12,12 +12,17 @@ class CreateAgenciesTable extends Migration
      * @return void
      */
     public function up()
-    { 
+    {
         if (!Schema::hasTable('agencies')) {
             Schema::create('agencies', function (Blueprint $table) {
                 $table->bigIncrements('id');
-                $table->string('name');
+                $table->string('title');
                 $table->longText('description');
+                $table->string('email');
+                $table->integer('avatar_id');
+                $table->bigInteger('phone');
+                $table->bigInteger('fax');
+                $table->integer('is_featured');
                 $table->enum('status', array('published', 'unpublished'));
                 $table->timestamps();
             });
