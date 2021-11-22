@@ -433,6 +433,12 @@ h4.modal-title {
     }
 }
 
+.form-group .ui-select-wrapper {
+    .select2-container {
+        z-index: 0;
+    }
+}
+
 .widget-title > h4 .control-label {
     padding-left: 10px;
 }
@@ -698,6 +704,16 @@ h4.modal-title {
     .progress {
         width: 100%;
     }
+
+    .changelog-info {
+        ul {
+            padding-left: 25px;
+
+            li {
+                list-style: circle;
+            }
+        }
+    }
 }
 
 .form-group:not(.mb-3) {
@@ -710,4 +726,24 @@ h4.modal-title {
 
 .datepicker.dropdown-menu {
     z-index: 1004 !important;
+}
+
+.page-sidebar-closed .page-footer {
+    margin-left: 45px;
+}
+
+.ck.ck-content {
+    ul,
+    ul li {
+        list-style-type: inherit;
+    }
+
+    ol,
+    ol li {
+        list-style-type: decimal;
+    }
+
+    ul, ol {
+        padding-left: 25px;
+    }
 }

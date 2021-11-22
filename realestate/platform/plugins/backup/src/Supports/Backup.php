@@ -57,6 +57,7 @@ class Backup
             'description' => $description,
             'date'        => now()->toDateTimeString(),
         ];
+
         save_file_data($file, $data);
 
         return [
@@ -320,8 +321,10 @@ class Backup
             if ($zip->open($fileName) === true) {
                 $zip->extractTo($pathTo);
                 $zip->close();
+
                 return true;
             }
+
             return false;
         }
 

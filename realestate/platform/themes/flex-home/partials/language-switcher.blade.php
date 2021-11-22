@@ -11,10 +11,10 @@
         <div class="padtop10 mb-2 language">
             @if (setting('language_switcher_display', 'dropdown') == 'dropdown')
                 <div class="language-switcher-wrapper">
-                    <div class="float-left language-label">
+                    <div class="d-inline-block d-sm-none language-label">
                         {{ __('Languages') }}:
                     </div>
-                    <div class="dropdown">
+                    <div class="dropdown d-inline-block">
                         <button class="btn btn-secondary dropdown-toggle btn-select-language" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             @if (($languageDisplay == 'all' || $languageDisplay == 'flag'))
                                 {!! language_flag(Language::getCurrentLocaleFlag(), Language::getCurrentLocaleName()) !!}

@@ -24,8 +24,11 @@ return [
     'last_name'              => 'Last Name',
     'username'               => 'Username',
     'username_placeholder'   => 'Ex: john_smith',
+    'company'                => 'Company Name',
+    'company_placeholder'    => 'Company Name',
     'phone'                  => 'Phone',
     'phone_placeholder'      => 'Phone',
     'email_placeholder'      => 'Ex: example@gmail.com',
-    'dob' => 'Date of birth',
+    'dob'                    => 'Date of birth',
+    'number_of_properties'   => 'Number of properties',
 ];

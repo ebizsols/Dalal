@@ -39,6 +39,7 @@ class UpdatedContentEvent extends Event
         if ($screen instanceof Model) {
             $screen = $screen->getTable();
         }
+
         $this->screen = $screen;
         $this->request = $request;
         $this->data = $data;

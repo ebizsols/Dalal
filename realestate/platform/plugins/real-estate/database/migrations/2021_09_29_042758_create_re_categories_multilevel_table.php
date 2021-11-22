@@ -1,6 +1,5 @@
 <?php
 
-use Botble\RealEstate\Models\Property;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -15,20 +14,27 @@ class CreateReCategoriesMultilevelTable extends Migration
      */
     public function up()
     {
-        Schema::table('re_categories', function (Blueprint $table) {
-            $table->integer('parent_id')->unsigned()->default(0);
-        });
+        if (!Schema::hasColumn('re_categories', 'parent_id')) {
+            Schema::table('re_categories', function (Blueprint $table) {
+                $table->integer('parent_id')->unsigned()->default(0);
+            });
+        }
 
-        Schema::create('re_property_categories', function (Blueprint $table) {
-            $table->id();
-            $table->integer('property_id')->unsigned()->references('id')->on('re_properties')->onDelete('cascade');
-            $table->integer('category_id')->unsigned()->references('id')->on('re_categories')->onDelete('cascade');
-        });
-        Schema::create('re_project_categories', function (Blueprint $table) {
-            $table->id();
-            $table->integer('project_id')->unsigned()->references('id')->on('re_projects')->onDelete('cascade');
-            $table->integer('category_id')->unsigned()->references('id')->on('re_categories')->onDelete('cascade');
-        });
+        if (!Schema::hasTable('re_property_categories')) {
+            Schema::create('re_property_categories', function (Blueprint $table) {
+                $table->id();
+                $table->integer('property_id')->unsigned()->references('id')->on('re_properties')->onDelete('cascade');
+                $table->integer('category_id')->unsigned()->references('id')->on('re_categories')->onDelete('cascade');
+            });
+        }
+
+        if (!Schema::hasTable('re_project_categories')) {
+            Schema::create('re_project_categories', function (Blueprint $table) {
+                $table->id();
+                $table->integer('project_id')->unsigned()->references('id')->on('re_projects')->onDelete('cascade');
+                $table->integer('category_id')->unsigned()->references('id')->on('re_categories')->onDelete('cascade');
+            });
+        }
 
         $properties = DB::table('re_properties')->get();
         foreach ($properties as $property) {
@@ -46,13 +52,17 @@ class CreateReCategoriesMultilevelTable extends Migration
             ]);
         }
 
-        Schema::table('re_properties', function (Blueprint $table) {
-            $table->dropColumn('category_id');
-        });
+        if (Schema::hasColumn('re_properties', 'category_id')) {
+            Schema::table('re_properties', function (Blueprint $table) {
+                $table->dropColumn('category_id');
+            });
+        }
 
-        Schema::table('re_projects', function (Blueprint $table) {
-            $table->dropColumn('category_id');
-        });
+        if (Schema::hasColumn('re_projects', 'category_id')) {
+            Schema::table('re_projects', function (Blueprint $table) {
+                $table->dropColumn('category_id');
+            });
+        }
     }
 
     /**
@@ -65,6 +75,7 @@ class CreateReCategoriesMultilevelTable extends Migration
         Schema::table('re_properties', function (Blueprint $table) {
             $table->integer('category_id')->unsigned()->nullable();
         });
+
         Schema::table('re_projects', function (Blueprint $table) {
             $table->integer('category_id')->unsigned()->nullable();
         });
@@ -74,7 +85,7 @@ class CreateReCategoriesMultilevelTable extends Migration
             DB::table('re_properties')
                 ->where('id', $propertyCategory->property_id)
                 ->update([
-                    'category_id' => $propertyCategory->category_id
+                    'category_id' => $propertyCategory->category_id,
                 ]);
         }
 
@@ -83,7 +94,7 @@ class CreateReCategoriesMultilevelTable extends Migration
             DB::table('re_projects')
                 ->where('id', $projectCategory->project_id)
                 ->update([
-                    'category_id' => $projectCategory->category_id
+                    'category_id' => $projectCategory->category_id,
                 ]);
         }
 

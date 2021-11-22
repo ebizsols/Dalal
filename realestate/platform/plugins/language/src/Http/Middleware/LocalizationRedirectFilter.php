@@ -44,7 +44,7 @@ class LocalizationRedirectFilter extends LaravelLocalizationMiddlewareBase
                 // The system redirect the user to the very same url "localized"
                 // we use the current locale to redirect him
                 if (!Language::getActiveLanguage(['lang_id'])->isEmpty()) {
-                    $redirection = Language::getLocalizedURL(session('language'), $request->fullUrl());
+                    $redirection = Language::getLocalizedURL(session('language'), $request->fullUrl(), [], false);
                 }
             }
 

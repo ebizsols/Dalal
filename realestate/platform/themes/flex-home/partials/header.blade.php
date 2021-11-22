@@ -53,11 +53,21 @@
                             </ul>
                             @php $currencies = get_all_currencies(); @endphp
                             @if (count($currencies) > 1)
-                                <div class="choose-currency">
-                                    <span>{{ __('Currency') }}: </span>
-                                    @foreach ($currencies as $currency)
-                                        <a href="{{ route('public.change-currency', $currency->title) }}" @if (get_application_currency_id() == $currency->id) class="active" @endif><span>{{ $currency->title }}</span></a>&nbsp;
-                                    @endforeach
+                                <div class="language currency-switcher">
+                                    <div class="language-switcher-wrapper">
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn btn-secondary dropdown-toggle btn-select-language" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                {{ get_application_currency()->title }}
+                                            </button>
+                                            <ul class="dropdown-menu language_bar_chooser">
+                                                @foreach ($currencies as $currency)
+                                                    <li>
+                                                        <a href="{{ route('public.change-currency', $currency->title) }}" @if (get_application_currency_id() == $currency->id) class="active" @endif><span>{{ $currency->title }}</span></a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="header-deliver">/</div>
                             @endif
@@ -129,19 +139,36 @@
                                     <div class="d-sm-none">
                                         <div>
                                             @if (is_plugin_active('real-estate'))
-                                                @php $currencies = get_all_currencies(); @endphp
+                                                <ul class="topbar-items d-block">
+                                                    <li class="login-item">
+                                                        <a href="{{ route('public.wishlist') }}"><i class="fas fa-heart"></i> {{ __('Wishlist') }}(<span class="wishlist-count">0</span>)</a>
+                                                    </li>
+                                                </ul>
                                                 @if (count($currencies) > 1)
-                                                    <div class="choose-currency">
-                                                        <span>{{ __('Currency') }}: </span>
-                                                        @foreach ($currencies as $currency)
-                                                            <a href="{{ route('public.change-currency', $currency->title) }}" @if (get_application_currency_id() == $currency->id) class="active" @endif><span>{{ $currency->title }}</span></a>&nbsp;
-                                                        @endforeach
+                                                    <div class="language">
+                                                        <div class="language-switcher-wrapper">
+                                                            <div class="d-inline-block language-label">
+                                                                {{ __('Currencies') }}:
+                                                            </div>
+                                                            <div class="dropdown d-inline-block">
+                                                                <button class="btn btn-secondary dropdown-toggle btn-select-language" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                                    {{ get_application_currency()->title }}
+                                                                </button>
+                                                                <ul class="dropdown-menu language_bar_chooser">
+                                                                    @foreach ($currencies as $currency)
+                                                                        <li>
+                                                                            <a href="{{ route('public.change-currency', $currency->title) }}" @if (get_application_currency_id() == $currency->id) class="active" @endif><span>{{ $currency->title }}</span></a>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 @endif
                                             @endif
                                             {!! Theme::partial('language-switcher') !!}
                                             @if (is_plugin_active('real-estate'))
-                                                <ul class="topbar-items">
+                                                <ul class="topbar-items d-block">
                                                     @if (auth('account')->check())
                                                         <li class="login-item"><a href="{{ route('public.account.dashboard') }}" rel="nofollow"><i class="fas fa-user"></i> <span>{{ auth('account')->user()->name }}</span></a></li>
                                                         <li class="login-item"><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" rel="nofollow"><i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}</a></li>

@@ -70,6 +70,12 @@ class AccountTable extends TableAbstract
             ->editColumn('created_at', function ($item) {
                 return BaseHelper::formatDate($item->created_at);
             })
+            ->editColumn('phone', function ($item) {
+                return $item->phone ?: '&mdash;';
+            })
+            ->editColumn('updated_at', function ($item) {
+                return $item->properties_count;
+            })
             ->addColumn('operations', function ($item) {
                 return $this->getOperations('account.edit', 'account.destroy', $item);
             });
@@ -86,15 +92,20 @@ class AccountTable extends TableAbstract
      */
     public function query()
     {
-        $query = $this->repository->getModel()->select([
-            'id',
-            'first_name',
-            'last_name',
-            'email',
-            'created_at',
-            'credits',
-            'avatar_id',
-        ])->with(['avatar']);
+        $query = $this->repository
+            ->getModel()
+            ->select([
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'phone',
+                'created_at',
+                'credits',
+                'avatar_id',
+            ])
+            ->with(['avatar'])
+            ->withCount(['properties']);
 
         return $this->applyScopes($query);
     }
@@ -123,9 +134,20 @@ class AccountTable extends TableAbstract
                 'title' => trans('core/base::tables.email'),
                 'class' => 'text-start',
             ],
+            'phone'    => [
+                'title' => trans('plugins/real-estate::account.phone'),
+                'class' => 'text-start',
+            ],
             'credits'    => [
                 'title' => trans('plugins/real-estate::account.credits'),
                 'class' => 'text-start',
+            ],
+            'updated_at' => [
+                'title'      => trans('plugins/real-estate::account.number_of_properties'),
+                'width'      => '100px',
+                'class'      => 'no-sort',
+                'orderable'  => false,
+                'searchable' => false,
             ],
             'created_at' => [
                 'title' => trans('core/base::tables.created_at'),

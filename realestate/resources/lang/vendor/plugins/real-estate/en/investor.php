@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name'   => 'Investors',
+    'name' => 'Investors',
     'create' => 'New investor',
-    'edit'   => 'Edit investor',
+    'edit' => 'Edit investor',
 ];

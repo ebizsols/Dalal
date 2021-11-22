@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Mimey\MimeTypes;
+use RealEstateHelper;
 use RssFeed;
 use RvMedia;
 use SeoHelper;
@@ -132,7 +133,7 @@ class PublicController extends Controller
             abort(404);
         }
 
-        $project->loadMissing(config('plugins.real-estate.real-estate.projects.relations'));
+        $project->loadMissing(RealEstateHelper::getProjectRelationsQuery());
 
         if ($project->slugable->key !== $key) {
             return redirect()->to($project->url);
@@ -204,7 +205,7 @@ class PublicController extends Controller
             abort(404);
         }
 
-        $property->loadMissing(config('plugins.real-estate.real-estate.properties.relations'));
+        $property->loadMissing(RealEstateHelper::getPropertyRelationsQuery());
 
         if ($property->slugable->key !== $key) {
             return redirect()->to($property->url);
@@ -283,7 +284,7 @@ class PublicController extends Controller
                 'current_paged' => (int)$request->input('page', 1),
             ],
             'order_by' => ['re_projects.created_at' => 'DESC'],
-            'with'     => config('plugins.real-estate.real-estate.projects.relations'),
+            'with'     => RealEstateHelper::getProjectRelationsQuery(),
         ];
 
         $projects = $projectRepository->getProjects($filters, $params);
@@ -300,8 +301,9 @@ class PublicController extends Controller
             ->add(__('Home'), route('public.index'))
             ->add(__('Projects'), route('public.projects'));
 
-        $categories = get_property_categories(['indent'     => '↳',
-                                               'conditions' => ['status' => BaseStatusEnum::PUBLISHED],
+        $categories = get_property_categories([
+            'indent'     => '↳',
+            'conditions' => ['status' => BaseStatusEnum::PUBLISHED],
         ]);
 
         return Theme::scope('real-estate.projects', compact('projects', 'categories'))->render();
@@ -347,7 +349,7 @@ class PublicController extends Controller
                 'current_paged' => (int)$request->input('page', 1),
             ],
             'order_by' => ['re_properties.created_at' => 'DESC'],
-            'with'     => config('plugins.real-estate.real-estate.properties.relations'),
+            'with'     => RealEstateHelper::getPropertyRelationsQuery(),
         ];
 
         $properties = $propertyRepository->getProperties($filters, $params);
@@ -364,8 +366,9 @@ class PublicController extends Controller
             ->add(__('Home'), route('public.index'))
             ->add(__('Properties'), route('public.properties'));
 
-        $categories = get_property_categories(['indent'     => '↳',
-                                               'conditions' => ['status' => BaseStatusEnum::PUBLISHED],
+        $categories = get_property_categories([
+            'indent'     => '↳',
+            'conditions' => ['status' => BaseStatusEnum::PUBLISHED],
         ]);
 
         return Theme::scope('real-estate.properties', compact('properties', 'categories'))->render();
@@ -432,7 +435,7 @@ class PublicController extends Controller
                 'current_paged' => (int)$request->input('page', 1),
             ],
             'order_by' => ['re_properties.created_at' => 'DESC'],
-            'with'     => config('plugins.real-estate.real-estate.properties.relations'),
+            'with'     => RealEstateHelper::getPropertyRelationsQuery(),
         ];
 
         $properties = $propertyRepository->getProperties($filters, $params);

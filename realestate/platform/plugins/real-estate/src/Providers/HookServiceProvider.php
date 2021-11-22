@@ -2,6 +2,7 @@
 
 namespace Botble\RealEstate\Providers;
 
+use Botble\Base\Models\BaseModel;
 use Botble\Payment\Enums\PaymentMethodEnum;
 use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Payment\Models\Payment;
@@ -16,6 +17,7 @@ use Botble\RealEstate\Repositories\Interfaces\TransactionInterface;
 use Form;
 use Html;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Menu;
@@ -121,6 +123,18 @@ class HookServiceProvider extends ServiceProvider
         if (defined('LANGUAGE_MODULE_SCREEN_NAME')) {
             add_action(BASE_ACTION_META_BOXES, [$this, 'addLanguageChooser'], 55, 2);
         }
+
+        add_filter('social_login_before_saving_account', function ($data, $oAuth, $providerData) {
+            if (Arr::get($providerData, 'model') == Account::class && Arr::get($providerData, 'guard') == 'account') {
+                $firstName = implode(' ', explode(' ', $oAuth->getName(), -1));
+                Arr::forget($data, 'name');
+                $data = array_merge($data, [
+                    'first_name' => $firstName,
+                    'last_name'  => trim(str_replace($firstName, '', $oAuth->getName())),
+                ]);
+            }
+            return $data;
+        }, 49, 3);
     }
 
     /**
@@ -213,7 +227,6 @@ class HookServiceProvider extends ServiceProvider
     /**
      * @param BaseModel $model
      * @param string $priority
-     * @return string
      */
     public function addLanguageChooser($priority, $model)
     {

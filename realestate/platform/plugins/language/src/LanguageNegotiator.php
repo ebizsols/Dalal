@@ -37,7 +37,7 @@ class LanguageNegotiator
     {
         $this->defaultLocale = $defaultLocale;
 
-        if (class_exists('Locale')) {
+        if (extension_loaded('intl') && class_exists('Locale')) {
             $this->useIntl = true;
 
             foreach ($supportedLanguages as $key => $supportedLanguage) {
@@ -94,6 +94,7 @@ class LanguageNegotiator
                 }
             }
         }
+
         // If any (i.e. "*") is acceptable, return the first supported format
         if (isset($matches['*'])) {
             reset($this->supportedLanguages);

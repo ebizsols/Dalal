@@ -18,6 +18,7 @@ use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\Theme\Http\Controllers\PublicController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use RealEstateHelper;
 use SeoHelper;
 use Theme;
 use Theme\FlexHome\Http\Resources\AgentHTMLResource;
@@ -32,18 +33,16 @@ class FlexHomeController extends PublicController
      * @param Request $request
      * @param ProjectInterface $projectRepository
      * @param CityInterface $cityRepository
-     * @return \Response
+     * @param BaseHttpResponse $response
+     * @return BaseHttpResponse|\Response
      */
     public function getProjectsByCity(
         string $slug,
         Request $request,
         ProjectInterface $projectRepository,
-        CityInterface $cityRepository
+        CityInterface $cityRepository,
+        BaseHttpResponse $response
     ) {
-        $filters = [
-            'city' => $slug,
-        ];
-
         $city = $cityRepository->getFirstBy(compact('slug'));
 
         if (!$city) {
@@ -58,15 +57,40 @@ class FlexHomeController extends PublicController
 
         do_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, CITY_MODULE_SCREEN_NAME, $city);
 
+        $perPage = (int)$request->input('per_page') ? (int)$request->input('per_page') : (int)theme_option('number_of_projects_per_page',
+            12);
+
+        $filters = [
+            'keyword'     => $request->input('k'),
+            'blocks'      => $request->input('blocks'),
+            'min_floor'   => $request->input('min_floor'),
+            'max_floor'   => $request->input('max_floor'),
+            'min_flat'    => $request->input('min_flat'),
+            'max_flat'    => $request->input('max_flat'),
+            'category_id' => $request->input('category_id'),
+            'city'        => $slug,
+            'location'    => $request->input('location'),
+            'sort_by'     => $request->input('sort_by'),
+        ];
+
         $params = [
             'paginate' => [
-                'per_page'      => (int)theme_option('number_of_projects_per_page', 12),
+                'per_page'      => $perPage ?: 12,
                 'current_paged' => (int)$request->input('page', 1),
             ],
             'order_by' => ['re_projects.created_at' => 'DESC'],
+            'with'     => RealEstateHelper::getProjectRelationsQuery(),
         ];
 
         $projects = $projectRepository->getProjects($filters, $params);
+
+        if ($request->ajax()) {
+            if ($request->input('minimal')) {
+                return $response->setData(Theme::partial('search-suggestion', ['items' => $projects]));
+            }
+
+            return $response->setData(Theme::partial('real-estate.projects.items', ['projects' => $projects]));
+        }
 
         $categories = get_property_categories([
             'indent'     => '↳',
@@ -82,18 +106,16 @@ class FlexHomeController extends PublicController
      * @param Request $request
      * @param PropertyInterface $propertyRepository
      * @param CityInterface $cityRepository
-     * @return \Response
+     * @param BaseHttpResponse $response
+     * @return BaseHttpResponse|\Response
      */
     public function getPropertiesByCity(
         string $slug,
         Request $request,
         PropertyInterface $propertyRepository,
-        CityInterface $cityRepository
+        CityInterface $cityRepository,
+        BaseHttpResponse $response
     ) {
-        $filters = [
-            'city' => $slug,
-        ];
-
         $city = $cityRepository->getFirstBy(compact('slug'));
 
         if (!$city) {
@@ -108,22 +130,51 @@ class FlexHomeController extends PublicController
             ->add(__('Home'), route('public.index'))
             ->add(SeoHelper::getTitle(), route('public.properties-by-city', $city->slug));
 
+        $perPage = (int)$request->input('per_page') ? (int)$request->input('per_page') : (int)theme_option('number_of_properties_per_page',
+            12);
+
+        $filters = [
+            'keyword'     => $request->input('k'),
+            'type'        => $request->input('type'),
+            'bedroom'     => $request->input('bedroom'),
+            'bathroom'    => $request->input('bathroom'),
+            'floor'       => $request->input('floor'),
+            'min_price'   => $request->input('min_price'),
+            'max_price'   => $request->input('max_price'),
+            'min_square'  => $request->input('min_square'),
+            'max_square'  => $request->input('max_square'),
+            'project'     => $request->input('project'),
+            'category_id' => $request->input('category_id'),
+            'city'        => $slug,
+            'location'    => $request->input('location'),
+            'sort_by'     => $request->input('sort_by'),
+        ];
+
         $params = [
             'paginate' => [
-                'per_page'      => (int)theme_option('number_of_properties_per_page', 12),
+                'per_page'      => $perPage ?: 12,
                 'current_paged' => (int)$request->input('page', 1),
             ],
             'order_by' => ['re_properties.created_at' => 'DESC'],
+            'with'     => RealEstateHelper::getPropertyRelationsQuery(),
         ];
 
         $properties = $propertyRepository->getProperties($filters, $params);
+
+        if ($request->ajax()) {
+            if ($request->input('minimal')) {
+                return $response->setData(Theme::partial('search-suggestion', ['items' => $properties]));
+            }
+
+            return $response->setData(Theme::partial('real-estate.properties.items', ['properties' => $properties]));
+        }
 
         $categories = get_property_categories([
             'indent'     => '↳',
             'conditions' => ['status' => BaseStatusEnum::PUBLISHED],
         ]);
 
-        return Theme::scope('real-estate.properties', compact('properties', 'categories'))
+        return Theme::scope('real-estate.properties', compact('properties', 'categories', 'city'))
             ->render();
     }
 
@@ -139,7 +190,8 @@ class FlexHomeController extends PublicController
         }
 
         $properties = [];
-        $with = config('plugins.real-estate.real-estate.properties.relations');
+        $with = RealEstateHelper::getPropertyRelationsQuery();
+
         switch ($request->input('type')) {
             case 'related':
                 $properties = app(PropertyInterface::class)
@@ -257,7 +309,7 @@ class FlexHomeController extends PublicController
         ];
 
         $params = [
-            'with'     => config('plugins.real-estate.real-estate.properties.relations'),
+            'with'     => RealEstateHelper::getPropertyRelationsQuery(),
             'paginate' => [
                 'per_page'      => 20,
                 'current_paged' => (int)$request->input('page', 1),
@@ -344,7 +396,7 @@ class FlexHomeController extends PublicController
                 'per_page'      => 12,
                 'current_paged' => (int)$request->input('page'),
             ],
-            'with'      => config('plugins.real-estate.real-estate.properties.relations'),
+            'with'      => RealEstateHelper::getPropertyRelationsQuery(),
         ]);
 
         return Theme::scope('real-estate.agent', compact('properties', 'account'))
@@ -400,7 +452,7 @@ class FlexHomeController extends PublicController
                     'per_page'      => (int)theme_option('number_of_properties_per_page', 12),
                     'current_paged' => (int)$request->input('page', 1),
                 ],
-                'with'      => config('plugins.real-estate.real-estate.properties.relations'),
+                'with'      => RealEstateHelper::getPropertyRelationsQuery(),
             ]);
         }
 

@@ -12,14 +12,43 @@ BPayment.initResources = function () {
 
     if ($('.stripe-card-wrapper').length > 0) {
         new Card({
-            form: '.payment-checkout-form',
-            container: '.stripe-card-wrapper',
+            // a selector or DOM element for the form where users will
+            // be entering their information
+            form: '.payment-checkout-form', // *required*
+            // a selector or DOM element for the container
+            // where you want the card to appear
+            container: '.stripe-card-wrapper', // *required*
+
             formSelectors: {
-                numberInput: 'input#stripe-number',
-                expiryInput: 'input#stripe-exp',
-                cvcInput: 'input#stripe-cvc',
-                nameInput: 'input#stripe-name'
+                numberInput: 'input#stripe-number', // optional — default input[name="number"]
+                expiryInput: 'input#stripe-exp', // optional — default input[name="expiry"]
+                cvcInput: 'input#stripe-cvc', // optional — default input[name="cvc"]
+                nameInput: 'input#stripe-name' // optional - defaults input[name="name"]
             },
+
+            width: 350, // optional — default 350px
+            formatting: true, // optional - default true
+
+            // Strings for translation - optional
+            messages: {
+                validDate: 'valid\ndate', // optional - default 'valid\nthru'
+                monthYear: 'mm/yyyy', // optional - default 'month/year'
+            },
+
+            // Default placeholders for rendered fields - optional
+            placeholders: {
+                number: '•••• •••• •••• ••••',
+                name: 'Full Name',
+                expiry: '••/••',
+                cvc: '•••'
+            },
+
+            masks: {
+                cardNumber: '•' // optional - mask card number
+            },
+
+            // if true, will log helpful messages for setting up Card
+            debug: false // optional - default false
         });
     }
 }

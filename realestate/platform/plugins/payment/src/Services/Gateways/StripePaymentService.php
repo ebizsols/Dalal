@@ -36,6 +36,8 @@ class StripePaymentService extends StripePaymentAbstract
 
         if ($multiplier > 1) {
             $amount = (int)(round((float)$amount, 2) * $multiplier);
+        } else {
+            $amount = (int) $amount;
         }
 
         $charge = Charge::create([

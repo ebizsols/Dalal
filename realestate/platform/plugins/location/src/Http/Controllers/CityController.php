@@ -2,7 +2,6 @@
 
 namespace Botble\Location\Http\Controllers;
 
-use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Events\BeforeEditContentEvent;
 use Botble\Location\Http\Requests\CityRequest;
 use Botble\Location\Http\Resources\CityResource;

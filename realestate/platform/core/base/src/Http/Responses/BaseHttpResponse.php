@@ -181,12 +181,18 @@ class BaseHttpResponse implements Responsable
     public function toResponse($request)
     {
         if ($request->expectsJson()) {
+            $data = [
+                'error'   => $this->error,
+                'data'    => $this->data,
+                'message' => $this->message,
+            ];
+
+            if ($this->additional) {
+                $data = array_merge($data, ['additional' => $this->additional]);
+            }
+
             return response()
-                ->json([
-                    'error'   => $this->error,
-                    'data'    => $this->data,
-                    'message' => $this->message,
-                ], $this->code);
+                ->json($data, $this->code);
         }
 
         if ($request->input('submit') === 'save' && !empty($this->previousUrl)) {

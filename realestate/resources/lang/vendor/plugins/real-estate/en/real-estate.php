@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'name'                   => 'Real Estate',
-    'settings'               => 'Settings',
+    'name' => 'Real Estate',
+    'settings' => 'Settings',
 ];

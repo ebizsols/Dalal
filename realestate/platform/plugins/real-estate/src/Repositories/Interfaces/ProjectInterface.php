@@ -17,7 +17,8 @@ interface ProjectInterface extends RepositoryInterface
     /**
      * @param int $projectId
      * @param int $limit
+     * @param array $with
      * @return Collection
      */
-    public function getRelatedProjects(int $projectId, $limit = 4);
+    public function getRelatedProjects(int $projectId, $limit = 4, array $with = []);
 }

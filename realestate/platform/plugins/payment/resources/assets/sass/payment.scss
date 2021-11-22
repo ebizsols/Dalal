@@ -183,3 +183,19 @@
         }
     }
 }
+
+@media (max-width: 450px) {
+    .stripe-card-wrapper {
+        max-width: 80vw;
+        width: 100%;
+        margin: 20px auto;
+        overflow-x: hidden;
+        & > .jp-card-container {
+            transform: scale(0.625);
+            transform-origin: left center;
+            .jp-card {
+                min-width: 100%;
+            }
+        }
+    }
+}

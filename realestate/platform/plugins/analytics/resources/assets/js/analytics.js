@@ -9,18 +9,19 @@ class PluginAnalytics {
         $.each(stats, (index, el) => {
             statArray.push({axis: el.axis, visitors: el.visitors, pageViews: el.pageViews});
         });
-
-        new Morris.Area({
-            element: 'stats-chart',
-            resize: true,
-            data: statArray,
-            xkey: 'axis',
-            ykeys: ['visitors', 'pageViews'],
-            labels: [lang_visits, lang_page_views],
-            lineColors: ['#dd4d37', '#3c8dbc'],
-            hideHover: 'auto',
-            parseTime: false
-        });
+        if ($('#stats-chart').length) {
+            new Morris.Area({
+                element: 'stats-chart',
+                resize: true,
+                data: statArray,
+                xkey: 'axis',
+                ykeys: ['visitors', 'pageViews'],
+                labels: [lang_visits, lang_page_views],
+                lineColors: ['#dd4d37', '#3c8dbc'],
+                hideHover: 'auto',
+                parseTime: false
+            });
+        }
 
         let visitorsData = {};
 
@@ -60,14 +61,6 @@ $(document).ready(() => {
     BDashboard.loadWidget($('#widget_analytics_general').find('.widget-content'), route('analytics.general'), null, () => {
         PluginAnalytics.initCharts();
     });
-
-    $(document).on('click', '#widget_analytics_general .portlet > .portlet-title .tools > a.reload', event => {
-        event.preventDefault();
-        BDashboard.loadWidget($('#widget_analytics_general').find('.widget-content'), route('analytics.general'), null, () => {
-            PluginAnalytics.initCharts();
-        });
-    });
-
     BDashboard.loadWidget($('#widget_analytics_page').find('.widget-content'), route('analytics.page'));
     BDashboard.loadWidget($('#widget_analytics_browser').find('.widget-content'), route('analytics.browser'));
     BDashboard.loadWidget($('#widget_analytics_referrer').find('.widget-content'), route('analytics.referrer'));

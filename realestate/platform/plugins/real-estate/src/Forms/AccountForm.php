@@ -7,6 +7,7 @@ use BaseHelper;
 use Botble\Base\Forms\FormAbstract;
 use Botble\RealEstate\Http\Requests\AccountCreateRequest;
 use Botble\RealEstate\Models\Account;
+use RealEstateHelper;
 use Throwable;
 
 class AccountForm extends FormAbstract
@@ -54,6 +55,14 @@ class AccountForm extends FormAbstract
                     'data-counter' => 120,
                 ],
             ])
+            ->add('company', 'text', [
+                'label'      => trans('plugins/real-estate::account.company'),
+                'label_attr' => ['class' => 'control-label'],
+                'attr'       => [
+                    'placeholder'  => trans('plugins/real-estate::account.company_placeholder'),
+                    'data-counter' => 255,
+                ],
+            ])
             ->add('phone', 'text', [
                 'label'      => trans('plugins/real-estate::account.phone'),
                 'label_attr' => ['class' => 'control-label'],
@@ -63,9 +72,9 @@ class AccountForm extends FormAbstract
                 ],
             ])
             ->add('dob', 'date', [
-                'label'      => trans('plugins/real-estate::account.dob'),
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
+                'label'         => trans('plugins/real-estate::account.dob'),
+                'label_attr'    => ['class' => 'control-label'],
+                'attr'          => [
                     'data-date-format' => config('core.base.general.date_format.js.date'),
                 ],
                 'default_value' => BaseHelper::formatDate(now()),
@@ -119,7 +128,7 @@ class AccountForm extends FormAbstract
             ->setBreakFieldPoint('avatar_image');
 
 
-        if ($this->getModel()->id) {
+        if ($this->getModel()->id && RealEstateHelper::isEnabledCreditsSystem()) {
             $this->addMetaBoxes([
                 'credits' => [
                     'title'   => null,

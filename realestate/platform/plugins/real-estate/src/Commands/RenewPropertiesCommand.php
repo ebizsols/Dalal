@@ -2,9 +2,9 @@
 
 namespace Botble\RealEstate\Commands;
 
-use Botble\RealEstate\Models\Account;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\RealEstate\Enums\ModerationStatusEnum;
+use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Illuminate\Console\Command;
 use RealEstateHelper;
@@ -49,23 +49,32 @@ class RenewPropertiesCommand extends Command
             ->expired()
             ->where('re_properties.status', BaseStatusEnum::PUBLISHED)
             ->where('moderation_status', ModerationStatusEnum::APPROVED)
-            ->where('author_type', Account::class)
-            ->join('re_accounts', 're_accounts.id', '=', 're_properties.author_id')
-            ->where('credits', '>', 0)
-            ->where('auto_renew', 1)
+            ->where('auto_renew', 1);
+
+        if (RealEstateHelper::isEnabledCreditsSystem()) {
+            $properties = $properties
+                ->where('author_type', Account::class)
+                ->join('re_accounts', 're_accounts.id', '=', 're_properties.author_id')
+                ->where('credits', '>', 0);
+        }
+
+        $properties = $properties
             ->with(['author'])
             ->select('re_properties.*')
             ->get();
 
         foreach ($properties as $property) {
-            if ($property->author->credits <= 0) {
+            if (RealEstateHelper::isEnabledCreditsSystem() && $property->author->credits <= 0) {
                 continue;
             }
 
             $property->expire_date = now()->addDays(RealEstateHelper::propertyExpiredDays());
             $property->save();
 
-            $property->author->credits--;
+            if (RealEstateHelper::isEnabledCreditsSystem()) {
+                $property->author->credits--;
+            }
+
             $property->author->save();
         }
 

@@ -1,5 +1,6 @@
 /* purgecss start ignore */
 @import 'menu';
+
 .blog-container {
     .container-grid {
         .grid-in {
@@ -465,7 +466,28 @@
                 transition: opacity .2s linear, visibility 0.2s, width 2s ease-in;
             }
         }
+    }
 
+    .language {
+        font-size: 14px;
+
+        .btn-select-language {
+            float: none;
+        }
+    }
+
+    .topbar-items {
+        li {
+            &.login-item {
+                &:first-child {
+                    padding-left: 0;
+                }
+
+                a {
+                    font-size: 14px;
+                }
+            }
+        }
     }
 }
 
@@ -799,10 +821,14 @@
     width: 100%;
 }
 
+.currency-switcher {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
 .btn-select-language {
     display: block;
     float: left;
-    margin-left: 15px;
     padding: 0;
     background: transparent !important;
     color: #333 !important;
@@ -1334,6 +1360,7 @@ body {
         display: inline-block;
         position: relative;
     }
+
     .search-button-wrapper {
         .btn {
             min-width: 108px;
@@ -2377,6 +2404,7 @@ ul.listnews li:last-child {
 
         .fr-grid-detail-flex {
             flex: 1;
+
             .fr-can-name {
                 margin-bottom: 0;
 
@@ -2457,6 +2485,18 @@ ul.listnews li:last-child {
             text-decoration: none;
         }
     }
+}
+
+.pagination {
+    flex-flow: wrap;
+}
+
+.pagination li {
+    margin-bottom: 10px;
+}
+
+.menufooter {
+    margin-bottom: 30px;
 }
 
 /* purgecss end ignore */

@@ -2,6 +2,8 @@
 
 namespace Botble\RealEstate\Supports;
 
+use Botble\Base\Enums\BaseStatusEnum;
+
 class RealEstateHelper
 {
     /**
@@ -24,5 +26,52 @@ class RealEstateHelper
         }
 
         return config('plugins.real-estate.real-estate.property_expired_after_x_days');
+    }
+
+    /**
+     * @return array
+     */
+    public function getPropertyRelationsQuery(): array
+    {
+        return [
+            'slugable:id,key,prefix,reference_id',
+            'city:id,name,state_id',
+            'city.state:id,name,country_id',
+            'currency:id,is_default,exchange_rate,symbol,title,is_prefix_symbol',
+            'categories' => function ($query) {
+                return $query->where('status', BaseStatusEnum::PUBLISHED)
+                    ->orderBy('created_at', 'DESC')
+                    ->orderBy('is_default', 'DESC')
+                    ->orderBy('order', 'ASC')
+                    ->select('re_categories.id', 're_categories.name');
+            },
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getProjectRelationsQuery(): array
+    {
+        return [
+            'slugable:id,key,prefix,reference_id',
+            'categories' => function ($query) {
+                return $query->where('status', BaseStatusEnum::PUBLISHED)
+                    ->orderBy('created_at', 'DESC')
+                    ->orderBy('is_default', 'DESC')
+                    ->orderBy('order', 'ASC')
+                    ->select('re_categories.id', 're_categories.name');
+            },
+            'city:id,name,state_id',
+            'city.state:id,name',
+        ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabledCreditsSystem(): bool
+    {
+        return setting('real_estate_enable_credits_system', 1) == 1;
     }
 }

@@ -192,23 +192,33 @@ class ProjectRepository extends RepositoriesAbstract implements ProjectInterface
     /**
      * {@inheritdoc}
      */
-    public function getRelatedProjects(int $projectId, $limit = 4)
+    public function getRelatedProjects(int $projectId, $limit = 4, array $with = [])
     {
+        $currentProject = $this->findById($projectId, ['categories']);
+
         $this->model = $this->originalModel;
         $this->model = $this->model
-            ->where('id', '<>', $projectId);
+            ->where('re_projects.id', '<>', $projectId);
+
+        if ($currentProject && $currentProject->categories->count()) {
+
+            $categoryIds = $currentProject->categories->pluck('id')->toArray();
+
+            $this->model
+                ->whereHas('categories', function ($query) use ($categoryIds) {
+                    $query->whereIn('re_project_categories.category_id', $categoryIds);
+                });
+        }
 
         $params = [
-            'condition' => [],
+            'condition' => [
+                ['status', 'NOT_IN', [ProjectStatusEnum::NOT_AVAILABLE]],
+            ],
             'order_by'  => [
-                'created_at' => 'DESC',
+                'created_at' => 'desc',
             ],
             'take'      => $limit,
-            'paginate'  => [
-                'per_page'      => 12,
-                'current_paged' => 1,
-            ],
-            'with'      => [],
+            'with'      => $with,
         ];
 
         return $this->advancedGet($params);

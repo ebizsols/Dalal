@@ -18,6 +18,8 @@ class Plugin extends PluginOperationAbstract
 
         Schema::dropIfExists('re_consults');
         Schema::dropIfExists('re_investors');
+        Schema::dropIfExists('re_property_categories');
+        Schema::dropIfExists('re_project_categories');
         Schema::dropIfExists('re_projects');
         Schema::dropIfExists('re_properties');
         Schema::dropIfExists('re_features');

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use RealEstateHelper;
 use RvMedia;
 
 /**
@@ -41,6 +42,7 @@ class Account extends Authenticatable
         'phone',
         'description',
         'gender',
+        'company',
     ];
 
     /**
@@ -149,7 +151,7 @@ class Account extends Authenticatable
      */
     public function canPost(): bool
     {
-        return $this->credits > 0;
+        return !RealEstateHelper::isEnabledCreditsSystem() || $this->credits > 0;
     }
 
     /**
@@ -158,6 +160,10 @@ class Account extends Authenticatable
      */
     public function getCreditsAttribute($value)
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            return 0;
+        }
+
         return $value ?: 0;
     }
 

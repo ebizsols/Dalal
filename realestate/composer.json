@@ -84,7 +84,8 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "Google\\Task\\Composer::cleanup"
+            "Google\\Task\\Composer::cleanup",
+            "@php artisan cms:publish:assets"
         ]
     },
     "config": {

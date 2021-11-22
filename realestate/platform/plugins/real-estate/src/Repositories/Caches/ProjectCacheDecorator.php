@@ -18,7 +18,7 @@ class ProjectCacheDecorator extends CacheAbstractDecorator implements ProjectInt
     /**
      * {@inheritdoc}
      */
-    public function getRelatedProjects(int $projectId, $limit = 4)
+    public function getRelatedProjects(int $projectId, $limit = 4, array $with = [])
     {
         return $this->getDataIfExistCache(__FUNCTION__, func_get_args());
     }

@@ -82,6 +82,7 @@ $(document).ready(function () {
         'fa fa-baby',
         'fa fa-baby-carriage',
         'fa fa-backspace',
+        'fas fa-parking',
         'fa fa-backward',
         'fa fa-bacon',
         'fa fa-balance-scale',
@@ -160,6 +161,7 @@ $(document).ready(function () {
         'fa fa-burn',
         'fab fa-buromobelexperte',
         'fa fa-bus',
+        'fas fa-bus',
         'fa fa-bus-alt',
         'fa fa-business-time',
         'fab fa-buysellads',
@@ -195,6 +197,7 @@ $(document).ready(function () {
         'fa fa-carrot',
         'fa fa-cart-arrow-down',
         'fa fa-cart-plus',
+        'fas fa-cart-plus',
         'fa fa-cash-register',
         'fa fa-cat',
         'fab fa-cc-amazon-pay',
@@ -219,6 +222,7 @@ $(document).ready(function () {
         'fa fa-chart-line',
         'fa fa-chart-pie',
         'fa fa-check',
+        'fas fa-check',
         'fa fa-check-circle',
         'fa fa-check-double',
         'fa fa-check-square',
@@ -638,9 +642,11 @@ $(document).ready(function () {
         'fa fa-hospital',
         'fa fa-hospital-alt',
         'fa fa-hospital-symbol',
+        'far fa-hospital',
         'fa fa-hot-tub',
         'fa fa-hotdog',
         'fa fa-hotel',
+        'fas fa-hotel',
         'fab fa-hotjar',
         'fa fa-hourglass-end',
         'fa fa-hourglass-half',
@@ -904,6 +910,7 @@ $(document).ready(function () {
         'fa fa-plane',
         'fa fa-plane-arrival',
         'fa fa-plane-departure',
+        'fas fa-plane-departure',
         'fa fa-play',
         'fa fa-play-circle',
         'fab fa-playstation',
@@ -925,6 +932,7 @@ $(document).ready(function () {
         'fa fa-prescription',
         'fa fa-prescription-bottle',
         'fa fa-prescription-bottle-alt',
+        'fas fa-prescription-bottle-alt',
         'fa fa-print',
         'fa fa-procedures',
         'fab fa-product-hunt',
@@ -1001,6 +1009,7 @@ $(document).ready(function () {
         'fa fa-save',
         'fab fa-schlix',
         'fa fa-school',
+        'fas fa-school',
         'fa fa-screwdriver',
         'fab fa-scribd',
         'fa fa-scroll',
@@ -1134,6 +1143,7 @@ $(document).ready(function () {
         'fab fa-stumbleupon-circle',
         'fa fa-subscript',
         'fa fa-subway',
+        'fas fa-subway',
         'fa fa-suitcase',
         'fa fa-suitcase-rolling',
         'fa fa-sun',
@@ -1144,6 +1154,7 @@ $(document).ready(function () {
         'fab fa-suse',
         'fa fa-swatchbook',
         'fa fa-swimmer',
+        'fas fa-swimmer',
         'fa fa-swimming-pool',
         'fab fa-symfony',
         'fa fa-synagogue',
@@ -1240,12 +1251,14 @@ $(document).ready(function () {
         'fab fa-uikit',
         'fa fa-umbrella',
         'fa fa-umbrella fa-beach',
+        'fas fa-umbrella-beach',
         'fa fa-underline',
         'fa fa-undo',
         'fa fa-undo-alt',
         'fab fa-uniregistry',
         'fa fa-universal-access',
         'fa fa-university',
+        'fas fa-university',
         'fa fa-unlink',
         'fa fa-unlock',
         'fa fa-unlock-alt',
@@ -1272,6 +1285,7 @@ $(document).ready(function () {
         'fa fa-user-nurse',
         'fa fa-user-plus',
         'fa fa-user-secret',
+        'fas fa-user-secret',
         'fa fa-user-shield',
         'fa fa-user-slash',
         'fa fa-user-tag',
@@ -1328,6 +1342,7 @@ $(document).ready(function () {
         'fa fa-wheelchair',
         'fab fa-whmcs',
         'fa fa-wifi',
+        'fas fa-wifi',
         'fab fa-wikipedia-w',
         'fa fa-wind',
         'fa fa-window-close',
@@ -1433,7 +1448,7 @@ $(document).ready(function () {
             $(el).html(options);
             $(el).val(value);
 
-            $(el).select2({
+            let select2Options = {
                 templateResult: function (state) {
                     if (!state.id) {
                         return state.text;
@@ -1447,7 +1462,14 @@ $(document).ready(function () {
                     }
                     return $('<span><i class="' + state.id + '"></i></span>&nbsp; ' + state.text + '</span>');
                 },
-            });
+            };
+
+            let parent = $(el).closest('.modal');
+            if (parent.length) {
+                select2Options.dropdownParent = parent;
+            }
+
+            $(el).select2(select2Options);
         });
     }
 

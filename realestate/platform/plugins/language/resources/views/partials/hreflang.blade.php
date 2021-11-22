@@ -1,5 +1,3 @@
-@foreach($supportedLocales as $localeCode => $properties)
-    @if ($localeCode != Language::getCurrentLocale())
-        <link rel="alternate" href="{{ Language::getLocalizedURL($localeCode, url()->current()) }}" hreflang="{{ $localeCode }}" />
-    @endif
+@foreach($urls as $item)
+    <link rel="alternate" href="{{ $item['url'] }}" hreflang="{{ $item['lang_code'] }}" />
 @endforeach

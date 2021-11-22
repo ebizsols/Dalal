@@ -56,9 +56,13 @@ class BackupController extends BaseController
     public function store(BackupRequest $request, BaseHttpResponse $response)
     {
         try {
+            ini_set('max_execution_time', -1);
+            ini_set('memory_limit', -1);
+
             $data = $this->backup->createBackupFolder($request->input('name'), $request->input('description'));
             $this->backup->backupDb();
             $this->backup->backupFolder(config('filesystems.disks.public.root'));
+
             do_action(BACKUP_ACTION_AFTER_BACKUP, BACKUP_MODULE_SCREEN_NAME, $request);
 
             $data['backupManager'] = $this->backup;
@@ -134,6 +138,7 @@ class BackupController extends BaseController
     public function getDownloadDatabase($folder, BaseHttpResponse $response)
     {
         $path = $this->backup->getBackupPath($folder);
+
         foreach (scan_folder($path) as $file) {
             if (Str::contains(basename($file), 'database')) {
                 return response()->download($path . DIRECTORY_SEPARATOR . $file);
@@ -152,6 +157,7 @@ class BackupController extends BaseController
     public function getDownloadUploadFolder($folder, BaseHttpResponse $response)
     {
         $path = $this->backup->getBackupPath($folder);
+
         foreach (scan_folder($path) as $file) {
             if (Str::contains(basename($file), 'storage')) {
                 return response()->download($path . DIRECTORY_SEPARATOR . $file);

@@ -154,10 +154,6 @@ class LanguageServiceProvider extends ServiceProvider
                 add_filter(WIDGET_TOP_META_BOXES, [$this, 'addLanguageMetaBoxForThemeOptionsAndWidgets'], 55, 2);
             }
 
-            if (defined('THEME_FRONT_HEADER')) {
-                add_filter(THEME_FRONT_HEADER, [$this, 'addLanguageRefLangTags'], 55);
-            }
-
             add_filter(BASE_FILTER_SITE_LANGUAGE_DIRECTION, function ($direction) {
                 if (Language::getCurrentLocaleRTL()) {
                     return 'rtl';
@@ -173,10 +169,24 @@ class LanguageServiceProvider extends ServiceProvider
 
                 return filter_var($value, FILTER_VALIDATE_URL) ? $value : Language::localizeURL($value);
             }, 1);
-        }
 
-        if (version_compare(get_cms_version(), '6.0') > 0) {
-            Language::setRoutesCachePath();
+            add_filter(BASE_FILTER_BEFORE_RENDER_FORM, function ($form, $data) {
+                if (is_in_admin() && Language::getCurrentAdminLocaleCode() != Language::getDefaultLocaleCode() && in_array(get_class($data), Language::supportedModels())) {
+
+                    $refLang = request()->input('ref_lang');
+                    $refFrom = request()->input('ref_from');
+
+                    if ($refLang && $refFrom) {
+                        $data = $data->getModel()->find($refFrom);
+
+                        if ($data) {
+                            $form->setModel($data->replicate());
+                        }
+                    }
+                }
+
+                return $form;
+            }, 1134, 2);
         }
     }
 
@@ -233,6 +243,7 @@ class LanguageServiceProvider extends ServiceProvider
             if (!$prefix) {
                 return $currentLocale;
             }
+
             return $currentLocale . '/' . $prefix;
         }
 
@@ -274,6 +285,7 @@ class LanguageServiceProvider extends ServiceProvider
                     'lang_meta_origin',
                 ]
             );
+
             if (!empty($meta)) {
                 $value = $meta->lang_meta_code;
             }
@@ -327,14 +339,12 @@ class LanguageServiceProvider extends ServiceProvider
                 if ($language->lang_code == $value) {
                     $currentLanguage = $language;
                 }
-            } else {
-                if ($request->input('ref_lang')) {
-                    if ($language->lang_code == $request->input('ref_lang')) {
-                        $currentLanguage = $language;
-                    }
-                } elseif ($language->lang_is_default) {
+            } elseif ($request->input('ref_lang')) {
+                if ($language->lang_code == $request->input('ref_lang')) {
                     $currentLanguage = $language;
                 }
+            } elseif ($language->lang_is_default) {
+                $currentLanguage = $language;
             }
         }
 
@@ -682,6 +692,7 @@ class LanguageServiceProvider extends ServiceProvider
             $activeLanguages = Language::getActiveLanguage(['lang_code', 'lang_name', 'lang_flag']);
             $languageButtons = [];
             $currentLanguage = Language::getCurrentAdminLocaleCode();
+
             foreach ($activeLanguages as $item) {
                 $languageButtons[] = [
                     'className' => 'change-data-language-item ' . ($item->lang_code == $currentLanguage ? 'active' : ''),
@@ -712,6 +723,7 @@ class LanguageServiceProvider extends ServiceProvider
                     'buttons' => $languageButtons,
                 ],
             ];
+
             $buttons = array_merge($buttons, $language);
         }
 
@@ -754,17 +766,5 @@ class LanguageServiceProvider extends ServiceProvider
         }
 
         return $query;
-    }
-
-    /**
-     * @param string|null $header
-     * @return string
-     * @throws Throwable
-     */
-    public function addLanguageRefLangTags($header)
-    {
-        $supportedLocales = Language::getSupportedLocales();
-
-        return $header . view('plugins/language::partials.hreflang', compact('supportedLocales'))->render();
     }
 }

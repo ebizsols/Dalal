@@ -11,6 +11,7 @@ use Botble\Blog\Repositories\Interfaces\CategoryInterface;
 use Botble\Blog\Repositories\Interfaces\PostInterface;
 use Botble\Blog\Repositories\Interfaces\TagInterface;
 use Botble\SeoHelper\SeoOpenGraph;
+use Botble\Slug\Models\Slug;
 use Eloquent;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ use Theme;
 class BlogService
 {
     /**
-     * @param Eloquent $slug
+     * @param Slug $slug
      * @return array|Eloquent
      */
     public function handleFrontRoutes($slug)

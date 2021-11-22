@@ -20,13 +20,18 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
         $currentProperty = $this->findById($propertyId, ['categories']);
 
         $this->model = $this->originalModel;
-        $this->model = $this->model->where('re_properties.id', '<>', $propertyId)
+        $this->model = $this->model
+            ->where('re_properties.id', '<>', $propertyId)
             ->notExpired();
 
         if ($currentProperty && $currentProperty->categories->count()) {
+
+            $categoryIds = $currentProperty->categories->pluck('id')->toArray();
+
             $this->model
-                ->join('re_property_categories', 're_property_categories.property_id', 're_properties.id')
-                ->whereIn('re_property_categories.category_id', $currentProperty->categories->pluck('id')->toArray())
+                ->whereHas('categories', function ($query) use ($categoryIds) {
+                    $query->whereIn('re_property_categories.category_id', $categoryIds);
+                })
                 ->where('type', $currentProperty->type);
         }
 
@@ -39,10 +44,6 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
                 'created_at' => 'desc',
             ],
             'take'      => $limit,
-            'paginate'  => [
-                'per_page'      => 12,
-                'current_paged' => 1,
-            ],
             'with'      => $with,
         ];
 
@@ -134,11 +135,14 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
         $this->model = $this->originalModel->notExpired();
 
         if ($filters['keyword'] !== null) {
+            $keyword = $filters['keyword'];
+
             $this->model = $this->model
-                ->where(function (Builder $query) use ($filters) {
+                ->where(function (Builder $query) use ($keyword) {
                     return $query
-                        ->where('re_properties.name', 'LIKE', '%' . $filters['keyword'] . '%')
-                        ->orWhere('re_properties.location', 'LIKE', '%' . $filters['keyword'] . '%');
+                        ->where('re_properties.name', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('re_properties.location', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('re_properties.description', 'LIKE', '%' . $keyword . '%');
                 });
         }
 
@@ -220,9 +224,9 @@ class PropertyRepository extends RepositoriesAbstract implements PropertyInterfa
         }
 
         if ($filters['city'] !== null) {
-            $this->model = $this->model
-                ->join('cities', 'cities.id', '=', 're_properties.city_id')
-                ->where('cities.slug', $filters['city']);
+            $this->model = $this->model->whereHas('city', function ($query) use ($filters) {
+                $query->where('slug', $filters['city']);
+            });
         }
 
         if ($filters['project'] !== null) {

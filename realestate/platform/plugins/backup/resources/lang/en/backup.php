@@ -25,4 +25,5 @@ return [
     'important_message1'                 => 'This is a simple backup feature, it is a solution for you if your site has < 1GB data and can be used for quickly backup your site.',
     'important_message2'                 => 'If you have more than 1GB images/files in local storage, you should use backup feature of your hosting or VPS.',
     'important_message3'                 => 'To backup your database, function <strong>proc_open()</strong> or <strong>system()</strong> must be enabled. Contact your hosting provider to enable it if it is disabled.',
+    'important_message4'                 => 'It is not a full backup, it is just back up uploaded files and your database.',
 ];

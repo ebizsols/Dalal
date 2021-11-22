@@ -51,7 +51,6 @@ class SlugServiceProvider extends ServiceProvider
             ->loadMigrations()
             ->publishAssets();
 
-        $this->app->register(FormServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
         $this->app->register(CommandServiceProvider::class);
 
@@ -69,7 +68,13 @@ class SlugServiceProvider extends ServiceProvider
         });
 
         $this->app->booted(function () {
+            $this->app->register(FormServiceProvider::class);
+
             foreach (array_keys($this->app->make(SlugHelper::class)->supportedModels()) as $item) {
+                if (!class_exists($item)) {
+                    continue;
+                }
+
                 /**
                  * @var BaseModel $item
                  */

@@ -404,6 +404,21 @@ abstract class FormAbstract extends Form
     }
 
     /**
+     * Set model to form object.
+     *
+     * @param mixed $model
+     * @return $this
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+
+        $this->rebuildForm();
+
+        return $this;
+    }
+
+    /**
      * Setup model for form, add namespace if needed for child forms.
      *
      * @param string $model

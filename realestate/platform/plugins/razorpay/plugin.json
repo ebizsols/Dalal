@@ -6,5 +6,5 @@
     "url": "https://botble.com",
     "version": "1.0",
     "description": "Razorpay payment gateway integration",
-    "require": []
+    "require": ["payment"]
 }

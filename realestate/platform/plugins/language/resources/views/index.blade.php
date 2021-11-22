@@ -1,4 +1,4 @@
-@extends('core/base::layouts.master')
+@extends(BaseHelper::getAdminMasterLayoutTemplate())
 @section('content')
     <div class="tabbable-custom tabbable-tabdrop">
         <ul class="nav nav-tabs">
@@ -178,6 +178,22 @@
                                     <input type="radio" name="language_show_default_item_if_current_version_not_existed"
                                            value="0"
                                            @if (!setting('language_show_default_item_if_current_version_not_existed', true)) checked @endif>{{ trans('core/setting::setting.general.no') }}
+                                </label>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="text-title-field"
+                                       for="language_auto_detect_user_language">{{ trans('plugins/language::language.language_auto_detect_user_language') }}
+                                </label>
+                                <label class="me-2">
+                                    <input type="radio" name="language_auto_detect_user_language"
+                                           value="1"
+                                           @if (setting('language_auto_detect_user_language', false)) checked @endif>{{ trans('core/setting::setting.general.yes') }}
+                                </label>
+                                <label>
+                                    <input type="radio" name="language_auto_detect_user_language"
+                                           value="0"
+                                           @if (!setting('language_auto_detect_user_language', false)) checked @endif>{{ trans('core/setting::setting.general.no') }}
                                 </label>
                             </div>
 

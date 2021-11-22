@@ -63,9 +63,11 @@ use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Language;
+use RealEstateHelper;
 use Route;
 use SeoHelper;
 use SlugHelper;
+use SocialService;
 
 class RealEstateServiceProvider extends ServiceProvider
 {
@@ -275,16 +277,29 @@ class RealEstateServiceProvider extends ServiceProvider
                     'icon'        => 'fa fa-users',
                     'url'         => route('account.index'),
                     'permissions' => ['account.index'],
-                ])
-                ->registerItem([
-                    'id'          => 'cms-plugins-package',
-                    'priority'    => 23,
-                    'parent_id'   => null,
-                    'name'        => 'plugins/real-estate::package.name',
-                    'icon'        => 'fas fa-money-check-alt',
-                    'url'         => route('package.index'),
-                    'permissions' => ['package.index'],
                 ]);
+
+            if (RealEstateHelper::isEnabledCreditsSystem()) {
+                dashboard_menu()
+                    ->registerItem([
+                        'id'          => 'cms-plugins-package',
+                        'priority'    => 23,
+                        'parent_id'   => null,
+                        'name'        => 'plugins/real-estate::package.name',
+                        'icon'        => 'fas fa-money-check-alt',
+                        'url'         => route('package.index'),
+                        'permissions' => ['package.index'],
+                    ]);
+            }
+
+            if (defined('SOCIAL_LOGIN_MODULE_SCREEN_NAME')) {
+                SocialService::registerModule([
+                    'guard'        => 'account',
+                    'model'        => Account::class,
+                    'login_url'    => route('public.account.login'),
+                    'redirect_url' => route('public.account.dashboard'),
+                ]);
+            }
 
         });
 

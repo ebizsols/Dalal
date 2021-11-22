@@ -16,6 +16,7 @@ use Botble\RealEstate\Repositories\Interfaces\AccountActivityLogInterface;
 use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\RealEstate\Services\SaveFacilitiesService;
+use Botble\RealEstate\Services\StorePropertyCategoryService;
 use Botble\RealEstate\Tables\AccountPropertyTable;
 use EmailHandler;
 use Exception;
@@ -95,13 +96,17 @@ class AccountPropertyController extends Controller
      * @param AccountPropertyRequest $request
      * @param BaseHttpResponse $response
      * @param AccountInterface $accountRepository
+     * @param StorePropertyCategoryService $propertyCategoryService
      * @param SaveFacilitiesService $saveFacilitiesService
      * @return BaseHttpResponse|\Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Throwable
      */
     public function store(
         AccountPropertyRequest $request,
         BaseHttpResponse $response,
         AccountInterface $accountRepository,
+        StorePropertyCategoryService $propertyCategoryService,
         SaveFacilitiesService $saveFacilitiesService
     ) {
         if (!auth('account')->user()->canPost()) {
@@ -127,6 +132,8 @@ class AccountPropertyController extends Controller
             $property->features()->sync($request->input('features', []));
 
             $saveFacilitiesService->execute($property, $request->input('facilities', []));
+
+            $propertyCategoryService->execute($request, $property);
         }
 
         event(new CreatedContentEvent(PROPERTY_MODULE_SCREEN_NAME, $request, $property));
@@ -137,9 +144,11 @@ class AccountPropertyController extends Controller
             'reference_url'  => route('public.account.properties.edit', $property->id),
         ]);
 
-        $account = $accountRepository->findOrFail(auth('account')->id());
-        $account->credits--;
-        $account->save();
+        if (RealEstateHelper::isEnabledCreditsSystem()) {
+            $account = $accountRepository->findOrFail(auth('account')->id());
+            $account->credits--;
+            $account->save();
+        }
 
         EmailHandler::setModule(REAL_ESTATE_MODULE_SCREEN_NAME)
             ->setVariableValues([
@@ -188,6 +197,7 @@ class AccountPropertyController extends Controller
      * @param int $id
      * @param AccountPropertyRequest $request
      * @param BaseHttpResponse $response
+     * @param StorePropertyCategoryService $propertyCategoryService
      * @param SaveFacilitiesService $saveFacilitiesService
      * @return BaseHttpResponse
      */
@@ -195,6 +205,7 @@ class AccountPropertyController extends Controller
         $id,
         AccountPropertyRequest $request,
         BaseHttpResponse $response,
+        StorePropertyCategoryService $propertyCategoryService,
         SaveFacilitiesService $saveFacilitiesService
     ) {
         $property = $this->propertyRepository->getFirstBy([
@@ -214,6 +225,8 @@ class AccountPropertyController extends Controller
         $property->features()->sync($request->input('features', []));
 
         $saveFacilitiesService->execute($property, $request->input('facilities', []));
+
+        $propertyCategoryService->execute($request, $property);
 
         event(new UpdatedContentEvent(PROPERTY_MODULE_SCREEN_NAME, $request, $property));
 
@@ -268,15 +281,17 @@ class AccountPropertyController extends Controller
 
         $account = auth('account')->user();
 
-        if ($account->credits < 1) {
+        if (RealEstateHelper::isEnabledCreditsSystem() && $account->credits < 1) {
             return $response->setError(true)->setMessage(__('You don\'t have enough credit to renew this property!'));
         }
 
         $job->expire_date = $job->expire_date->addDays(RealEstateHelper::propertyExpiredDays());
         $job->save();
 
-        $account->credits--;
-        $account->save();
+        if (RealEstateHelper::isEnabledCreditsSystem()) {
+            $account->credits--;
+            $account->save();
+        }
 
         return $response->setMessage(__('Renew property successfully'));
     }

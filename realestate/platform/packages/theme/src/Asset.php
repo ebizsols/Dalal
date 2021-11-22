@@ -15,7 +15,7 @@ class Asset
     public static $path;
 
     /**
-     * All of the instantiated asset containers.
+     * all the instantiated asset containers.
      *
      * @var array
      */

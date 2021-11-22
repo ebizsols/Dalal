@@ -37,6 +37,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use RealEstateHelper;
 use RvMedia;
 use SeoHelper;
 
@@ -155,6 +156,10 @@ class PublicAccountController extends Controller
      */
     public function getPackages()
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         SeoHelper::setTitle(trans('plugins/real-estate::account.packages'));
 
         Assets::addScriptsDirectly('vendor/core/plugins/real-estate/js/components.js');
@@ -167,6 +172,10 @@ class PublicAccountController extends Controller
      */
     public function getTransactions()
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+        
         SeoHelper::setTitle(trans('plugins/real-estate::account.transactions'));
 
         Assets::addScriptsDirectly('vendor/core/plugins/real-estate/js/components.js');
@@ -181,6 +190,10 @@ class PublicAccountController extends Controller
      */
     public function ajaxGetPackages(PackageInterface $packageRepository, BaseHttpResponse $response)
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         $account = $this->accountRepository->findOrFail(auth('account')->id(),
             ['packages']);
 
@@ -210,6 +223,10 @@ class PublicAccountController extends Controller
         BaseHttpResponse $response,
         TransactionInterface $transactionRepository
     ) {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         $package = $packageRepository->findOrFail($request->input('id'));
 
         $account = $this->accountRepository->findOrFail(auth('account')->id());
@@ -241,6 +258,10 @@ class PublicAccountController extends Controller
      */
     protected function savePayment(Package $package, ?string $chargeId, TransactionInterface $transactionRepository, bool $force = false)
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         $payment = app(PaymentInterface::class)->getFirstBy(['charge_id' => $chargeId]);
 
         if (!$payment && !$force) {
@@ -303,6 +324,10 @@ class PublicAccountController extends Controller
      */
     public function getSubscribePackage($id, PackageInterface $packageRepository)
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         $package = $packageRepository->findOrFail($id);
 
         SeoHelper::setTitle(trans('plugins/real-estate::package.subscribe_package', ['name' => $package->name]));
@@ -326,6 +351,10 @@ class PublicAccountController extends Controller
         TransactionInterface $transactionRepository,
         BaseHttpResponse $response
     ) {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         $package = $packageRepository->findOrFail($packageId);
 
         if ($request->input('type') == PaymentMethodEnum::PAYPAL) {
@@ -521,6 +550,10 @@ class PublicAccountController extends Controller
      */
     public function ajaxGetTransactions(TransactionInterface $transactionRepository, BaseHttpResponse $response)
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         $transactions = $transactionRepository->advancedGet([
             'condition' => [
                 'account_id' => auth('account')->id(),

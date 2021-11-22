@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name'   => 'Facilities',
+    'name' => 'Facilities',
     'create' => 'New facility',
-    'edit'   => 'Edit facility',
+    'edit' => 'Edit facility',
 ];

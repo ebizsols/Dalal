@@ -1,14 +1,14 @@
 class BackupManagement {
     init() {
-        let table_backup = $('#table-backups');
-        table_backup.on('click', '.deleteDialog', event => {
+        let backupTable = $('#table-backups');
+        backupTable.on('click', '.deleteDialog', event => {
             event.preventDefault();
 
             $('.delete-crud-entry').data('section', $(event.currentTarget).data('section'));
             $('.modal-confirm-delete').modal('show');
         });
 
-        table_backup.on('click', '.restoreBackup', event => {
+        backupTable.on('click', '.restoreBackup', event => {
             event.preventDefault();
             $('#restore-backup-button').data('section', $(event.currentTarget).data('section'));
             $('#restore-backup-modal').modal('show');
@@ -27,7 +27,11 @@ class BackupManagement {
                     if (data.error) {
                         Botble.showError(data.message);
                     } else {
-                        table_backup.find('a[data-section="' + deleteURL + '"]').closest('tr').remove();
+                        if (backupTable.find('tbody tr').length <= 1) {
+                            backupTable.load(window.location.href + ' #table-backups > *');
+                        }
+
+                        backupTable.find('a[data-section="' + deleteURL + '"]').closest('tr').remove();
                         Botble.showSuccess(data.message);
                     }
                 },
@@ -82,10 +86,6 @@ class BackupManagement {
                 error = true;
                 Botble.showError('Backup name is required!');
             }
-            if (description === '' || description === null) {
-                error = true;
-                Botble.showError('Backup description is required!');
-            }
 
             if (!error) {
                 $.ajax({
@@ -102,8 +102,8 @@ class BackupManagement {
                         if (data.error) {
                             Botble.showError(data.message);
                         } else {
-                            table_backup.find('.no-backup-row').remove();
-                            table_backup.find('tbody').append(data.data);
+                            backupTable.find('.no-backup-row').remove();
+                            backupTable.find('tbody').append(data.data);
                             Botble.showSuccess(data.message);
                         }
                     },

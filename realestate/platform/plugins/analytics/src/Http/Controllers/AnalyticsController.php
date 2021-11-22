@@ -7,23 +7,29 @@ use Botble\Analytics\Exceptions\InvalidConfiguration;
 use Botble\Analytics\Period;
 use Botble\Base\Http\Controllers\BaseController;
 use Botble\Base\Http\Responses\BaseHttpResponse;
+use Botble\Dashboard\Supports\DashboardWidgetInstance;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Throwable;
 
 class AnalyticsController extends BaseController
 {
 
     /**
+     * @param Request $request
      * @param BaseHttpResponse $response
      * @return BaseHttpResponse
      * @throws Throwable
      */
-    public function getGeneral(BaseHttpResponse $response)
+    public function getGeneral(Request $request, BaseHttpResponse $response)
     {
-        $startDate = today()->startOfDay();
-        $endDate = today()->endOfDay();
-        $dimensions = 'hour';
+        $predefinedRangeFound = (new DashboardWidgetInstance)->getFilterRange($request->input('predefined_range'));
+
+        $startDate = $predefinedRangeFound['startDate'];
+        $endDate = $predefinedRangeFound['endDate'];
+        $dimensions = $this->getDimension($predefinedRangeFound['key']);
 
         try {
             $period = Period::create($startDate, $endDate);
@@ -36,32 +42,12 @@ class AnalyticsController extends BaseController
                 $answer->rows = [];
             }
 
-            if ($dimensions === 'hour') {
-                foreach ($answer->rows as $dateRow) {
-                    $visitorData[] = [
-                        'axis'      => (int)$dateRow[0] . 'h',
-                        'visitors'  => $dateRow[1],
-                        'pageViews' => $dateRow[2],
-                    ];
-                }
-            } else {
-                foreach ($answer->rows as $dateRow) {
-                    $visitorData[] = [
-                        'axis'      => Carbon::parse($dateRow[0])->toDateString(),
-                        'visitors'  => $dateRow[1],
-                        'pageViews' => $dateRow[2],
-                    ];
-                }
-            }
-
-            if (count($visitorData) == 0) {
-                for ($i = 0; $i <= 23; $i++) {
-                    $visitorData[] = [
-                        'axis'      => $i . 'h',
-                        'visitors'  => 0,
-                        'pageViews' => 0,
-                    ];
-                }
+            foreach ($answer->rows as $dateRow) {
+                $visitorData[] = [
+                    'axis'      => $this->getAxisByDimensions($dateRow[0], $dimensions),
+                    'visitors'  => $dateRow[1],
+                    'pageViews' => $dateRow[2],
+                ];
             }
 
             $stats = collect($visitorData);
@@ -75,8 +61,7 @@ class AnalyticsController extends BaseController
         } catch (InvalidConfiguration $exception) {
             return $response
                 ->setError()
-                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration',
-                    ['version' => number_format((float) get_cms_version(), 2)]));
+                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration'));
         } catch (Exception $exception) {
             return $response
                 ->setError()
@@ -85,14 +70,50 @@ class AnalyticsController extends BaseController
     }
 
     /**
+     * @param string $dateRow
+     * @param string $dimensions
+     * @return Carbon|string
+     */
+    protected function getAxisByDimensions($dateRow, $dimensions = 'hour')
+    {
+        switch ($dimensions) {
+            case 'date':
+                return Carbon::parse($dateRow)->toDateString();
+            case 'yearMonth':
+                return Carbon::createFromFormat('Ym', $dateRow)->format('Y-m');
+            default:
+                return (int)$dateRow . 'h';
+        }
+    }
+
+    /**
+    * @param string $key
+    * @return string
+    */
+    protected function getDimension($key): string
+    {
+        $data = [
+            'this_week'    => 'date',
+            'last_7_days'  => 'date',
+            'this_month'   => 'date',
+            'last_30_days' => 'date',
+            'this_year'    => 'yearMonth',
+        ];
+
+        return Arr::get($data, $key, 'hour');
+    }
+
+    /**
+     * @param Request $request
      * @param BaseHttpResponse $response
      * @return BaseHttpResponse
-     * @throws Throwable
      */
-    public function getTopVisitPages(BaseHttpResponse $response)
+    public function getTopVisitPages(Request $request, BaseHttpResponse $response)
     {
-        $startDate = today()->startOfDay();
-        $endDate = today()->endOfDay();
+        $predefinedRangeFound = (new DashboardWidgetInstance)->getFilterRange($request->input('predefined_range'));
+
+        $startDate = $predefinedRangeFound['startDate'];
+        $endDate = $predefinedRangeFound['endDate'];
 
         try {
             $period = Period::create($startDate, $endDate);
@@ -102,8 +123,7 @@ class AnalyticsController extends BaseController
         } catch (InvalidConfiguration $exception) {
             return $response
                 ->setError()
-                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration',
-                    ['version' => number_format((float) get_cms_version(), 2)]));
+                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration'));
         } catch (Exception $exception) {
             return $response
                 ->setError()
@@ -112,25 +132,26 @@ class AnalyticsController extends BaseController
     }
 
     /**
+     * @param Request $request
      * @param BaseHttpResponse $response
      * @return BaseHttpResponse
-     * @throws Throwable
      */
-    public function getTopBrowser(BaseHttpResponse $response)
+    public function getTopBrowser(Request $request, BaseHttpResponse $response)
     {
-        $startDate = today()->startOfDay();
-        $endDate = today()->endOfDay();
+        $predefinedRangeFound = (new DashboardWidgetInstance)->getFilterRange($request->input('predefined_range'));
+
+        $startDate = $predefinedRangeFound['startDate'];
+        $endDate = $predefinedRangeFound['endDate'];
 
         try {
             $period = Period::create($startDate, $endDate);
-            $browsers = Analytics::fetchTopBrowsers($period, 10);
+            $browsers = Analytics::fetchTopBrowsers($period);
 
             return $response->setData(view('plugins/analytics::widgets.browser', compact('browsers'))->render());
         } catch (InvalidConfiguration $exception) {
             return $response
                 ->setError()
-                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration',
-                    ['version' => number_format((float) get_cms_version(), 2)]));
+                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration'));
         } catch (Exception $exception) {
             return $response
                 ->setError()
@@ -139,14 +160,16 @@ class AnalyticsController extends BaseController
     }
 
     /**
+     * @param Request $request
      * @param BaseHttpResponse $response
      * @return BaseHttpResponse
-     * @throws Throwable
      */
-    public function getTopReferrer(BaseHttpResponse $response)
+    public function getTopReferrer(Request $request, BaseHttpResponse $response)
     {
-        $startDate = today()->startOfDay();
-        $endDate = today()->endOfDay();
+        $predefinedRangeFound = (new DashboardWidgetInstance)->getFilterRange($request->input('predefined_range'));
+
+        $startDate = $predefinedRangeFound['startDate'];
+        $endDate = $predefinedRangeFound['endDate'];
 
         try {
             $period = Period::create($startDate, $endDate);
@@ -156,8 +179,7 @@ class AnalyticsController extends BaseController
         } catch (InvalidConfiguration $exception) {
             return $response
                 ->setError()
-                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration',
-                    ['version' => number_format((float) get_cms_version(), 2)]));
+                ->setMessage(trans('plugins/analytics::analytics.wrong_configuration'));
         } catch (Exception $exception) {
             return $response
                 ->setError()

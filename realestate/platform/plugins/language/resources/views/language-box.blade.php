@@ -36,7 +36,7 @@
                     @else
                         @php
                             $queryString ='ref_from=' . (!empty($args[0]) && $args[0]->id ? $args[0]->id : 0) . '&ref_lang=' . $language->lang_code;
-                            $currentQueryString = remove_query_string_var(Request::getQueryString(), ['ref_from', 'ref_lang']);
+                            $currentQueryString = BaseHelper::removeQueryStringVars(Request::getQueryString(), ['ref_from', 'ref_lang']);
                             if (!empty($currentQueryString)) {
                                 $queryString = $currentQueryString . '&' . $queryString;
                             }
@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <input type="hidden" id="lang_meta_created_from" name="ref_from" value="{{ Request::get('ref_from') }}">
+    <input type="hidden" id="lang_meta_created_from" name="ref_from" value="{{ Request::input('ref_from') }}">
     <input type="hidden" id="reference_id" value="{{ $args[0] && $args[0]->id ? $args[0]->id : 0 }}">
     <input type="hidden" id="reference_type" value="{{ $args[1] }}">
     <input type="hidden" id="route_create" value="{{ Route::has($route['create']) ? route($route['create']) : '#' }}">

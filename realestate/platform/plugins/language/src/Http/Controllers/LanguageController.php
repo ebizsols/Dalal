@@ -181,6 +181,7 @@ class LanguageController extends BaseController
             if (empty($language)) {
                 abort(404);
             }
+
             $language->fill($request->input());
             $language = $this->languageRepository->createOrUpdate($language);
 
@@ -208,13 +209,16 @@ class LanguageController extends BaseController
             'reference_id'   => $referenceId,
             'reference_type' => $request->input('reference_type'),
         ]);
+
         $others = $this->languageMetaRepository->getModel();
+
         if ($currentLanguage) {
             $others = $others->where('lang_meta_code', '!=', $request->input('lang_meta_current_language'))
                 ->where('lang_meta_origin', $currentLanguage->origin);
         }
-        $others = $others->select(['reference_id', 'lang_meta_code'])
-            ->get();
+
+        $others = $others->select(['reference_id', 'lang_meta_code'])->get();
+
         $data = [];
         foreach ($others as $other) {
             $language = $this->languageRepository->getFirstBy(['lang_code' => $other->lang_code], [
@@ -222,6 +226,7 @@ class LanguageController extends BaseController
                 'lang_name',
                 'lang_code',
             ]);
+
             if (!empty($language) && !empty($currentLanguage) && $language->lang_code != $currentLanguage->lang_meta_code) {
                 $data[$language->lang_code]['lang_flag'] = $language->lang_flag;
                 $data[$language->lang_code]['lang_name'] = $language->lang_name;
@@ -254,10 +259,12 @@ class LanguageController extends BaseController
             $language = $this->languageRepository->getFirstBy(['lang_id' => $id]);
             $this->languageRepository->delete($language);
             $deleteDefaultLanguage = false;
+
             if ($language->lang_is_default) {
                 $default = $this->languageRepository->getFirstBy([
                     'lang_is_default' => 0,
                 ]);
+
                 if ($default) {
                     $default->lang_is_default = 1;
                     $this->languageRepository->createOrUpdate($default);
@@ -321,6 +328,7 @@ class LanguageController extends BaseController
             ->set('language_display', $request->input('language_display'))
             ->set('language_switcher_display', $request->input('language_switcher_display'))
             ->set('language_hide_languages', json_encode($request->input('language_hide_languages', [])))
+            ->set('language_auto_detect_user_language', $request->input('language_auto_detect_user_language'))
             ->set('language_show_default_item_if_current_version_not_existed',
                 $request->input('language_show_default_item_if_current_version_not_existed'))
             ->save();

@@ -21,7 +21,7 @@
                                     <div id="account-avatar">
                                         <div class="profile-image">
                                             <div class="avatar-view mt-card-avatar">
-                                                <img class="br2" src="{{ $user->avatar_url }}" style="width: 200px;">
+                                                <img class="br2" src="{{ $user->avatar_url }}" style="width: 200px;" alt="{{ $user->name }}">
                                                 <div class="mt-overlay br2">
                                                     <span><i class="fa fa-edit"></i></span>
                                                 </div>
@@ -57,6 +57,10 @@
                             <div class="form-group mb-3">
                                 <label for="username">{{ trans('plugins/real-estate::dashboard.username') }}</label>
                                 <input type="text" class="form-control" name="username" id="username" required value="{{ old('username') ?? $user->username }}">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="company">{{ trans('plugins/real-estate::dashboard.company') }}</label>
+                                <input type="text" class="form-control" name="company" id="company" required value="{{ old('company') ?? $user->company }}">
                             </div>
                             <!-- Phone -->
                             <div class="form-group mb-3">

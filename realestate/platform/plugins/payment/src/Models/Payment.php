@@ -72,7 +72,11 @@ class Payment extends BaseModel
     {
         $time = Html::tag('span', $this->created_at->diffForHumans(), ['class' => 'small italic']);
 
-        return 'You have created a payment #' . $this->charge_id . ' via ' . $this->payment_channel->label() . ' ' . $time .
-            ': ' . number_format($this->amount, 2) . $this->currency;
+        return __('You have created a payment #:charge_id via :channel :time : :amount', [
+            'charge_id' => $this->charge_id,
+            'channel'   => $this->payment_channel->label(),
+            'time'      => $time,
+            'amount'    => number_format($this->amount, 2) . $this->currency,
+        ]);
     }
 }

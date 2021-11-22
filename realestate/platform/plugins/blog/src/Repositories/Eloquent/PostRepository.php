@@ -162,7 +162,8 @@ class PostRepository extends RepositoriesAbstract implements PostInterface
         $data = $this->model->where(['status' => BaseStatusEnum::PUBLISHED]);
 
         if ($categoryId != 0) {
-            $data = $data->join('post_categories', 'post_categories.post_id', '=', 'posts.id')
+            $data = $data
+                ->join('post_categories', 'post_categories.post_id', '=', 'posts.id')
                 ->where('post_categories.category_id', $categoryId);
         }
 
@@ -177,14 +178,14 @@ class PostRepository extends RepositoriesAbstract implements PostInterface
     /**
      * {@inheritDoc}
      */
-    public function getSearch($query, $limit = 10, $paginate = 10)
+    public function getSearch($keyword, $limit = 10, $paginate = 10)
     {
-        $data = $this->model->with('slugable')->where('status', BaseStatusEnum::PUBLISHED);
-        foreach (explode(' ', $query) as $term) {
-            $data = $data->where('name', 'LIKE', '%' . $term . '%');
-        }
-
-        $data = $data
+        $data = $this->model
+            ->with('slugable')
+            ->where('status', BaseStatusEnum::PUBLISHED)
+            ->where(function ($query) use ($keyword) {
+                $query->addSearch('name', $keyword);
+            })
             ->orderBy('created_at', 'desc');
 
         if ($limit) {
@@ -237,54 +238,59 @@ class PostRepository extends RepositoriesAbstract implements PostInterface
      */
     public function getFilters(array $filters)
     {
-        $this->model = $this->originalModel;
+        $data = $this->originalModel;
 
         if ($filters['categories'] !== null) {
             $categories = array_filter((array)$filters['categories']);
 
-            $this->model = $this->model->whereHas('categories', function ($query) use ($categories) {
-                $query->whereIn('categories.id', $categories);
+            $data = $data->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('id', $categories);
             });
         }
 
         if ($filters['categories_exclude'] !== null) {
-            $excludeCategories = array_filter((array)$filters['categories_exclude']);
-
-            $this->model = $this->model->whereHas('categories', function ($query) use ($excludeCategories) {
-                $query->whereNotIn('categories.id', $excludeCategories);
-            });
+            $data = $data
+                ->whereHas('categories', function ($query) use ($filters) {
+                    $query->whereNotIn('id', array_filter((array)$filters['categories_exclude']));
+                });
         }
 
         if ($filters['exclude'] !== null) {
-            $this->model = $this->model->whereNotIn('id', array_filter((array)$filters['exclude']));
+            $data = $data->whereNotIn('id', array_filter((array)$filters['exclude']));
         }
 
         if ($filters['include'] !== null) {
-            $this->model = $this->model->whereNotIn('id', array_filter((array)$filters['include']));
+            $data = $data->whereNotIn('id', array_filter((array)$filters['include']));
         }
 
         if ($filters['author'] !== null) {
-            $this->model = $this->model->whereIn('author_id', array_filter((array)$filters['author']));
+            $data = $data->whereIn('author_id', array_filter((array)$filters['author']));
         }
 
         if ($filters['author_exclude'] !== null) {
-            $this->model = $this->model->whereNotIn('author_id', array_filter((array)$filters['author_exclude']));
+            $data = $data->whereNotIn('author_id', array_filter((array)$filters['author_exclude']));
         }
 
         if ($filters['featured'] !== null) {
-            $this->model = $this->model->where('is_featured', $filters['featured']);
+            $data = $data->where('is_featured', $filters['featured']);
         }
 
         if ($filters['search'] !== null) {
-            $this->model = $this->model->where('name', 'like', '%' . $filters['search'] . '%')
-                ->orWhere('content', 'like', '%' . $filters['search'] . '%');
+            $data = $data
+                ->where(function ($query) use ($filters) {
+                    $query
+                        ->addSearch('name', $filters['search'])
+                        ->addSearch('description', $filters['search']);
+                });
         }
 
-        $orderBy = isset($filters['order_by']) ? $filters['order_by'] : 'updated_at';
-        $order = isset($filters['order']) ? $filters['order'] : 'desc';
+        $orderBy = Arr::get($filters, 'order_by', 'updated_at');
+        $order = Arr::get($filters, 'order', 'desc');
 
-        $this->model = $this->model->where('status', BaseStatusEnum::PUBLISHED)->orderBy($orderBy, $order);
+        $data = $data
+            ->where('status', BaseStatusEnum::PUBLISHED)
+            ->orderBy($orderBy, $order);
 
-        return $this->applyBeforeExecuteQuery($this->model)->paginate((int)$filters['per_page']);
+        return $this->applyBeforeExecuteQuery($data)->paginate((int)$filters['per_page']);
     }
 }

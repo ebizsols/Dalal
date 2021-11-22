@@ -1,4 +1,4 @@
-@extends('core/base::layouts.master')
+@extends(BaseHelper::getAdminMasterLayoutTemplate())
 @section('content')
     <div class="container">
         <h1 class="text-center" style="padding-top: 20px;">{{ trans('core/base::system.updater') }}</h1><br>
@@ -7,6 +7,7 @@
                 <p>- Please backup your database and script files before upgrading.</p>
                 <p>- You need to activate your license before doing upgrade.</p>
                 <p>- If you don't need this 1-click update, you can disable it in <strong>.env</strong> by adding <strong>CMS_ENABLE_SYSTEM_UPDATER=false</strong></p>
+                <p>- It will override all files in <strong>platform/core</strong>, <strong>platform/packages</strong>, all plugins developed by us in <strong>platform/plugins</strong> and theme developed by us in <strong>platform/themes</strong>.</p>
             </div>
             <p class="mb-0 text-success">
                 {{ $updateData['message'] }}
@@ -14,7 +15,7 @@
             <div class="content">
                 @if ($updateData['status'])
                     <br>
-                    <div class="note note-info">
+                    <div class="note note-info changelog-info">
                         {!! trim($updateData['changelog']) !!}
                     </div>
                     <br>

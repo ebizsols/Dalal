@@ -45,7 +45,7 @@ return [
         // breadcrumb template.
         'beforeRenderTheme' => function(Theme $theme)
         {
-            $version = '2.29.0';
+            $version = '2.30.0';
 
             // You may use this event to set up your assets.
             $theme->asset()->usePath()->add('bootstrap-css', 'libraries/bootstrap/bootstrap.min.v4.css');

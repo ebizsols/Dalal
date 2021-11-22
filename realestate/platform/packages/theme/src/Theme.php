@@ -2,8 +2,6 @@
 
 namespace Botble\Theme;
 
-use Botble\Base\Supports\Helper;
-use Botble\Setting\Models\Setting;
 use Botble\Theme\Contracts\Theme as ThemeContract;
 use Botble\Theme\Exceptions\UnknownLayoutFileException;
 use Botble\Theme\Exceptions\UnknownPartialFileException;
@@ -208,7 +206,7 @@ class Theme implements ThemeContract
         }
 
         // Is theme ready?
-        if (!$this->exists($theme)) {
+        if (!$this->exists($theme) && !app()->runningInConsole()) {
             throw new UnknownThemeException('Theme [' . $theme . '] not found.');
         }
 
@@ -283,7 +281,9 @@ class Theme implements ThemeContract
             // Require public theme config.
             $minorConfigPath = theme_path($this->theme . '/config.php');
 
-            $this->themeConfig['themes'][$this->theme] = $this->files->getRequire($minorConfigPath);
+            if ($this->files->exists($minorConfigPath)) {
+                $this->themeConfig['themes'][$this->theme] = $this->files->getRequire($minorConfigPath);
+            }
         }
 
         // Evaluate theme config.
@@ -296,7 +296,7 @@ class Theme implements ThemeContract
      * Evaluate config.
      *
      * Config minor is at public folder [theme]/config.php,
-     * they can be override package config.
+     * they can be overridden package config.
      *
      * @param mixed $config
      * @return mixed
@@ -460,7 +460,7 @@ class Theme implements ThemeContract
      * Set a place to regions.
      *
      * @param string $region
-     * @param string $value
+     * @param mixed $value
      * @return Theme
      */
     public function set(string $region, $value): self
@@ -988,7 +988,7 @@ class Theme implements ThemeContract
         }
 
         $content->withHeaders([
-            'CMS-Version'       => get_cms_version(),
+            'CMS-Version'       => '5.23',
             'Authorization-At'  => setting('membership_authorization_at'),
             'Activated-License' => !empty(setting('licensed_to')) ? 'Yes' : 'No',
         ]);

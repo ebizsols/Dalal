@@ -9,6 +9,7 @@ use Botble\RealEstate\Enums\TransactionTypeEnum;
 use Botble\RealEstate\Http\Requests\CreateTransactionRequest;
 use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
 use Botble\RealEstate\Repositories\Interfaces\TransactionInterface;
+use RealEstateHelper;
 
 class TransactionController extends BaseController
 {
@@ -43,6 +44,10 @@ class TransactionController extends BaseController
      */
     public function postCreate($id, CreateTransactionRequest $request, BaseHttpResponse $response)
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            abort(404);
+        }
+
         $account = $this->accountRepository->findOrFail($id);
 
         $request->merge([

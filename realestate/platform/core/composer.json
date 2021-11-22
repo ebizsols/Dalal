@@ -29,7 +29,8 @@
         "yajra/laravel-datatables-buttons": "^4.13",
         "yajra/laravel-datatables-oracle": "^9.18",
         "guzzlehttp/guzzle": "^6.0|^7.0",
-        "mews/purifier": "^3.3"
+        "mews/purifier": "^3.3",
+        "phpoffice/phpspreadsheet": "1.18.0"
     },
     "autoload": {
         "psr-4": {

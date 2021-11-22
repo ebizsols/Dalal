@@ -9,7 +9,7 @@ return [
             'description' => 'Enable/disable & configure app credentials for Facebook login',
             'app_id'      => 'App ID',
             'app_secret'  => 'App Secret',
-            'helper'      => 'Please go to https://developers.facebook.com to create new app update App ID, App Secret. A Valid OAuth Redirect URIs is :callback',
+            'helper'      => 'Please go to https://developers.facebook.com to create new app update App ID, App Secret. Callback URL is :callback',
         ],
         'google'      => [
             'title'       => 'Google login settings',

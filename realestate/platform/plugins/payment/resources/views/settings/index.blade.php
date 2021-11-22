@@ -1,4 +1,4 @@
-@extends('core/base::layouts.master')
+@extends(BaseHelper::getAdminMasterLayoutTemplate())
 
 @section('content')
     <div class="container">
@@ -95,12 +95,12 @@
                                             </p>
                                             <div class="form-group mb-3">
                                                 <label class="text-title-field" for="stripe_client_id">{{ trans('plugins/payment::payment.stripe_key') }}</label>
-                                                <input type="text" class="next-input" name="payment_stripe_client_id" id="stripe_client_id" value="{{ app()->environment('demo') ? '*******************************' : setting('payment_stripe_client_id') }}">
+                                                <input type="text" class="next-input" name="payment_stripe_client_id" id="stripe_client_id" placeholder="pk_*************" value="{{ app()->environment('demo') ? '*******************************' : setting('payment_stripe_client_id') }}">
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="text-title-field" for="stripe_secret">{{ trans('plugins/payment::payment.stripe_secret') }}</label>
                                                 <div class="input-option">
-                                                    <input type="password" class="next-input" placeholder="••••••••" id="stripe_secret" name="payment_stripe_secret" value="{{ app()->environment('demo') ? '*******************************' : setting('payment_stripe_secret') }}">
+                                                    <input type="password" class="next-input" id="stripe_secret" name="payment_stripe_secret" placeholder="sk_*************" value="{{ app()->environment('demo') ? '*******************************' : setting('payment_stripe_secret') }}">
                                                 </div>
                                             </div>
                                             {!! apply_filters(PAYMENT_METHOD_SETTINGS_CONTENT, null, 'stripe') !!}

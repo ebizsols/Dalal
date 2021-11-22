@@ -4,6 +4,7 @@ namespace Botble\Page\Http\Controllers;
 
 use Botble\Page\Models\Page;
 use Botble\Page\Services\PageService;
+use Botble\Theme\Events\RenderingSingleEvent;
 use Illuminate\Routing\Controller;
 use Response;
 use SlugHelper;
@@ -29,6 +30,8 @@ class PublicController extends Controller
         if (isset($data['slug']) && $data['slug'] !== $slug->key) {
             return redirect()->to(url(SlugHelper::getPrefix(Page::class) . '/' . $data['slug']));
         }
+
+        event(new RenderingSingleEvent($slug));
 
         return Theme::scope($data['view'], $data['data'], $data['default_view'])->render();
     }

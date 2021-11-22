@@ -65,6 +65,7 @@ class HookServiceProvider extends ServiceProvider
             ->setBodyClass('row')
             ->setHasLoadCallback(true)
             ->setIsEqualHeight(false)
+            ->setSettings(['show_predefined_ranges' => true])
             ->init($widgets, $widgetSettings);
     }
 
@@ -85,6 +86,7 @@ class HookServiceProvider extends ServiceProvider
             ->setRoute(route('analytics.page'))
             ->setBodyClass('scroll-table')
             ->setColumn('col-md-6 col-sm-6')
+            ->setSettings(['show_predefined_ranges' => true])
             ->init($widgets, $widgetSettings);
     }
 
@@ -105,6 +107,7 @@ class HookServiceProvider extends ServiceProvider
             ->setRoute(route('analytics.browser'))
             ->setBodyClass('scroll-table')
             ->setColumn('col-md-6 col-sm-6')
+            ->setSettings(['show_predefined_ranges' => true])
             ->init($widgets, $widgetSettings);
     }
 
@@ -125,6 +128,7 @@ class HookServiceProvider extends ServiceProvider
             ->setRoute(route('analytics.referrer'))
             ->setBodyClass('scroll-table')
             ->setColumn('col-md-6 col-sm-6')
+            ->setSettings(['show_predefined_ranges' => true])
             ->init($widgets, $widgetSettings);
     }
 

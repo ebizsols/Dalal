@@ -163,6 +163,31 @@ class SystemController extends Controller
     }
 
     /**
+     * @return BaseHttpResponse
+     */
+    public function getCheckUpdate(BaseHttpResponse $response)
+    {
+        if (!config('core.base.general.enable_system_updater')) {
+            return $response;
+        }
+
+        $response
+            ->setData(['has_new_version' => false]);
+
+        $api = new Core;
+
+        $updateData = $api->checkUpdate();
+
+        if ($updateData['status']) {
+            $response
+                ->setData(['has_new_version' => true])
+                ->setMessage('A new version (' . $updateData['version'] . ' / released on ' . $updateData['release_date'] . ') is available to update');
+        }
+
+        return $response;
+    }
+
+    /**
      * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View
      */
     public function getUpdater()

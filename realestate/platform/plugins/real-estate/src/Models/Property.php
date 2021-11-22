@@ -2,7 +2,6 @@
 
 namespace Botble\RealEstate\Models;
 
-use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Models\BaseModel;
 use Botble\Base\Traits\EnumCastable;
 use Botble\Location\Models\City;

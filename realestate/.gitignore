@@ -39,6 +39,7 @@ resources/docs
 
 .phpunit.result.cache
 /storage/.license
+/storage/fonts
 
 /log
 

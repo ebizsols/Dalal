@@ -18,7 +18,6 @@ class SocialLoginServiceProvider extends ServiceProvider
         $this->setNamespace('plugins/social-login')
             ->loadHelpers()
             ->loadAndPublishConfigurations(['permissions', 'general'])
-            ->loadMigrations()
             ->loadAndPublishViews()
             ->loadAndPublishTranslations()
             ->loadRoutes(['web'])
@@ -38,8 +37,6 @@ class SocialLoginServiceProvider extends ServiceProvider
 
         AliasLoader::getInstance()->alias('SocialService', SocialServiceFacade::class);
 
-        $this->app->booted(function () {
-            $this->app->register(HookServiceProvider::class);
-        });
+        $this->app->register(HookServiceProvider::class);
     }
 }

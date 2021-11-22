@@ -23,4 +23,5 @@ return [
     ],
     'property_expired_after_days'               => 'Property Expired Time (days)',
     'enable_post_approval'                      => 'Enable post approval?',
+    'enable_credits_system'                     => 'Enable credits system (agents need to buy credits to post their properties)',
 ];

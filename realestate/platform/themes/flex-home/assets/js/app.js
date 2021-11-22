@@ -721,7 +721,7 @@
         $(document).on('click', '#ajax-filters-form .pagination a', function (e) {
             e.preventDefault();
             var url = new URL($(e.currentTarget).attr('href'));
-            var page = url.searchParams.get("page");
+            var page = url.searchParams.get('page');
             $('#ajax-filters-form input[name=page]').val(page)
             $('#ajax-filters-form').trigger('submit');
         });

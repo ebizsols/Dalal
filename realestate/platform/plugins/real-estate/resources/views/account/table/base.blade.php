@@ -46,7 +46,7 @@
     'type' => 'info',
     'name' => 'modal-confirm-renew',
     'title' => __('Renew confirmation'),
-    'content' => __('Are you sure you want to renew this property, it will takes 1 credit from your credits'),
+    'content' => (RealEstateHelper::isEnabledCreditsSystem() ? __('Are you sure you want to renew this property, it will takes 1 credit from your credits') : __('Are you sure you want to renew this property')) . '?',
     'action_name' => __('Yes'),
     'action_button_attributes' => [
         'class' => 'button-confirm-renew',

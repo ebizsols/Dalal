@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use RvMedia;
-use Illuminate\Support\Str;
 
 class Project extends BaseModel
 {

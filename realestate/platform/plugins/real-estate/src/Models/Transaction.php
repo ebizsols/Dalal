@@ -8,6 +8,7 @@ use Botble\Payment\Models\Payment;
 use Botble\RealEstate\Enums\TransactionTypeEnum;
 use Eloquent;
 use Html;
+use RealEstateHelper;
 
 class Transaction extends Eloquent
 {
@@ -60,6 +61,10 @@ class Transaction extends Eloquent
      */
     public function getDescription(): string
     {
+        if (!RealEstateHelper::isEnabledCreditsSystem()) {
+            return '';
+        }
+
         $time = Html::tag('span', $this->created_at->diffForHumans(), ['class' => 'small italic']);
 
         if ($this->user_id) {

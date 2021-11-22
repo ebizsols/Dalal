@@ -3,7 +3,6 @@
 namespace Botble\RealEstate\Forms;
 
 use Botble\Base\Forms\FormAbstract;
-use Botble\RealEstate\Forms\Fields\FontawesomeSelectField;
 use Botble\RealEstate\Http\Requests\FeatureRequest;
 use Botble\RealEstate\Models\Feature;
 use Throwable;
@@ -20,7 +19,6 @@ class FeatureForm extends FormAbstract
         $this
             ->setupModel(new Feature)
             ->setValidatorClass(FeatureRequest::class)
-            ->addCustomField('fontawesomeSelect', FontawesomeSelectField::class)
             ->add('name', 'text', [
                 'label'      => trans('plugins/real-estate::feature.form.name'),
                 'label_attr' => ['class' => 'control-label required'],
@@ -29,7 +27,7 @@ class FeatureForm extends FormAbstract
                     'data-counter' => 120,
                 ],
             ])
-            ->add('icon', 'fontawesomeSelect', [
+            ->add('icon', 'text', [
                 'label'         => trans('plugins/real-estate::feature.form.icon'),
                 'label_attr'    => ['class' => 'control-label'],
                 'attr'          => [

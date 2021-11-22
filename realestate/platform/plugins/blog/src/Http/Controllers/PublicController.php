@@ -7,6 +7,7 @@ use Botble\Blog\Models\Post;
 use Botble\Blog\Models\Tag;
 use Botble\Blog\Repositories\Interfaces\PostInterface;
 use Botble\Blog\Services\BlogService;
+use Botble\Theme\Events\RenderingSingleEvent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -59,6 +60,8 @@ class PublicController extends Controller
             return redirect()->to(route('public.single', SlugHelper::getPrefix(Tag::class) . '/' . $data['slug']));
         }
 
+        event(new RenderingSingleEvent($slug));
+
         return Theme::scope($data['view'], $data['data'], $data['default_view'])
             ->render();
     }
@@ -82,6 +85,8 @@ class PublicController extends Controller
             return redirect()->to(route('public.single', SlugHelper::getPrefix(Post::class) . '/' . $data['slug']));
         }
 
+        event(new RenderingSingleEvent($slug));
+
         return Theme::scope($data['view'], $data['data'], $data['default_view'])
             ->render();
     }
@@ -104,6 +109,8 @@ class PublicController extends Controller
         if (isset($data['slug']) && $data['slug'] !== $slug->key) {
             return redirect()->to(route('public.single', SlugHelper::getPrefix(Category::class) . '/' . $data['slug']));
         }
+
+        event(new RenderingSingleEvent($slug));
 
         return Theme::scope($data['view'], $data['data'], $data['default_view'])
             ->render();

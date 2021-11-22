@@ -16,17 +16,15 @@ class HookServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->booted(function () {
-            add_filter(BASE_FILTER_TOP_HEADER_LAYOUT, [$this, 'registerTopHeaderNotification'], 120);
-            add_filter(BASE_FILTER_APPEND_MENU_NAME, [$this, 'getUnreadCount'], 120, 2);
-            add_filter(BASE_FILTER_MENU_ITEMS_COUNT, [$this, 'getMenuItemCount'], 120);
+        add_filter(BASE_FILTER_TOP_HEADER_LAYOUT, [$this, 'registerTopHeaderNotification'], 120);
+        add_filter(BASE_FILTER_APPEND_MENU_NAME, [$this, 'getUnreadCount'], 120, 2);
+        add_filter(BASE_FILTER_MENU_ITEMS_COUNT, [$this, 'getMenuItemCount'], 120);
 
-            if (function_exists('add_shortcode')) {
-                add_shortcode('contact-form', trans('plugins/contact::contact.shortcode_name'), trans('plugins/contact::contact.shortcode_description'), [$this, 'form']);
-                shortcode()
-                    ->setAdminConfig('contact-form', view('plugins/contact::partials.short-code-admin-config')->render());
-            }
-        });
+        if (function_exists('add_shortcode')) {
+            add_shortcode('contact-form', trans('plugins/contact::contact.shortcode_name'), trans('plugins/contact::contact.shortcode_description'), [$this, 'form']);
+            shortcode()
+                ->setAdminConfig('contact-form', view('plugins/contact::partials.short-code-admin-config')->render());
+        }
     }
 
     /**

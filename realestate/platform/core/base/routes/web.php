@@ -40,6 +40,12 @@ Route::group(['namespace' => 'Botble\Base\Http\Controllers', 'middleware' => ['w
             'permission' => false,
         ]);
 
+        Route::get('system/check-update', [
+            'as'         => 'system.check-update',
+            'uses'       => 'SystemController@getCheckUpdate',
+            'permission' => 'superuser',
+        ]);
+
         Route::get('system/updater', [
             'as'         => 'system.updater',
             'uses'       => 'SystemController@getUpdater',

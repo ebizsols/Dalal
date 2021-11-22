@@ -43,6 +43,7 @@ class Language extends BaseModel
 
         self::deleted(function (Language $language) {
             $defaultLanguage = self::where('lang_is_default', 1)->first();
+
             if (empty($defaultLanguage) && self::count() > 0) {
                 $defaultLanguage = self::first();
                 $defaultLanguage->lang_is_default = 1;

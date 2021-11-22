@@ -3,7 +3,7 @@
     "namespace": "Theme\\FlexHome\\",
     "description": "Real Estate theme",
     "author": "Botble Technologies",
-    "version": "2.29",
+    "version": "2.30.0",
     "required_plugins": [
         "blog",
         "contact",

@@ -378,7 +378,7 @@ class AssetContainer
     }
 
     /**
-     * Get the links to all of the registered CSS assets.
+     * Get the links to all the registered CSS assets.
      *
      * @return  string
      * @throws Exception
@@ -389,7 +389,7 @@ class AssetContainer
     }
 
     /**
-     * Get all of the registered assets for a given type / group.
+     * Get all the registered assets for a given type / group.
      *
      * @param string $group
      * @return string
@@ -661,7 +661,7 @@ class AssetContainer
     }
 
     /**
-     * Get the links to all of the registered JavaScript assets.
+     * Get the links to all the registered JavaScript assets.
      *
      * @return  string
      * @throws Exception

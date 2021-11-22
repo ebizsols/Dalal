@@ -87,9 +87,17 @@
                              ])
                         !!}
                     </div>
-                    @if (defined('THEME_MODULE_SCREEN_NAME'))
-                        <hr>
-                        <h3>{{ trans('packages/menu::menu.menu_settings') }}</h3>
+                </div>
+            </div>
+
+            @if (defined('THEME_MODULE_SCREEN_NAME'))
+                <div class="widget meta-boxes">
+                    <div class="widget-title">
+                        <h4>
+                            <span>{{ trans('packages/menu::menu.menu_settings') }}</span>
+                        </h4>
+                    </div>
+                    <div class="widget-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <p><i>{{ trans('packages/menu::menu.display_location') }}</i></p>
@@ -103,9 +111,9 @@
                                 @endforeach
                             </div>
                         </div>
-                    @endif
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 @endif

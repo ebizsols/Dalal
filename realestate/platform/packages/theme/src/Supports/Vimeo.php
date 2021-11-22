@@ -2,8 +2,6 @@
 
 namespace Botble\Theme\Supports;
 
-use Illuminate\Support\Arr;
-
 class Vimeo
 {
     /**

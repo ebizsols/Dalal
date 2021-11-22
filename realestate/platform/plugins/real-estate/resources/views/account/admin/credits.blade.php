@@ -29,7 +29,7 @@
                                                         <div class="timeline__inner-message">
                                                             <a href="#"
                                                                class="text-no-bold show-timeline-dropdown hover-underline"
-                                                               data-target="#history-line-{{ $transaction->id }}">
+                                                               data-bs-target="#history-line-{{ $transaction->id }}">
                                                                 {!! clean($transaction->getDescription()) !!}
                                                             </a>
                                                         </div>

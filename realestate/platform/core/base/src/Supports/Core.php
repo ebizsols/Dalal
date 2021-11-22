@@ -3,6 +3,7 @@
 namespace Botble\Base\Supports;
 
 use BaseHelper;
+use Botble\Base\Supports\PclZip as Zip;
 use Botble\Theme\Services\ThemeService;
 use Exception;
 use GuzzleHttp\Client;
@@ -459,19 +460,31 @@ class Core
                 }
 
                 ob_flush();
-                $zip = new ZipArchive;
-                $res = $zip->open($destination);
-                if ($res === true) {
-                    $zip->extractTo($this->rootPath . '/');
-                    $zip->close();
+                if (class_exists('ZipArchive', false)) {
+                    $zip = new ZipArchive;
+                    $res = $zip->open($destination);
+                    if ($res === true) {
+                        $zip->extractTo($this->rootPath . '/');
+                        $zip->close();
+                        unlink($destination);
+                        echo 'Main update files downloaded and extracted.<br><br>';
+                        if ($this->showUpdateProcess) {
+                            echo '<script>document.getElementById(\'prog\').value = 75;</script>';
+                        }
+                        ob_flush();
+                    } else {
+                        echo 'Update zip extraction failed.<br><br>';
+                        ob_flush();
+                    }
+                } else {
+                    $archive = new Zip($destination);
+                    $archive->extract(PCLZIP_OPT_PATH, $this->rootPath . '/', PCLZIP_OPT_REMOVE_ALL_PATH);
+
                     unlink($destination);
                     echo 'Main update files downloaded and extracted.<br><br>';
                     if ($this->showUpdateProcess) {
                         echo '<script>document.getElementById(\'prog\').value = 75;</script>';
                     }
-                    ob_flush();
-                } else {
-                    echo 'Update zip extraction failed.<br><br>';
                     ob_flush();
                 }
 
@@ -492,13 +505,17 @@ class Core
                             continue;
                         }
 
+                        $modulePath = $path . '/' . $module;
+
+                        if (!File::isDirectory($modulePath)) {
+                            continue;
+                        }
+
                         $publishedPath = 'vendor/core/' . File::basename($path);
 
                         if (!File::isDirectory($publishedPath)) {
                             File::makeDirectory($publishedPath, 0755, true);
                         }
-
-                        $modulePath = $path . '/' . $module;
 
                         if (File::isDirectory($modulePath . '/public')) {
                             File::copyDirectory($modulePath . '/public', $publishedPath . '/' . $module);

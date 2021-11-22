@@ -1,4 +1,4 @@
-@extends('core/base::layouts.master')
+@extends(BaseHelper::getAdminMasterLayoutTemplate())
 @section('content')
     <div class="clearfix"></div>
     @if (!function_exists('proc_open'))
@@ -8,9 +8,10 @@
     @endif
 
     <div class="note note-warning">
-        <p>{!! clean(trans('plugins/backup::backup.important_message1')) !!}</p>
-        <p>{!! clean(trans('plugins/backup::backup.important_message2')) !!}</p>
-        <p>{!! clean(trans('plugins/backup::backup.important_message3')) !!}</p>
+        <p>- {!! clean(trans('plugins/backup::backup.important_message1')) !!}</p>
+        <p>- {!! clean(trans('plugins/backup::backup.important_message2')) !!}</p>
+        <p>- {!! clean(trans('plugins/backup::backup.important_message3')) !!}</p>
+        <p>- {!! clean(trans('plugins/backup::backup.important_message4')) !!}</p>
     </div>
 
     @if (auth()->user()->hasPermission('backups.create'))
@@ -30,7 +31,7 @@
         <tbody>
             @if (count($backups) > 0)
                 @foreach($backups as $key => $backup)
-                    @include('plugins/backup::partials.backup-item', ['data' => $backup, 'backupManager' => $backupManager, 'key' => $key, 'odd' => $loop->index % 2 == 0 ? true : false])
+                    @include('plugins/backup::partials.backup-item', ['data' => $backup, 'backupManager' => $backupManager, 'key' => $key, 'odd' => $loop->index % 2 == 0])
                 @endforeach
             @else
                 <tr class="text-center no-backup-row">

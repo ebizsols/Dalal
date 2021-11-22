@@ -1,4 +1,4 @@
-@extends('core/base::layouts.master')
+@extends(BaseHelper::getAdminMasterLayoutTemplate())
 @section('content')
     {!! Form::open(['url' => route('real-estate.settings'), 'class' => 'main-setting-form']) !!}
     <div class="max-width-1200">
@@ -47,13 +47,13 @@
                         <label class="text-title-field"
                                for="real_estate_convert_money_to_text_enabled">{{ trans('plugins/real-estate::settings.real_estate_convert_money_to_text_enabled') }}
                         </label>
-                        <label class="hrv-label">
-                            <input type="radio" name="real_estate_convert_money_to_text_enabled" class="hrv-radio"
+                        <label class="me-2">
+                            <input type="radio" name="real_estate_convert_money_to_text_enabled"
                                    value="1"
                                    @if (setting('real_estate_convert_money_to_text_enabled', config('plugins.real-estate.real-estate.display_big_money_in_million_billion')) == 1) checked @endif>{{ trans('core/setting::setting.general.yes') }}
                         </label>
-                        <label class="hrv-label">
-                            <input type="radio" name="real_estate_convert_money_to_text_enabled" class="hrv-radio"
+                        <label class="me-2">
+                            <input type="radio" name="real_estate_convert_money_to_text_enabled"
                                    value="0"
                                    @if (setting('real_estate_convert_money_to_text_enabled', config('plugins.real-estate.real-estate.display_big_money_in_million_billion')) == 0) checked @endif>{{ trans('core/setting::setting.general.no') }}
                         </label>
@@ -166,6 +166,21 @@
                             <input type="radio" name="verify_account_email"
                                    value="0"
                                    @if (setting('verify_account_email', config('plugins.real-estate.real-estate.verify_email')) == 0) checked @endif>{{ trans('core/setting::setting.general.no') }}
+                        </label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-title-field"
+                               for="real_estate_enable_credits_system">{{ trans('plugins/real-estate::settings.enable_credits_system') }}
+                        </label>
+                        <label class="me-2">
+                            <input type="radio" name="real_estate_enable_credits_system"
+                                   value="1"
+                                   @if (RealEstateHelper::isEnabledCreditsSystem()) checked @endif>{{ trans('core/setting::setting.general.yes') }}
+                        </label>
+                        <label class="me-2">
+                            <input type="radio" name="real_estate_enable_credits_system"
+                                   value="0"
+                                   @if (!RealEstateHelper::isEnabledCreditsSystem()) checked @endif>{{ trans('core/setting::setting.general.no') }}
                         </label>
                     </div>
                     <div class="form-group mb-3">

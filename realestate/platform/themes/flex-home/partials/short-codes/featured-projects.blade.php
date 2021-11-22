@@ -11,7 +11,7 @@
                 ['re_projects.status', 'NOT_IN', [ProjectStatusEnum::NOT_AVAILABLE]],
             ],
             'take'      => (int)theme_option('number_of_featured_projects', 4),
-            'with'      => config('plugins.real-estate.real-estate.projects.relations'),
+            'with'      => RealEstateHelper::getProjectRelationsQuery(),
             'order_by' => ['re_projects.created_at' => 'DESC'],
         ]);
      }

@@ -46,6 +46,7 @@ return [
     'account_field_title'        => 'Account Information',
     'profile-picture'            => 'Profile picture',
     'uploading'                  => 'Uploading...',
+    'company'                    => 'Company Name',
     'phone'                      => 'Phone',
     'first_name'                 => 'First name',
     'last_name'                  => 'Last name',

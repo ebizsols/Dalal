@@ -1,6 +1,6 @@
 <tr class="@if (!empty($odd) && $odd == true) odd @else even @endif">
     <td>{{ $data['name'] }}</td>
-    <td>{{ $data['description'] }}</td>
+    <td>@if ($data['description']) {{ $data['description'] }} @else &mdash; @endif</td>
     <td>{{ human_file_size(get_backup_size($key)) }}</td>
     <td style="width: 250px;">{{ $data['date'] }}</td>
     <td style="width: 150px;">

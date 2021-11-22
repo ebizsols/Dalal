@@ -21,6 +21,10 @@ class PaymentServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this
+            ->setNamespace('plugins/payment')
+            ->loadHelpers();
+
         $this->app->singleton(PaymentInterface::class, function () {
             return new PaymentCacheDecorator(new PaymentRepository(new Payment));
         });
@@ -33,8 +37,6 @@ class PaymentServiceProvider extends ServiceProvider
     public function boot()
     {
         $this
-            ->setNamespace('plugins/payment')
-            ->loadHelpers()
             ->loadAndPublishConfigurations(['payment', 'permissions'])
             ->loadAndPublishViews()
             ->loadAndPublishTranslations()
@@ -133,5 +135,12 @@ class PaymentServiceProvider extends ServiceProvider
         shortcode()->setAdminConfig('payment-info', function ($attributes) {
             return view('plugins/payment::partials.payment-info-admin-config', compact('attributes'))->render();
         });
+
+        add_filter(PAYMENT_FILTER_ADDITIONAL_PAYMENT_METHODS, function ($html, array $data) {
+            $html .= view('plugins/payment::stripe.methods', $data)->render();
+            $html .= view('plugins/payment::paypal.methods', $data)->render();
+
+            return $html;
+        }, 1, 2);
     }
 }

@@ -188,6 +188,7 @@ class MetaBox
                 'reference_id'   => $object->id,
                 'reference_type' => get_class($object),
             ]);
+
             if (!$fieldMeta) {
                 $fieldMeta = $this->metaBoxRepository->getModel();
                 $fieldMeta->reference_id = $object->id;
@@ -201,6 +202,7 @@ class MetaBox
 
             $fieldMeta->meta_value = [$value];
             $this->metaBoxRepository->createOrUpdate($fieldMeta);
+
             return true;
         } catch (Exception $exception) {
             return false;

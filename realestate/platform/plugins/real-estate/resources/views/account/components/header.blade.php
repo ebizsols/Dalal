@@ -10,7 +10,7 @@
         @endif
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -43,18 +43,23 @@
                   <i class="fas fa-cogs mr1"></i>{{ trans('plugins/real-estate::dashboard.header_settings_link') }}
               </a>
           </li>
-          <li>
-              <a class="no-underline mr2 black-50 hover-black-70 pv1 ph2 db mr2" style="text-decoration: none; line-height: 32px;" href="{{ route('public.account.packages') }}" title="{{ trans('plugins/real-estate::account.credits') }}">
-                  <i class="far fa-credit-card mr1"></i>{{ trans('plugins/real-estate::account.buy_credits') }} <span class="badge badge-info">{{ auth('account')->user()->credits }} {{ trans('plugins/real-estate::account.credits') }}</span>
-              </a>
-          </li>
-          {!! apply_filters(ACCOUNT_TOP_MENU_FILTER, null) !!}
+          @if (RealEstateHelper::isEnabledCreditsSystem())
               <li>
-                  <a class="no-underline mr2 black-50 hover-black-70 pv1 ph2 db mr2" style="text-decoration: none; line-height: 32px;" href="{{ route('public.account.properties.index') }}" title="{{ trans('plugins/real-estate::account-property.properties') }}">
-                      <i class="far fa-newspaper mr1"></i>{{ trans('plugins/real-estate::account-property.properties') }}
+                  <a class="no-underline mr2 black-50 hover-black-70 pv1 ph2 db mr2" style="text-decoration: none; line-height: 32px;" href="{{ route('public.account.packages') }}" title="{{ trans('plugins/real-estate::account.credits') }}">
+                      <i class="far fa-credit-card mr1"></i>{{ trans('plugins/real-estate::account.buy_credits') }} <span class="badge badge-info">{{ auth('account')->user()->credits }} {{ trans('plugins/real-estate::account.credits') }}</span>
                   </a>
               </li>
-          @if (auth('account')->user()->canPost())
+          @endif
+
+          {!! apply_filters(ACCOUNT_TOP_MENU_FILTER, null) !!}
+
+          <li>
+              <a class="no-underline mr2 black-50 hover-black-70 pv1 ph2 db mr2" style="text-decoration: none; line-height: 32px;" href="{{ route('public.account.properties.index') }}" title="{{ trans('plugins/real-estate::account-property.properties') }}">
+                  <i class="far fa-newspaper mr1"></i>{{ trans('plugins/real-estate::account-property.properties') }}
+              </a>
+          </li>
+
+              @if (auth('account')->user()->canPost())
               <li>
                   <a class="no-underline mr2 black-50 hover-black-70 pv1 ph2 db mr2" style="text-decoration: none; line-height: 32px;" href="{{ route('public.account.properties.create') }}" title="{{ trans('plugins/real-estate::account-property.write_property') }}">
                       <i class="far fa-edit mr1"></i>{{ trans('plugins/real-estate::account-property.write_property') }}

@@ -2,8 +2,8 @@
 
 namespace Botble\Language\Listeners;
 
+use Botble\Language\Plugin;
 use Exception;
-use Setting;
 
 class ActivatedPluginListener
 {
@@ -16,15 +16,7 @@ class ActivatedPluginListener
     public function handle()
     {
         try {
-            $plugins = get_active_plugins();
-
-            if (($key = array_search('language', $plugins)) !== false) {
-                unset($plugins[$key]);
-            }
-
-            array_unshift($plugins, 'language');
-
-            Setting::set('activated_plugins', json_encode($plugins))->save();
+            Plugin::activated();
         } catch (Exception $exception) {
             info($exception->getMessage());
         }

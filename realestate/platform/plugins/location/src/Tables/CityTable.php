@@ -77,15 +77,17 @@ class CityTable extends TableAbstract
                 return Html::link(route('city.edit', $item->id), $item->name);
             })
             ->editColumn('state_id', function ($item) {
-                if (!$item->state_id && $item->state->name) {
-                    return null;
+                if (!$item->state_id || !$item->state->name) {
+                    return '&mdash;';
                 }
+
                 return Html::link(route('state.edit', $item->state_id), $item->state->name);
             })
             ->editColumn('country_id', function ($item) {
-                if (!$item->country_id && $item->country->name) {
-                    return null;
+                if (!$item->country_id || !$item->country->name) {
+                    return '&mdash;';
                 }
+
                 return Html::link(route('country.edit', $item->country_id), $item->country->name);
             })
             ->editColumn('checkbox', function ($item) {

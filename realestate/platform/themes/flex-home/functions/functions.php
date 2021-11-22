@@ -5,9 +5,12 @@ use Botble\Base\Models\BaseModel;
 use Botble\Base\Models\MetaBox as MetaBoxModel;
 use Botble\Career\Repositories\Interfaces\CareerInterface;
 use Botble\Location\Models\City;
+use Botble\Location\Repositories\Interfaces\CityInterface;
 use Botble\RealEstate\Enums\ModerationStatusEnum;
 use Botble\RealEstate\Enums\ProjectStatusEnum;
 use Botble\RealEstate\Enums\PropertyStatusEnum;
+use Botble\RealEstate\Models\Facility;
+use Botble\RealEstate\Models\Feature;
 use Botble\RealEstate\Models\Project;
 use Botble\RealEstate\Models\Property;
 use Botble\RealEstate\Repositories\Interfaces\ProjectInterface;
@@ -15,13 +18,11 @@ use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\Theme\Events\RenderingSiteMapEvent;
 use Botble\Theme\Supports\Youtube;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Theme\FlexHome\Http\Requests\CityRequest;
+use Theme\FlexHome\Forms\Fields\ThemeIconField;
 
 app()->booted(function () {
-    if (is_plugin_active('location')) {
-        app('migrator')->path(__DIR__ . '/../database/migrations');
-    }
-
     SeoHelper::registerModule(City::class);
 });
 
@@ -93,36 +94,44 @@ if (is_plugin_active('location')) {
      */
     function add_addition_fields_into_form($form, $data)
     {
-        if (get_class($data) == City::class) {
-            $form
-                ->setValidatorClass(CityRequest::class)
-                ->addAfter('name', 'slug', 'text', [
-                    'label'      => __('Slug'),
-                    'label_attr' => ['class' => 'control-label required'],
-                    'attr'       => [
-                        'placeholder'  => __('Slug'),
-                        'data-counter' => 120,
-                    ],
-                    'value'      => $data->slug,
-                ])
-                ->addAfter('country_id', 'is_featured', 'onOff', [
-                    'label'         => trans('core/base::forms.is_featured'),
-                    'label_attr'    => ['class' => 'control-label'],
-                    'default_value' => false,
-                    'value'         => $data->is_featured,
-                ])
-                ->addAfter('status', 'image', 'mediaImage', [
-                    'label'      => trans('core/base::forms.image'),
-                    'label_attr' => ['class' => 'control-label'],
-                    'value'      => $data->image,
-                ]);
+        switch (get_class($data)) {
+            case City::class:
+                $form
+                    ->setValidatorClass(CityRequest::class)
+                    ->addAfter('name', 'slug', 'text', [
+                        'label'      => __('Slug'),
+                        'label_attr' => ['class' => 'control-label required'],
+                        'attr'       => [
+                            'placeholder'  => __('Slug'),
+                            'data-counter' => 120,
+                        ],
+                        'value'      => $data->slug,
+                    ])
+                    ->addAfter('country_id', 'is_featured', 'onOff', [
+                        'label'         => trans('core/base::forms.is_featured'),
+                        'label_attr'    => ['class' => 'control-label'],
+                        'default_value' => false,
+                        'value'         => $data->is_featured,
+                    ])
+                    ->addAfter('status', 'image', 'mediaImage', [
+                        'label'      => trans('core/base::forms.image'),
+                        'label_attr' => ['class' => 'control-label'],
+                        'value'      => $data->image,
+                    ]);
+                break;
+            case Facility::class:
+            case Feature::class:
+                $form
+                    ->addCustomField('themeIcon', ThemeIconField::class)
+                    ->modify('icon', 'themeIcon', ['label' => __('Icon')], true);
+                break;
         }
 
         return $form;
     }
 
     add_action(BASE_ACTION_AFTER_CREATE_CONTENT, 'save_addition_city_fields', 230, 3);
-    add_action(BASE_ACTION_AFTER_UPDATE_CONTENT, 'save_addition_city_fields', 230, 3);
+    add_action(BASE_ACTION_AFTER_UPDATE_CONTENT, 'save_addition_city_fields', 231, 3);
 
     /**
      * @param string $type
@@ -133,10 +142,38 @@ if (is_plugin_active('location')) {
     function save_addition_city_fields($type, $request, $object)
     {
         if (is_plugin_active('location') && in_array($type, [CITY_MODULE_SCREEN_NAME])) {
-            $object->slug = $request->input('slug');
+            $object->slug = create_city_slug($request->input('slug'), $object);
             $object->is_featured = $request->input('is_featured');
             $object->image = $request->input('image');
             $object->save();
+        }
+    }
+
+    if (!function_exists('create_city_slug')) {
+        /**
+         * @param string $slug
+         * @param City $city
+         * @return int|string
+         */
+        function create_city_slug($slug, $city) {
+            $slug = Str::slug($slug, '-', !SlugHelper::turnOffAutomaticUrlTranslationIntoLatin() ? 'en' : false);
+
+            $index = 1;
+            $baseSlug = $slug;
+
+            while (app(CityInterface::class)->getModel()->where('slug', $slug)->where('id', '!=', $city->id)->count() > 0) {
+                if ($slug == $baseSlug) {
+                    $slug = $baseSlug . '-' . Str::slug($city->state->name, '-', !SlugHelper::turnOffAutomaticUrlTranslationIntoLatin() ? 'en' : false);
+                } else {
+                    $slug = $baseSlug . '-' . $index++;
+                }
+            }
+
+            if (empty($slug)) {
+                $slug = time();
+            }
+
+            return $slug;
         }
     }
 }

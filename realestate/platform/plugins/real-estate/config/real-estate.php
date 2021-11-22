@@ -1,6 +1,5 @@
 <?php
 
-use Botble\Base\Enums\BaseStatusEnum;
 use Botble\RealEstate\Notifications\ConfirmEmailNotification;
 
 return [
@@ -19,34 +18,4 @@ return [
     'notification'                         => ConfirmEmailNotification::class,
 
     'verify_email' => env('CMS_ACCOUNT_VERIFY_EMAIL', false),
-
-    'properties' => [
-        'relations' => [
-            'slugable:id,key,prefix,reference_id',
-            'city:id,name,state_id',
-            'city.state:id,name,country_id',
-            'currency:id,is_default,exchange_rate,symbol,title,is_prefix_symbol',
-            'categories' => function ($q) {
-                return $q->where('status', BaseStatusEnum::PUBLISHED)
-                        ->orderBy('created_at', 'DESC')
-                        ->orderBy('is_default', 'DESC')
-                        ->orderBy('order', 'ASC')
-                        ->select('re_categories.id', 're_categories.name');
-            },
-        ],
-    ],
-    'projects'   => [
-        'relations' => [
-            'slugable:id,key,prefix,reference_id',
-            'categories' => function ($q) {
-                return $q->where('status', BaseStatusEnum::PUBLISHED)
-                    ->orderBy('created_at', 'DESC')
-                    ->orderBy('is_default', 'DESC')
-                    ->orderBy('order', 'ASC')
-                    ->select('re_categories.id', 're_categories.name');
-            },
-            'city:id,name,state_id',
-            'city.state:id,name',
-        ],
-    ],
 ];

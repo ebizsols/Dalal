@@ -129,7 +129,7 @@ class PropertyTable extends TableAbstract
             ],
             'image'             => [
                 'title'      => trans('core/base::tables.image'),
-                'width'      => '60px',
+                'width'      => '50px',
                 'class'      => 'no-sort',
                 'orderable'  => false,
                 'searchable' => false,
