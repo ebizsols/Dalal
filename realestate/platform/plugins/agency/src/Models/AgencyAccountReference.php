@@ -1,10 +1,7 @@
 <?php
 namespace Botble\Agency\Models;
 
-//use Account;
-use Botble\Agency\Models\Agency;
 use Botble\realEstate\Models\Account;
-use RvMedia;
 
 use Botble\Base\Models\BaseModel;
 
@@ -23,9 +20,5 @@ class AgencyAccountReference extends BaseModel
     {
         return $this->belongsTo(Account::class, 'account_id');
     }
-//  public function getUnit()
-//    {
-//        return $this->hasMany(Account::class, 'agency_id');
-//    }
 
 }

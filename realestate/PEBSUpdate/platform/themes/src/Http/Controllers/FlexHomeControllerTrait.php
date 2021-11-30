@@ -6,7 +6,7 @@ use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Models\Property;
 use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
-use Botble\Agency\Models\AgencyAccountRefrence;
+use Botble\Agency\Models\AgencyAccountReference;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -61,10 +61,10 @@ trait FlexHomeControllerTrait{
         ]);
 
 
-        $AgencyAccountRefrence = new AgencyAccountRefrence();
-        $AgencyAccountRefrencelisting = $AgencyAccountRefrence->where('agency_id',$id)->get()->toArray();
+        $AgencyAccountReference = new AgencyAccountReference();
+        $AgencyAccountReferencelisting = $AgencyAccountReference->where('agency_id',$id)->get()->toArray();
         $accountList = array();
-        foreach ($AgencyAccountRefrencelisting as $something){
+        foreach ($AgencyAccountReferencelisting as $something){
             $accountId = $something['account_id'];
 
             $account = new Account();
@@ -78,10 +78,10 @@ trait FlexHomeControllerTrait{
         }
 
         $agency = $agencyRepository->getFirstBy(['id' => $id]);
-        $AgencyAccountRefrence = new AgencyAccountRefrence();
-        $AgencyAccountRefrencelisting = $AgencyAccountRefrence->where('agency_id', $id)->get()->toArray();
+        $AgencyAccountReference = new AgencyAccountReference();
+        $AgencyAccountReferencelisting = $AgencyAccountReference->where('agency_id', $id)->get()->toArray();
         $property = array();
-        foreach ($AgencyAccountRefrencelisting as $something) {
+        foreach ($AgencyAccountReferencelisting as $something) {
             $accountId = $something['account_id'];
 
             $account = new Property();
