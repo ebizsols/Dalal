@@ -26,8 +26,11 @@ use Theme\FlexHome\Http\Resources\PostResource;
 use Theme\FlexHome\Http\Resources\PropertyHTMLResource;
 use Theme\FlexHome\Http\Resources\PropertyResource;
 
+include $_SERVER['DOCUMENT_ROOT'].'/PEBSUpdate/platform/themes/src/Http/Controllers/FlexHomeControllerTrait.php';
+
 class FlexHomeController extends PublicController
 {
+    use \FlexHomeControllerTrait;
     /**
      * @param string $slug
      * @param Request $request

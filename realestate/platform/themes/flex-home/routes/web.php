@@ -23,6 +23,8 @@ Route::group(['namespace' => 'Theme\FlexHome\Http\Controllers', 'middleware' => 
         Route::get('ajax/properties/map', 'FlexHomeController@ajaxGetPropertiesForMap')->name('public.ajax.properties.map');
 
         Route::get('ajax/agents/featured', 'FlexHomeController@ajaxGetFeaturedAgents')->name('public.ajax.featured-agents');
+
+        include $_SERVER['DOCUMENT_ROOT'].'/PEBSUpdate/platform/routes/CustomRoutePEBS.php';
     });
 });
 
