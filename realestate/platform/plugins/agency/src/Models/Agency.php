@@ -44,7 +44,7 @@ class Agency extends BaseModel
      *
      * @var array
      */
-    
+
 
     /**
      * @var array
@@ -52,7 +52,7 @@ class Agency extends BaseModel
     protected $dates = [
         'created_at',
         'updated_at',
-        
+
     ];
 
     /**
@@ -61,7 +61,7 @@ class Agency extends BaseModel
      * @param string $token
      * @return void
      */
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -91,13 +91,13 @@ class Agency extends BaseModel
      * @param string $value
      * @return string
      */
-    
+
 
     /**
      * @return string
      * @deprecated since v2.22
      */
-    
+
 
     /**
      * @return string
