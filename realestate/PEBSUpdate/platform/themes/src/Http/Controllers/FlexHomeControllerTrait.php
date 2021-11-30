@@ -2,6 +2,8 @@
 
 use Botble\Agency\Repositories\Interfaces\AgencyInterface;
 use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 trait FlexHomeControllerTrait{
     /**
