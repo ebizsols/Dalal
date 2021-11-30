@@ -1,5 +1,4 @@
 <?php
-namespace Botble\RealEstate\Models;
 namespace Botble\Agency\Models;
 
 //use Account;
