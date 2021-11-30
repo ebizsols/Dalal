@@ -6,6 +6,7 @@ use Botble\RealEstate\Models\Account;
 use Botble\RealEstate\Models\Property;
 use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
+use Botble\Agency\Models\AgencyAccountRefrence;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
