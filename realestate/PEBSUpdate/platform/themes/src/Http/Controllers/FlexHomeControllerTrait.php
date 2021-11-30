@@ -10,7 +10,8 @@ use Botble\Agency\Models\AgencyAccountReference;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-trait FlexHomeControllerTrait{
+trait FlexHomeControllerTrait
+{
     /**
      * @param Request $request
      * @param AccountInterface $accountRepository
@@ -21,7 +22,7 @@ trait FlexHomeControllerTrait{
     {
         $agencies = $agencyRepository->advancedGet([
             'paginate' => [
-                'per_page'      => 12,
+                'per_page' => 12,
                 'current_paged' => (int)$request->input('page'),
             ],
         ]);
@@ -37,12 +38,12 @@ trait FlexHomeControllerTrait{
         Request $request,
         AgencyInterface $agencyRepository,
         PropertyInterface $propertyRepository,
-        AccountInterface  $accountRepository
-    ) {
+        AccountInterface $accountRepository
+    )
+    {
         $agency = $agencyRepository->getFirstBy(['id' => $id]);
 
         if (!$agency) {
-            //echo "hello"; exit;
             abort(404);
         }
 
@@ -50,26 +51,26 @@ trait FlexHomeControllerTrait{
 
         $properties = $propertyRepository->advancedGet([
             'condition' => [
-                'author_id'   => $agency->id,
+                'author_id' => $agency->id,
                 'author_type' => Agency::class,
             ],
-            'paginate'  => [
-                'per_page'      => 12,
+            'paginate' => [
+                'per_page' => 12,
                 'current_paged' => (int)$request->input('page'),
             ],
-            'with'      => config('plugins.real-estate.real-estate.properties.relations'),
+            'with' => config('plugins.real-estate.real-estate.properties.relations'),
         ]);
 
 
         $AgencyAccountReference = new AgencyAccountReference();
-        $AgencyAccountReferencelisting = $AgencyAccountReference->where('agency_id',$id)->get()->toArray();
+        $AgencyAccountReferencelisting = $AgencyAccountReference->where('agency_id', $id)->get()->toArray();
         $accountList = array();
-        foreach ($AgencyAccountReferencelisting as $something){
+        foreach ($AgencyAccountReferencelisting as $something) {
             $accountId = $something['account_id'];
 
             $account = new Account();
             $accountData = $account->where('id', $accountId)->first();
-            if(!empty($accountData)){
+            if (!empty($accountData)) {
                 $accountData = $accountData->toArray();
             }
 
@@ -92,7 +93,7 @@ trait FlexHomeControllerTrait{
             }
         }
 
-        return Theme::scope('real-estate.agency', compact('properties','property', 'agency','accountList'))
+        return Theme::scope('PEBSUpdate.real-estate.agency.agency', compact('properties', 'property', 'agency', 'accountList'))
             ->render();
     }
 }
