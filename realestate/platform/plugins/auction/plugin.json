@@ -1,0 +1,9 @@
+{
+    "name": "Auction",
+    "namespace": "Botble\\Auction\\",
+    "provider": "Botble\\Auction\\Providers\\AuctionServiceProvider",
+    "author": "Botble Technologies",
+    "url": "https://botble.com",
+    "version": "1.0",
+    "description": "Auction plugin"
+}

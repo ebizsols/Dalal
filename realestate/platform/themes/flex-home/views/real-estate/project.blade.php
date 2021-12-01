@@ -1,4 +1,4 @@
-@php
+     @php
     Theme::asset()->usePath()->add('leaflet-css', 'libraries/leaflet.css');
     Theme::asset()->container('footer')->usePath()->add('leaflet-js', 'libraries/leaflet.js');
     Theme::asset()->usePath()->add('magnific-css', 'libraries/magnific/magnific-popup.css');
