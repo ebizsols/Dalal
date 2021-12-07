@@ -30,13 +30,13 @@ class Auction extends BaseModel
      */
     protected $fillable = [
         'id',
-        'property_id',
         'title',
+        'email',
+        'phone',
+        'fax',
         'description',
-        'price',
-        'image'
-
-
+        'avatar_id',
+        'is_featured',
     ];
 
     /**
@@ -154,8 +154,4 @@ class Auction extends BaseModel
     protected $casts = [
         'status' => BaseStatusEnum::class,
     ];
-//    public function auction(){
-//        return $this->hasOne(Agency::class , 'foreign_ke');
-//
-//    }
 }

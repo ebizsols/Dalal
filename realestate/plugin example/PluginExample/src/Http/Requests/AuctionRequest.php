@@ -1,12 +1,12 @@
 <?php
 
-namespace Botble\Agency\Http\Requests;
+namespace Botble\Auction\Http\Requests;
 
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Support\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 
-class AgentRequest extends Request
+class AuctionRequest extends Request
 {
 
     /**
@@ -17,8 +17,11 @@ class AgentRequest extends Request
     public function rules()
     {
         return [
-            'email'        => '',
-            
+            'title'        => 'required',
+            'description'    => '',
+            'status'      => Rule::in(BaseStatusEnum::values()),
+            'email'      => 'required|max:60|min:6|email',
+
         ];
     }
 }

@@ -46,6 +46,7 @@ class AuctionController extends BaseController
     public function index(AuctionTable $table)
     {
 
+
         page_title()->setTitle(trans('plugins/auction::auction.name'));
 
         return $table->renderTable();

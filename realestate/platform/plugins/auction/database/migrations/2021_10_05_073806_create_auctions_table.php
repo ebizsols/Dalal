@@ -18,15 +18,14 @@ class CreateAuctionsTable extends Migration
                 $table->bigIncrements('id');
                 $table->string('title');
                 $table->longText('description')->nullable()->default(NULL);
-                $table->string('email')->nullable()->default(NULL);
-                $table->unsignedInteger('avatar_id')->nullable()->default(NULL);
-                $table->bigInteger('phone')->nullable()->default(NULL);
-                $table->bigInteger('fax')->nullable()->default(NULL);
-                $table->integer('is_featured')->default(0);
-                $table->enum('status', array('published', 'unpublished'))->default('published');
+                $table->float('price');
+                $table->string('image');
+                $table->unsignedBigInteger('property_id');
+                $table->foreign('property_id')->references('id')->on('re_properties');
                 $table->timestamps();
             });
         }
+
     }
 
     /**

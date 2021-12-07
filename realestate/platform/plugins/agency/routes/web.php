@@ -1,6 +1,8 @@
 <?php
 
 use Botble\Agency\Models\Agency;
+use Botble\Agency\Http\Controllers\AgencyController;
+use Botble\Agency\Http\Controllers\AgentController;
 //echo "--tesdtgs"; exit;
 Route::group(['namespace' => 'Botble\Agency\Http\Controllers', 'middleware' => ['web', 'core']], function () {
 
@@ -32,7 +34,7 @@ Route::group(['namespace' => 'Botble\Agency\Http\Controllers', 'middleware' => [
         // 'uses'      => 'AgentController@edit',
 
         // ]);
-        
+
     });
 
     if (defined('THEME_MODULE_SCREEN_NAME')) {
