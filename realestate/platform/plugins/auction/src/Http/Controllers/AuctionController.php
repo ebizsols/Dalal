@@ -5,6 +5,8 @@ namespace Botble\Auction\Http\Controllers;
 use Botble\Base\Events\BeforeEditContentEvent;
 use Botble\Auction\Http\Requests\AuctionRequest;
 use Botble\Auction\Repositories\Interfaces\AuctionInterface;
+use Botble\Auction\Repositories\Eloquent\AuctionRepository;
+
 use Botble\Base\Http\Controllers\BaseController;
 use Botble\Media\Repositories\Interfaces\MediaFileInterface;
 use Illuminate\Http\Request;
@@ -76,13 +78,16 @@ class AuctionController extends BaseController
     {
 
         $customRequest = $request->input();
-        if ($request->input('avatar_id')) {
 
-            $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
+        if ($request->input('image')) {
+
+            $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('image')]);
 
             if ($image) {
-                $customRequest['avatar_id'] = $image->id;
+                $customRequest['image'] = $image->id;
             }
+
+            //dd($customRequest);
         }
 
 
@@ -107,7 +112,7 @@ class AuctionController extends BaseController
     public function edit($id, FormBuilder $formBuilder, Request $request)
     {
         $auction = $this->AuctionRepository->findOrFail($id);
-        event(new BeforeEditContentEvent($request, $action));
+        event(new BeforeEditContentEvent($request, $auction));
         page_title()->setTitle(trans('plugins/auction::auction.edit') . ' "' . $auction->name . '"');
 
         return $formBuilder->create(AuctionForm::class, ['model' => $auction])->renderForm();
@@ -123,20 +128,20 @@ class AuctionController extends BaseController
         $customRequest = $request->input();
 
 
-        $auction = $this->auctionRepository->findOrFail($id);
+        $auction = $this->AuctionRepository->findOrFail($id);
         $auction->is_featured = ($request->has('is_featured') && $request->is_profile_listing == 'false') ? 0 : 1;
 
-        if ($request->input('avatar_id')) {
+        if ($request->input('image')) {
             $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
             if ($image) {
                 $auction->avatar_id = $image->id;
-                $customRequest['avatar_id'] = $image->id;
+                $customRequest['image'] = $image->id;
             }
         }
         $auction->is_featured = $request->input('is_featured');
         $auction->fill($customRequest);
 
-        $this->auctionRepository->createOrUpdate($auction);
+        $this->AuctionRepository->createOrUpdate($auction);
 
         event(new UpdatedContentEvent(AUCTION_MODULE_SCREEN_NAME, $request, $Auction));
 
@@ -196,16 +201,17 @@ class AuctionController extends BaseController
      */
     public function getList(Request $request, BaseHttpResponse $response)
     {
+
         $keyword = $request->input('q');
 
         if (!$keyword) {
             return $response->setData([]);
         }
 
-        $data = $this->auctionRepository->getModel()
+        $data = $this->AuctionRepository->getModel()
             ->where('title', 'LIKE', '%' . $keyword . '%')
             ->orWhere('description', 'LIKE', '%' . $keyword . '%')
-            ->select(['id', 'name', 'description'])
+            ->select(['id', 'title', 'description','price' , 'image', 'property_id'])
             ->take(10)
             ->get();
 

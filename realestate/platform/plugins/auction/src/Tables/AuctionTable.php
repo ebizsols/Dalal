@@ -4,6 +4,7 @@ namespace Botble\Auction\Tables;
 use Botble\Auction\Repositories\Interfaces\AuctionInterface;
 use Auth;
 use BaseHelper;
+use Botble\Auction\Models\Auction;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Table\Abstracts\TableAbstract;
 use Html;
@@ -52,6 +53,8 @@ class AuctionTable extends TableAbstract
      */
     public function ajax()
     {
+
+     $Listing= Auction::all();
         $data = $this->table
             ->eloquent($this->query())
             ->editColumn('title', function ($item) {
@@ -61,24 +64,37 @@ class AuctionTable extends TableAbstract
                 }
                 return Html::link(route('auction.edit', $item->id), $item->title);
             })
-            ->editColumn('avatar_id', function ($item) {
-                return Html::image(RvMedia::getImageUrl($item->avatar->url, 'thumb', false, RvMedia::getDefaultImage()),
-                    $item->name, ['width' => 50]);
+//            ->editColumn('description', function ($item) {
+//                if (!Auth::user()->hasPermission('auction.edit')) {
+//                    return $item->description;
+//
+//                }
+//                return Html::link(route('auction.edit', $item->id), $item->description);
+//            })
+            ->editColumn('price', function ($item) {
+                if (!Auth::user()->hasPermission('auction.edit')) {
+                    return $item->price;
+
+                }
+                return Html::link(route('auction.edit', $item->id), $item->price);
+            })
+
+//            ->editColumn('image', function ($item) {
+//                return Html::image(RvMedia::getImageUrl($item->image->url, 'thumb', false, RvMedia::getDefaultImage()),
+//                    $item->name, ['width' => 50]);
+//            })
+            ->editColumn('property_id', function ($item) {
+                if (!Auth::user()->hasPermission('auction.edit')) {
+                    return $item->property_id;
+
+                }
+                return Html::link(route('auction.edit', $item->id), $item->title);
             })
             ->editColumn('checkbox', function ($item) {
                 return $this->getCheckbox($item->id);
             })
             ->editColumn('created_at', function ($item) {
                 return BaseHelper::formatDate($item->created_at);
-            })
-            ->editColumn('status', function ($item) {
-                return $item->status->toHtml();
-            })
-            ->editColumn('assignAgent', function ($item) {
-                // if (!Auth::user()->hasPermission('auction.assignAgent')) {
-                //     return $item->name;
-                // }
-                return Html::link(route('auction.assignAgent',  $item->id), 'Assign Agent');
             })
 
             ->addColumn('operations', function ($item) {
@@ -97,14 +113,20 @@ class AuctionTable extends TableAbstract
      */
     public function query()
     {
+
+
         $query = $this->repository->getModel()->select([
             'id',
             'title',
-            // 'first_name',
+           // 'description',
+            'price',
+//            'image',
+            'property_id',
             'created_at',
-            'status',
-            'avatar_id',
-        ])->with(['avatar']);
+
+
+        ]);
+            //->with(['image']);
 
         return $this->applyScopes($query);
     }
@@ -124,22 +146,28 @@ class AuctionTable extends TableAbstract
                 'title' => trans('core/base::tables.title'),
                 'width' => '20px',
             ],
-            'avatar_id'  => [
-                'title' => trans('core/base::tables.image'),
+//            'description' => [
+//                'title' => trans('core/base::tables.description'),
+//                'width' => '20px',
+//            ],
+            'price' => [
+                'title' => trans('core/base::tables.price'),
+                'width' => '20px',
+            ],
+//            'image'  => [
+//                'title' => trans('core/base::tables.image'),
+//                'width' => '70px',
+//            ],
+            'property_id'  => [
+                'property_id' => trans('core/base::tables.property_id'),
                 'width' => '70px',
             ],
             'created_at' => [
                 'title' => trans('core/base::tables.created_at'),
                 'width' => '100px',
             ],
-            'status' => [
-                'title' => trans('core/base::tables.status'),
-                'width' => '100px',
-            ],
-            'assignAgent' => [
-                'title' => 'Assign Agent',
-                'width' => '100px',
-            ],
+
+
 
 
         ];
@@ -171,16 +199,11 @@ class AuctionTable extends TableAbstract
     {
         return [
             'title' => [
-                'title'    => trans('core/base::tables.name'),
+                'title'    => trans('core/base::tables.title'),
                 'type'     => 'text',
                 'validate' => 'required|max:120',
             ],
-            'status' => [
-                'title'    => trans('core/base::tables.status'),
-                'type'     => 'select',
-                'choices'  => BaseStatusEnum::labels(),
-                'validate' => 'required|in:' . implode(',', BaseStatusEnum::values()),
-            ],
+
         ];
     }
 }

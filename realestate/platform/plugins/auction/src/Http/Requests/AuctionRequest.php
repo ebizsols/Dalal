@@ -20,7 +20,7 @@ class AuctionRequest extends Request
             'title'        => 'required',
             'description'    => '',
             'status'      => Rule::in(BaseStatusEnum::values()),
-            'email'      => 'required|max:60|min:6|email',
+            //'email'      => 'required|max:60|min:6|email',
 
         ];
     }

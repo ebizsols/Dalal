@@ -40,7 +40,7 @@ class AgencyForm extends FormAbstract
                     'data-counter' => 400,
                 ],
             ])
-            
+
             ->add('status', 'select', [
                 'label'      => trans('core/base::tables.status'),
                 'label_attr' => ['class' => 'control-label required'],
@@ -50,8 +50,6 @@ class AgencyForm extends FormAbstract
                 'choices'    => BaseStatusEnum::labels(),
             ])
             ->setBreakFieldPoint('status')
-
-            
             ->add('phone', 'text', [
                 'label'      => trans('plugins/agency::agency.phone'),
                 'label_attr' => ['class' => 'control-label'],
@@ -89,6 +87,6 @@ class AgencyForm extends FormAbstract
             ->setBreakFieldPoint('avatar_id');
 
 
-        
+
     }
 }

@@ -34,7 +34,7 @@ class Auction extends BaseModel
         'title',
         'description',
         'price',
-        'image'
+       // 'image'
 
 
     ];

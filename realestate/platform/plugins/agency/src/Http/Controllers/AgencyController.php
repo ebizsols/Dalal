@@ -46,7 +46,7 @@ class AgencyController extends BaseController
      */
     public function index(AgencyTable $table)
     {
-        
+
 
         page_title()->setTitle(trans('plugins/agency::agency.name'));
 
@@ -59,12 +59,12 @@ class AgencyController extends BaseController
      */
     public function create(FormBuilder $formBuilder)
     {
-       
-        
+
+
         page_title()->setTitle(trans('plugins/agency::agency.create'));
         return $formBuilder->
         create(AgencyForm::class)->renderForm();
-        
+
 
     }
 
@@ -76,22 +76,23 @@ class AgencyController extends BaseController
      */
     public function store(AgencyRequest $request, BaseHttpResponse $response)
     {
-        
+
         $customRequest = $request->input();
         if ($request->input('avatar_id')) {
-            
+
             $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
-            
+
             if ($image) {
                 $customRequest['avatar_id'] = $image->id;
             }
+            //echo $customRequest;
         }
- 
-    
+
+
         $agency = $this->AgencyRepository->createOrUpdate($customRequest);
 
         event(new CreatedContentEvent(AGENCY_MODULE_SCREEN_NAME, $request, $agency));
-        
+
         return $response
             ->setPreviousUrl(route('agency.index'))
             ->setNextUrl(route('agency.edit', $agency->id))
@@ -111,7 +112,7 @@ class AgencyController extends BaseController
         $agency = $this->AgencyRepository->findOrFail($id);
         event(new BeforeEditContentEvent($request, $agency));
         page_title()->setTitle(trans('plugins/agency::agency.edit') . ' "' . $agency->name . '"');
-       
+
         return $formBuilder->create(AgencyForm::class, ['model' => $agency])->renderForm();
     }
 
@@ -124,10 +125,10 @@ class AgencyController extends BaseController
     {
         $customRequest = $request->input();
 
-        
+
         $agency = $this->AgencyRepository->findOrFail($id);
         $agency->is_featured = ($request->has('is_featured') && $request->is_profile_listing == 'false') ? 0 : 1;
-        
+
         if ($request->input('avatar_id')) {
             $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
             if ($image) {
@@ -214,11 +215,11 @@ class AgencyController extends BaseController
         return $response->setData(AgencyResource::collection($data));
     }
 
-    
+
     public function assignAgent(request $req, FormBuilder $formBuilder)
     {
         page_title()->setTitle(trans('plugins/agency::agency.create'));
-        
+
         return $formBuilder->create(AssignAgencyForm::class)->renderForm();
     }
 

@@ -6,6 +6,7 @@ use Botble\Base\Forms\FormAbstract;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Auction\Models\Auction;
 use Botble\Auction\Http\Requests\AuctionRequest;
+use Botble\RealEstate\Models\Property;
 
 
 
@@ -18,6 +19,18 @@ class AuctionForm extends FormAbstract
      */
     public function buildForm()
     {
+
+        $list = Property::all();
+        foreach($list as $listIn) {
+            //$Array = array();
+                $ProId = $listIn->id;
+                $ProName = $listIn->name;
+                $ProNameId[$ProId] = $ProName;
+            }
+
+
+
+
         $this
             ->setupModel(new Auction)
             ->setValidatorClass(AuctionRequest::class)
@@ -26,7 +39,7 @@ class AuctionForm extends FormAbstract
                 //'label' => trans('core/base::forms.name'),
                 'label_attr' => ['class' => 'control-label required'],
                 'attr' => [
-                    'placeholder'  => trans('plugins/auction::auction.title'),
+                    'placeholder'  => trans('plugins/agency::agency.title'),
                     'data-counter' => 50,
                 ],
             ])
@@ -39,55 +52,47 @@ class AuctionForm extends FormAbstract
                     'data-counter' => 400,
                 ],
             ])
+            ->add('price', 'number', [
+                //'label' => trans('core/base::forms.name'),
+                'label_attr' => ['class' => 'control-label required'],
+                'attr' => [
+                    'placeholder'  => trans('plugins/auction::auction.price'),
+                    'data-counter' => 50,
+                ],
+            ])
 
             ->add('status', 'select', [
-                'label'      => trans('core/base::tables.status'),
+                // 'label'      => trans('core/base::tables.status'),
                 'label_attr' => ['class' => 'control-label required'],
                 'attr' => [
                     'class' => 'form-control select-full',
                 ],
                 'choices'    => BaseStatusEnum::labels(),
             ])
+
+            ->add('property_id', 'select', [
+                // 'label'      => trans('core/base::tables.status'),
+                'label_attr' => ['class' => 'control-label required'],
+                'attr' => [
+                    'class' => 'form-control select-full',
+                ],
+                'choices'    =>  $ProNameId
+            ])
+
             ->setBreakFieldPoint('status')
 
 
-            ->add('phone', 'text', [
-                'label'      => trans('plugins/auction::auction.phone'),
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
-                    'placeholder'  => trans('plugins/real-estate::account.phone_placeholder'),
-                    'data-counter' => 20,
-                ],
-            ])
-            ->add('fax', 'text', [
-                'label'      => trans('plugins/auction::auction.fax'),
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
-                    'placeholder'  => trans('plugins/real-estate::account.phone_placeholder'),
-                    'data-counter' => 20,
-                ],
-            ])
-            ->add('email', 'text', [
-                'label'      => trans('plugins/real-estate::account.form.email'),
-                'label_attr' => ['class' => 'control-label required'],
-                'attr'       => [
-                    'placeholder'  => trans('plugins/real-estate::account.email_placeholder'),
-                    'data-counter' => 60,
-                ],
-            ])
+
             ->add('is_featured', 'onOff', [
                 'label'         => trans('core/base::forms.is_featured'),
                 'label_attr'    => ['class' => 'control-label'],
                 'default_value' => false,
             ])
-            ->add('avatar_id', 'mediaImage', [
+            ->add('image', 'mediaImage', [
                 'label'      => trans('core/base::forms.image'),
                 'label_attr' => ['class' => 'control-label'],
-                'value'      => $this->getModel()->avatar->url,
+                'value'      => '',
             ])
             ->setBreakFieldPoint('avatar_id');
-
-
-
-    }
+  }
 }

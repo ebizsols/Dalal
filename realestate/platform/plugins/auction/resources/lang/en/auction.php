@@ -8,8 +8,7 @@ return [
     'location' => 'Location',
     'salary'   => 'Salary',
     'agent'    => 'Assign Agent Successfully',
-    'fax'      => 'fax',
-    'phone'    => 'phone',
+    'price'    => 'price',
     'title'    => 'title',
 
 ];
