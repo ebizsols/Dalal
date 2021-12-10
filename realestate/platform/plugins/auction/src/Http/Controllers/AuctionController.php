@@ -77,18 +77,31 @@ class AuctionController extends BaseController
     public function store(AuctionRequest $request, BaseHttpResponse $response)
     {
 
+
         $customRequest = $request->input();
 
-        if ($request->input('image')) {
 
-            $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('image')]);
+        $startDate = $customRequest['start_date'];
+        $startDate = str_replace('T', ' ', $startDate).':00';
+        $customRequest['start_date'] = $startDate;
+        //echo "<pre>"; print_r( $customRequest['start_date']); exit();
+
+        $endDate = $customRequest['end_date'];
+        $endDate = str_replace('T', ' ', $endDate).':00';
+        $customRequest['end_date'] = $endDate;
+   //echo "<pre>"; print_r( $customRequest['end_date']); exit();
+
+        if ($request->input('avatar_id')) {
+
+            $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
 
             if ($image) {
-                $customRequest['image'] = $image->id;
+                $customRequest['avatar_id'] = $image->id;
             }
-
-            //dd($customRequest);
         }
+
+
+
 
 
         $auction = $this->AuctionRepository->createOrUpdate($customRequest);
@@ -100,6 +113,7 @@ class AuctionController extends BaseController
             ->setNextUrl(route('auction.edit', $auction->id))
             ->setMessage(trans('core/base::notices.create_success_message'));
     }
+//
 
     /**
      * Show edit form
@@ -129,24 +143,24 @@ class AuctionController extends BaseController
 
 
         $auction = $this->AuctionRepository->findOrFail($id);
-        $auction->is_featured = ($request->has('is_featured') && $request->is_profile_listing == 'false') ? 0 : 1;
-
-        if ($request->input('image')) {
-            $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
+////        $auction->is_featured = ($request->has('is_featured') && $request->is_profile_listing == 'false') ? 0 : 1;
+////
+      if ($request->input('avatar_id')) {
+          $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
             if ($image) {
-                $auction->avatar_id = $image->id;
-                $customRequest['image'] = $image->id;
-            }
-        }
-        $auction->is_featured = $request->input('is_featured');
+               $auction->avatar_id = $image->id;
+               $customRequest['avatar_id'] = $image->id;
+           }
+       }
+//        //$auction->is_featured = $request->input('is_featured');
         $auction->fill($customRequest);
 
         $this->AuctionRepository->createOrUpdate($auction);
 
-        event(new UpdatedContentEvent(AUCTION_MODULE_SCREEN_NAME, $request, $Auction));
+        event(new UpdatedContentEvent(AUCTION_MODULE_SCREEN_NAME, $request, $auction));
 
         return $response
-            ->setPreviousUrl(route('Auction.index'))
+            ->setPreviousUrl(route('auction.index'))
             ->setMessage(trans('core/base::notices.update_success_message'));
     }
 
@@ -198,7 +212,7 @@ class AuctionController extends BaseController
     /**
      * @param Request $request
      * @param BaseHttpResponse $response
-     */
+      */
     public function getList(Request $request, BaseHttpResponse $response)
     {
 
@@ -211,7 +225,7 @@ class AuctionController extends BaseController
         $data = $this->AuctionRepository->getModel()
             ->where('title', 'LIKE', '%' . $keyword . '%')
             ->orWhere('description', 'LIKE', '%' . $keyword . '%')
-            ->select(['id', 'title', 'description','price' , 'image', 'property_id'])
+            ->select(['id', 'title', 'description','minimum_selling_price','start_date','end_date', 'avatar_id', 'property_id'])
             ->take(10)
             ->get();
 

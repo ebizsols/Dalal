@@ -33,8 +33,13 @@ class Auction extends BaseModel
         'property_id',
         'title',
         'description',
-        'price',
-       // 'image'
+        //'opening_price',
+        'minimum_selling_price',
+        'start_date',
+        'end_date',
+        'is_featured',
+        //'price',
+        'avatar_id'
 
 
     ];
@@ -48,6 +53,7 @@ class Auction extends BaseModel
 
     /**
      * @var array
+     *
      */
     protected $dates = [
         'created_at',
@@ -155,7 +161,7 @@ class Auction extends BaseModel
         'status' => BaseStatusEnum::class,
     ];
 //    public function auction(){
-//        return $this->hasOne(Agency::class , 'foreign_ke');
+//        return $this->hasOne(Agency::class , 'foreign_key');
 //
 //    }
 }

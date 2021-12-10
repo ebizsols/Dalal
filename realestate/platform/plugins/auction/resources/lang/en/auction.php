@@ -10,5 +10,6 @@ return [
     'agent'    => 'Assign Agent Successfully',
     'price'    => 'price',
     'title'    => 'title',
+    'avatar_id'    => 'avatar_id',
 
 ];

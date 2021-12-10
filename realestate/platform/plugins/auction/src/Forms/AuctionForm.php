@@ -10,6 +10,7 @@ use Botble\RealEstate\Models\Property;
 
 
 
+
 class AuctionForm extends FormAbstract
 {
 
@@ -39,7 +40,7 @@ class AuctionForm extends FormAbstract
                 //'label' => trans('core/base::forms.name'),
                 'label_attr' => ['class' => 'control-label required'],
                 'attr' => [
-                    'placeholder'  => trans('plugins/agency::agency.title'),
+                    'placeholder'  => trans('plugins/auction::auction.title'),
                     'data-counter' => 50,
                 ],
             ])
@@ -52,14 +53,42 @@ class AuctionForm extends FormAbstract
                     'data-counter' => 400,
                 ],
             ])
-            ->add('price', 'number', [
+//            ->add('opening_price', 'number', [
+//                //'label' => trans('core/base::forms.name'),
+//                'label_attr' => ['class' => 'control-label required'],
+//                'attr' => [
+//                    'placeholder'  => trans('plugins/auction::auction.opening_price'),
+//                    'data-counter' => 50,
+//                ],
+//            ])
+            ->add('minimum_selling_price', 'number', [
                 //'label' => trans('core/base::forms.name'),
                 'label_attr' => ['class' => 'control-label required'],
                 'attr' => [
-                    'placeholder'  => trans('plugins/auction::auction.price'),
+                    'placeholder'  => trans('plugins/auction::auction.minimum_selling_price'),
                     'data-counter' => 50,
                 ],
             ])
+
+            ->add('start_date', 'datetime-local', [
+                //'label' => trans('core/base::forms.name'),
+                'label_attr' => ['class' => 'control-label required'],
+                'attr' => [
+                    'placeholder'  => trans('plugins/auction::auction.start_date'),
+                    'data-counter' => 50,
+                ],
+            ])
+
+            ->add('end_date', 'datetime-local', [
+                //'label' => trans('core/base::forms.name'),
+                'label_attr' => ['class' => 'control-label required'],
+                'attr' => [
+                    'placeholder'  => trans('plugins/auction::auction.end_date'),
+                    'data-counter' => 50,
+                ],
+            ])
+
+
 
             ->add('status', 'select', [
                 // 'label'      => trans('core/base::tables.status'),
@@ -88,10 +117,10 @@ class AuctionForm extends FormAbstract
                 'label_attr'    => ['class' => 'control-label'],
                 'default_value' => false,
             ])
-            ->add('image', 'mediaImage', [
-                'label'      => trans('core/base::forms.image'),
+            ->add('avatar_id', 'mediaImage', [
+                'label'      => trans('core/base::forms.avatar_id'),
                 'label_attr' => ['class' => 'control-label'],
-                'value'      => '',
+                'value'      => $this->getModel()->avatar->url,
             ])
             ->setBreakFieldPoint('avatar_id');
   }

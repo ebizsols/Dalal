@@ -71,18 +71,47 @@ class AuctionTable extends TableAbstract
 //                }
 //                return Html::link(route('auction.edit', $item->id), $item->description);
 //            })
-            ->editColumn('price', function ($item) {
+//            ->editColumn('opening_price', function ($item) {
+//                if (!Auth::user()->hasPermission('auction.edit')) {
+//                    return $item->opening_price;
+//
+//                }
+//                return Html::link(route('auction.edit', $item->id), $item->opening_price);
+//            })
+
+            ->editColumn('minimum_selling_price', function ($item) {
                 if (!Auth::user()->hasPermission('auction.edit')) {
-                    return $item->price;
+                    return $item->minimum_selling_price;
 
                 }
-                return Html::link(route('auction.edit', $item->id), $item->price);
+                return Html::link(route('auction.edit', $item->id), $item->minimum_selling_price);
             })
 
-//            ->editColumn('image', function ($item) {
-//                return Html::image(RvMedia::getImageUrl($item->image->url, 'thumb', false, RvMedia::getDefaultImage()),
-//                    $item->name, ['width' => 50]);
-//            })
+            ->editColumn('start_date', function ($item) {
+                if (!Auth::user()->hasPermission('auction.edit')) {
+                    return $item->start_date;
+
+                }
+                return Html::link(route('auction.edit', $item->id), $item->start_date);
+            })
+
+            ->editColumn('end_date', function ($item) {
+                if (!Auth::user()->hasPermission('auction.edit')) {
+                    return $item->end_date;
+
+                }
+                return Html::link(route('auction.edit', $item->id), $item->end_date);
+            })
+
+
+
+            ->editColumn('avatar_id', function ($item) {
+
+                //echo "<pre>"; print_r($item)
+                //echo "<pre>"; print_r($item->avatar); exit;
+                return Html::image(RvMedia::getImageUrl($item->avatar->url, 'thumb', false, RvMedia::getDefaultImage()),
+                    $item->name, ['width' => 50]);
+            })
             ->editColumn('property_id', function ($item) {
                 if (!Auth::user()->hasPermission('auction.edit')) {
                     return $item->property_id;
@@ -118,15 +147,17 @@ class AuctionTable extends TableAbstract
         $query = $this->repository->getModel()->select([
             'id',
             'title',
-           // 'description',
-            'price',
-//            'image',
+            //'price',
+            //'description',
+            'minimum_selling_price',
+            'start_date',
+            'end_date',
+            'avatar_id',
             'property_id',
             'created_at',
 
 
-        ]);
-            //->with(['image']);
+        ])->with(['avatar']);
 
         return $this->applyScopes($query);
     }
@@ -143,32 +174,39 @@ class AuctionTable extends TableAbstract
                 'width' => '20px',
             ],
             'title' => [
-                'title' => trans('core/base::tables.title'),
+                'title' => trans('title'),
                 'width' => '20px',
             ],
-//            'description' => [
-//                'title' => trans('core/base::tables.description'),
-//                'width' => '20px',
-//            ],
-            'price' => [
-                'title' => trans('core/base::tables.price'),
+//            'price' => [
+////                'title' => trans('price'),
+////                'width' => '20px',
+////            ],
+//
+            'minimum_selling_price' => [
+                'title' => trans('minimum_selling_price'),
                 'width' => '20px',
             ],
-//            'image'  => [
-//                'title' => trans('core/base::tables.image'),
-//                'width' => '70px',
-//            ],
+            'start_date' => [
+                'title' => trans('start_date'),
+                'width' => '20px',
+            ],
+            'end_date' => [
+                'title' => trans('end_date'),
+                'width' => '20px',
+            ],
+
+            'avatar_id'  => [
+                'title' => trans('avatar_id'),
+                'width' => '70px',
+            ],
             'property_id'  => [
-                'property_id' => trans('core/base::tables.property_id'),
+                'property_id' => trans('property_id'),
                 'width' => '70px',
             ],
             'created_at' => [
-                'title' => trans('core/base::tables.created_at'),
+                'title' => trans('created_at'),
                 'width' => '100px',
             ],
-
-
-
 
         ];
     }

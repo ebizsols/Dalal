@@ -18,10 +18,15 @@ class CreateAuctionsTable extends Migration
                 $table->bigIncrements('id');
                 $table->string('title');
                 $table->longText('description')->nullable();
-                $table->float('price');
-                $table->string('image')->nullable()->default(NULL);
+
+               // $table->float('opening_price');
+                $table->float('minimum_selling_price');
+                $table->timestamp('start_date')->useCurrent()->getdate();
+                $table->timestamp('end_date')->nullable();
+                $table->integer('is_featured')->default(0);
+                $table->unsignedBigInteger('avatar_id')->nullable()->default(NULL);
                 $table->unsignedBigInteger('property_id');
-                $table->foreign('property_id')->references('id')->on('re_properties');
+                $table->foreign('property_id')->references('id')->on('re_properties')->onDelete('cascade')->onUpdate('cascade');
                 $table->timestamps();
             });
         }
