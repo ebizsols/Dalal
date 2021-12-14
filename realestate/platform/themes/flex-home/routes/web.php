@@ -14,7 +14,11 @@ Route::group(['namespace' => 'Theme\FlexHome\Http\Controllers', 'middleware' => 
 
         Route::get('agents', 'FlexHomeController@getAgents')->name('public.agents');
         Route::get('agents/{username}', 'FlexHomeController@getAgent')->name('public.agent');
-
+///////////////////////////////////////////// auction routes///////////////////////////////////////
+        Route::get('auctions', 'FlexHomeController@getAuctions')->name('public.auctions');
+        Route::get('auction/{id}', 'FlexHomeController@getAuction')->name('public.auction');
+///////////////////////////////////////////// auction routes///////////////////////////////////////
+       
         Route::get('wishlist', 'FlexHomeController@getWishlist')->name('public.wishlist');
 
         Route::get('ajax/cities', 'FlexHomeController@ajaxGetCities')->name('public.ajax.cities');

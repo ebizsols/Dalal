@@ -11,8 +11,10 @@ use Botble\Location\Repositories\Interfaces\CityInterface;
 use Botble\RealEstate\Enums\ModerationStatusEnum;
 use Botble\RealEstate\Enums\PropertyStatusEnum;
 use Botble\RealEstate\Enums\PropertyTypeEnum;
-use Botble\RealEstate\Models\Account;
+use Botble\Auction\Models\Auction;
 use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
+use Botble\Auction\Repositories\Interfaces\AuctionInterface;
+
 use Botble\RealEstate\Repositories\Interfaces\ProjectInterface;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\Theme\Http\Controllers\PublicController;
@@ -369,7 +371,6 @@ class FlexHomeController extends PublicController
 
         return Theme::scope('real-estate.agents', compact('accounts'))->render();
     }
-
     /**
      * @param string $username
      * @param Request $request
@@ -500,4 +501,68 @@ class FlexHomeController extends PublicController
             ->setData(AgentHTMLResource::collection($accounts))
             ->toApiResponse();
     }
+
+
+     /////////////////Auctions///////////////////////////////////////////////////
+
+
+    public function getAuctions(Request $request, AuctionInterface $auctionRepository)
+    {
+//       $auctionData= Auction::all();
+//        echo "<pre>"; print_r( $auctionData); exit();
+
+        $auctions = $auctionRepository->advancedGet([
+
+            'paginate'  => [
+                'per_page'      => 12,
+                'current_paged' => (int)$request->input('page'),
+            ],
+
+        ]);
+
+// echo"<pre>"; print_r( $auctions); exit();
+        SeoHelper::setTitle(__('Auctions'));
+
+        Theme::breadcrumb()->add(__('Home'), route('public.index'))->add(__('Auctions'), route('public.auctions'));
+
+        return Theme::scope('real-estate.auctions', compact('auctions'))->render();
+
+    }
+
+
+
+
+    public function getAuction(
+        string $id,
+        Request $request,
+        AccountInterface $accountRepository,
+        PropertyInterface $propertyRepository,
+        AuctionInterface $auctionRepository)
+     {
+
+        $auction = $auctionRepository->getFirstBy(['id' => $id]);
+ //echo"<pre>" ; print_r( $auction); exit();
+        if (!$auction) {
+            abort(404);
+        }
+
+
+//        SeoHelper::setTitle($auction->id);
+//
+//        $auctions = $propertyRepository->advancedGet([
+//            'condition' => [
+//                'id'   => $auction->id,
+//                //'id_type' => Account::class,
+//            ],
+//            'paginate'  => [
+//                'per_page'      => 12,
+//            'current_paged' => (int)$request->input('page'),
+//            ],
+//            'with'      => RealEstateHelper::getPropertyRelationsQuery(),
+//        ]);
+
+        return Theme::scope('real-estate.auction', compact('auction', 'auction'))
+            ->render();
+    }
+
 }
