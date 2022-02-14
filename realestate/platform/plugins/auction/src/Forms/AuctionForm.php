@@ -20,17 +20,29 @@ class AuctionForm extends FormAbstract
      */
     public function buildForm()
     {
+        //$listAuction= Auction::all();
+        
+        //making property id array which exist in auction
+        $auctionPropertyIds= Auction::distinct()->select('property_id')->where('status','=','published')->get();
+        $auctionPropertyIdsArray = array();
+       
+
+        foreach($auctionPropertyIds as $auctionPropertyId){
+            $auctionPropertyIdsArray[] = $auctionPropertyId['property_id'];
+           
+        }
 
         $list = Property::all();
         foreach($list as $listIn) {
-            //$Array = array();
+            $ProId = $listIn->id;
+            $ProName = $listIn->name;
+            if(!in_array($ProId, $auctionPropertyIdsArray)){
                 $ProId = $listIn->id;
                 $ProName = $listIn->name;
                 $ProNameId[$ProId] = $ProName;
             }
-
-
-
+        }
+        
 
         $this
             ->setupModel(new Auction)

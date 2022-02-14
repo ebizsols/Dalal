@@ -3,12 +3,16 @@
 namespace Botble\Auction\Providers;
 
 use Botble\Auction\Models\Auction;
+use Botble\Auction\Models\Bid;
 use Botble\Auction\Models\AuctionAccountReference;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Botble\Auction\Repositories\Caches\AuctionCacheDecorator;
+use Botble\Auction\Repositories\Caches\BidCacheDecorator;
 use Botble\Auction\Repositories\Eloquent\AuctionRepository;
+use Botble\Auction\Repositories\Eloquent\BidRepository;
 use Botble\Auction\Repositories\Interfaces\AuctionInterface;
+use Botble\Auction\Repositories\Interfaces\BidInterface;
 use Botble\Base\Supports\Helper;
 use Botble\Base\Traits\LoadAndPublishDataTrait;
 use Illuminate\Routing\Events\RouteMatched;
@@ -35,6 +39,9 @@ class AuctionServiceProvider extends ServiceProvider
 
         $this->app->bind(AgentInterface::class, function () {
             return new AgentCacheDecorator(new AgentRepository(new AuctionAccountReference));
+        });
+        $this->app->bind(BidInterface::class, function () {
+            return new BidCacheDecorator(new BidRepository(new Bid));
         });
         Helper::autoload(__DIR__ . '/../../helpers');
     }

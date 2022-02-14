@@ -1,12 +1,26 @@
 @php
-    Theme::asset()->usePath()->add('leaflet-css', 'libraries/leaflet.css');
-    Theme::asset()->container('footer')->usePath()->add('leaflet-js', 'libraries/leaflet.js');
-    Theme::asset()->usePath()->add('magnific-css', 'libraries/magnific/magnific-popup.css');
-    Theme::asset()->container('footer')->usePath()->add('magnific-js', 'libraries/magnific/jquery.magnific-popup.min.js');
-    Theme::asset()->container('footer')->usePath()->add('property-js', 'js/property.js');
+Theme::asset()
+    ->usePath()
+    ->add('leaflet-css', 'libraries/leaflet.css');
+Theme::asset()
+    ->container('footer')
+    ->usePath()
+    ->add('leaflet-js', 'libraries/leaflet.js');
+Theme::asset()
+    ->usePath()
+    ->add('magnific-css', 'libraries/magnific/magnific-popup.css');
+Theme::asset()
+    ->container('footer')
+    ->usePath()
+    ->add('magnific-js', 'libraries/magnific/jquery.magnific-popup.min.js');
+Theme::asset()
+    ->container('footer')
+    ->usePath()
+    ->add('property-js', 'js/property.js');
 @endphp
 <main class="detailproject bg-white">
     <div data-property-id="{{ $property->id }}"></div>
+    {{-- IMPORTANT --}}
     @include(Theme::getThemeNamespace() . '::views.real-estate.includes.slider', ['object' => $property])
 
     <div class="container-fluid w90 padtop20">
@@ -25,7 +39,7 @@
                                         <tr>
                                             <td>{{ __('Category') }}</td>
                                             <td>
-                                                <strong>{{ implode(', ', $property->categories()->pluck('name')->all()) }}</strong>
+                                                <strong>{{ implode(', ',$property->categories()->pluck('name')->all()) }}</strong>
                                             </td>
                                         </tr>
                                     @endif
@@ -75,9 +89,10 @@
                         <div class="col-sm-12">
                             <h5 class="headifhouse">{{ __('Features') }}</h5>
                             <div class="row">
-                                @foreach($property->features as $feature)
+                                @foreach ($property->features as $feature)
                                     <div class="col-sm-4">
-                                        <p><i class="@if ($feature->icon) {{ $feature->icon }} @else fas fa-check @endif text-orange text0i"></i>  {{ $feature->name }}</p>
+                                        <p><i class="@if ($feature->icon) {{ $feature->icon }} @else fas fa-check @endif text-orange text0i"></i>
+                                            {{ $feature->name }}</p>
                                     </div>
                                 @endforeach
                             </div>
@@ -90,16 +105,17 @@
                         <div class="col-sm-12">
                             <h5 class="headifhouse">{{ __('Distance key between facilities') }}</h5>
                             <div class="row">
-                                @foreach($property->facilities as $facility)
+                                @foreach ($property->facilities as $facility)
                                     <div class="col-sm-4">
-                                        <p><i class="@if ($facility->icon) {{ $facility->icon }} @else fas fa-check @endif text-orange text0i"></i>  {{ $facility->name }} - {{ $facility->pivot->distance }}</p>
+                                        <p><i class="@if ($facility->icon) {{ $facility->icon }} @else fas fa-check @endif text-orange text0i"></i>
+                                            {{ $facility->name }} - {{ $facility->pivot->distance }}</p>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
                     </div>
                 @endif
-                @if ($property->project_id && $project = $property->project)
+                @if ($property->project_id && ($project = $property->project))
                     <div class="row pb-3">
                         <div class="col-sm-12">
                             <h5 class="headifhouse">{{ __('Project\'s information') }}</h5>
@@ -117,7 +133,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8 col-sm-7 pt-2 pr-sm-0 bg-light">
-                                    <h5><a href="{{ $project->url }}" class="font-weight-bold text-dark">{{ $project->name }}</a></h5>
+                                    <h5><a href="{{ $project->url }}"
+                                            class="font-weight-bold text-dark">{{ $project->name }}</a></h5>
                                     <div>{{ Str::limit($project->description, 120) }}</div>
                                     <p><a href="{{ $project->url }}">{{ __('Read more') }}</a></p>
                                 </div>
@@ -139,6 +156,7 @@
                 <div class="clearfix"></div>
             </div>
             <div class="col-md-4">
+
                 @if ($author = $property->author)
                     <div class="boxright p-3">
                         <div class="head">
@@ -150,16 +168,20 @@
                                 @if ($author->username)
                                     <a href="{{ route('public.agent', $author->username) }}">
                                         @if ($author->avatar->url)
-                                            <img src="{{ RvMedia::getImageUrl($author->avatar->url, 'thumb') }}" alt="{{ $author->name }}" class="img-thumbnail">
+                                            <img src="{{ RvMedia::getImageUrl($author->avatar->url, 'thumb') }}"
+                                                alt="{{ $author->name }}" class="img-thumbnail">
                                         @else
-                                            <img src="{{ $author->avatar_url }}" alt="{{ $author->name }}" class="img-thumbnail">
+                                            <img src="{{ $author->avatar_url }}" alt="{{ $author->name }}"
+                                                class="img-thumbnail">
                                         @endif
                                     </a>
                                 @else
                                     @if ($author->avatar->url)
-                                        <img src="{{ RvMedia::getImageUrl($author->avatar->url, 'thumb') }}" alt="{{ $author->name }}" class="img-thumbnail">
+                                        <img src="{{ RvMedia::getImageUrl($author->avatar->url, 'thumb') }}"
+                                            alt="{{ $author->name }}" class="img-thumbnail">
                                     @else
-                                        <img src="{{ $author->avatar_url }}" alt="{{ $author->name }}" class="img-thumbnail">
+                                        <img src="{{ $author->avatar_url }}" alt="{{ $author->name }}"
+                                            class="img-thumbnail">
                                     @endif
                                 @endif
                             </div>
@@ -168,7 +190,8 @@
                                     <p>
                                         <strong>
                                             @if ($author->username)
-                                                <a href="{{ route('public.agent', $author->username) }}">{{ $author->name }}</a>
+                                                <a
+                                                    href="{{ route('public.agent', $author->username) }}">{{ $author->name }}</a>
                                             @else
                                                 {{ $author->name }}
                                             @endif
@@ -177,23 +200,36 @@
                                     <p class="mobile">{{ $author->phone }}</p>
                                     <p>{{ $author->email }}</p>
                                     @if ($author->username)
-                                        <p><span class="fas fa-arrow-circle-right"></span> <a href="{{ route('public.agent', $author->username) }}">{{ __('More properties by this agent') }}</a></p>
+                                        <p><span class="fas fa-arrow-circle-right"></span> <a
+                                                href="{{ route('public.agent', $author->username) }}">{{ __('More properties by this agent') }}</a>
+                                        </p>
                                     @endif
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endif
-                <div class="boxright p-3">
-                    {!! Theme::partial('consult-form', ['type' => 'property', 'data' => $property]) !!}
-                </div>
+               
+                @if (!empty($auction))
+                    <div class="boxright p-3">
+                        {!! Theme::partial('auction-bid', ['type' => 'auction', 'auction' => $auction, 'maxBid' => $maxBid, 'isAuctionExpire'=>$isAuctionExpire]) !!}
+                    </div>
             </div>
+
         </div>
-        <br>
-        <h5 class="headifhouse">{{ __('Related properties') }}</h5>
-        <div class="projecthome mb-3">
-            <property-component type="related" url="{{ route('public.ajax.properties') }}" :property_id="{{ $property->id }}"></property-component>
+            @endif
+
+         <div class="boxright p-3">
+            {!! Theme::partial('consult-form', ['type' => 'property', 'data' => $property]) !!}
         </div>
+    </div>
+
+<br>
+    <h5 class="headifhouse">{{ __('Related properties') }}</h5>
+    <div class="projecthome mb-3">
+        <property-component type="related" url="{{ route('public.ajax.properties') }}"
+            :property_id="{{ $property->id }}"></property-component>
+    </div>
     </div>
 </main>
 

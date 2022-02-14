@@ -2,6 +2,7 @@
 
 namespace Botble\RealEstate\Http\Controllers;
 
+use Auth;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\RealEstate\Http\Requests\SendConsultRequest;
@@ -17,6 +18,8 @@ use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\SeoHelper\SeoOpenGraph;
 use Botble\Slug\Repositories\Interfaces\SlugInterface;
 use EmailHandler;
+use Botble\Auction\Models\Auction;
+use Botble\Auction\Models\Bid;
 use Exception;
 use File;
 use Illuminate\Http\Request;
@@ -32,6 +35,7 @@ use Spatie\Feed\Feed;
 use Spatie\Feed\FeedItem;
 use Theme;
 use Throwable;
+use Carbon\carbon;
 
 class PublicController extends Controller
 {
@@ -189,6 +193,7 @@ class PublicController extends Controller
      */
     public function getProperty(string $key, SlugInterface $slugRepository, PropertyInterface $propertyRepository)
     {
+        //echo "<pre>--qasim is here"; exit;
         $slug = $slugRepository->getFirstBy([
             'slugs.key'      => $key,
             'reference_type' => Property::class,
@@ -200,6 +205,7 @@ class PublicController extends Controller
         }
 
         $property = $propertyRepository->getProperty($slug->reference_id);
+       
 
         if (!$property) {
             abort(404);
@@ -216,7 +222,7 @@ class PublicController extends Controller
         $meta = new SeoOpenGraph;
         if ($property->image) {
             $meta->setImage(RvMedia::getImageUrl($property->image));
-        }
+         }
         $meta->setDescription($property->description);
         $meta->setUrl($property->url);
         $meta->setTitle($property->name);
@@ -245,8 +251,30 @@ class PublicController extends Controller
         foreach ($property->images as $image) {
             $images[] = RvMedia::getImageUrl($image, null, false, RvMedia::getDefaultImage());
         }
+        $currentDate = date('Y-m-d H:i:s');
+        $id = $property->id;
+         $auction = Auction::where('property_id',$id)->where('status','published')->first();
+         
+         $maxBid= 0;
+         $isAuctionExpire = false;
+         if(!empty($auction)){
 
-        return Theme::scope('real-estate.property', compact('property', 'images'))->render();
+            $auctionId = $auction->id;
+            $maxBid = Bid::where('auction_id', $auctionId)->max('bid_amount');
+             $Date= $auction->end_date;
+             $endDateMili= Carbon::parse($Date)->getPreciseTimestamp(3);
+             $currentDateMili = Carbon::parse($currentDate)->getPreciseTimestamp(3);
+
+             $isAuctionExpire = ($endDateMili < $currentDateMili)?true:false;
+            }
+
+            
+          
+
+
+                      
+
+         return Theme::scope('real-estate.property', compact('property', 'images', 'auction' , 'maxBid' ,'isAuctionExpire'))->render();
     }
 
     /**
@@ -324,6 +352,8 @@ class PublicController extends Controller
 
         $perPage = (int)$request->input('per_page') ? (int)$request->input('per_page') : (int)theme_option('number_of_properties_per_page',
             12);
+
+           //echo"properties"; exit();
 
         $filters = [
             'keyword'     => $request->input('k'),

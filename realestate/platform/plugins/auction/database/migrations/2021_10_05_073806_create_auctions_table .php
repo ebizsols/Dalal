@@ -23,6 +23,7 @@ class CreateAuctionsTable extends Migration
                 $table->float('minimum_selling_price');
                 $table->timestamp('start_date')->useCurrent()->getdate();
                 $table->timestamp('end_date')->nullable();
+                $table->enum('status', array('published', 'unpublished'))->default('published');
                 $table->integer('is_featured')->default(0);
                 $table->unsignedBigInteger('avatar_id')->nullable()->default(NULL);
                 $table->unsignedBigInteger('property_id');

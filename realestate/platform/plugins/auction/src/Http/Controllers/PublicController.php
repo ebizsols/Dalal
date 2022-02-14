@@ -38,7 +38,7 @@ class PublicController extends Controller
             'order_by'  => ['Auctions.created_at' => 'DESC'],
         ]);
 
-        return Theme::scope('auction.Auctions', compact('Auctions'))->render();
+        //return Theme::scope('auction.Auctions', compact('Auctions'))->render();
     }
 
     /**
@@ -73,6 +73,8 @@ class PublicController extends Controller
         $meta->setUrl($auction->url);
         $meta->setTitle($auction->name);
         $meta->setType('article');
+
+       
 
         SeoHelper::setSeoOpenGraph($meta);
 

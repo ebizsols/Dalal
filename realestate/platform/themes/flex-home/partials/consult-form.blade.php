@@ -7,7 +7,7 @@
         <input type="text" name="name" class="form-control" placeholder="{{ __('Name') }} *"
                data-validation-engine="validate[required]"
                data-errormessage-value-missing="{{ __('Please enter name') }}!">
-    </div>
+    </div> 
     <div class="form-group">
         <input type="text" name="phone" class="form-control" placeholder="{{ __('Phone') }} *"
                data-validation-engine="validate[required]"

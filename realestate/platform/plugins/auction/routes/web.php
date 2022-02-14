@@ -14,6 +14,19 @@ Route::group(['namespace' => 'Botble\Auction\Http\Controllers', 'middleware' => 
                 'uses'       => 'AuctionController@deletes',
                 'permission' => 'auction.destroy',
             ]);
+            
+//
+            Route::get('displayBids/{id}', [
+                'as'         => 'displayBids',
+                'uses'       => 'AuctionController@displayBids',
+                'permission' => 'auction.displayBids',
+            ]);
+            Route::post('displayBids/{id}', [
+                'as'         => 'displayBids',
+                'uses'       => 'AuctionController@displayBids',
+                'permission' => 'auction.displayBids',
+            ]);
+//            Route::get('displayBids', 'AuctionController@displayBids');
         });
 
     });

@@ -20,4 +20,10 @@ return [
         'flag'        => 'career.destroy',
         'parent_flag' => 'career.index',
     ],
+
+    [
+        'name'        => 'displayBids',
+        'flag'        => 'career.displayBids',
+        'parent_flag' => 'career.index',
+    ],
 ];

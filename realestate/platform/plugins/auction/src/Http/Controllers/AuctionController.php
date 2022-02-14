@@ -1,11 +1,15 @@
 <?php
 
 namespace Botble\Auction\Http\Controllers;
+use Botble\Auction\Models\Auction;
+ use Botble\Auction\Models\Bid;
 
 use Botble\Base\Events\BeforeEditContentEvent;
 use Botble\Auction\Http\Requests\AuctionRequest;
 use Botble\Auction\Repositories\Interfaces\AuctionInterface;
 use Botble\Auction\Repositories\Eloquent\AuctionRepository;
+use Botble\Auction\Repositories\Interfaces\BidInterface;
+use Botble\Auction\Repositories\Eloquent\BidRepository;
 
 use Botble\Base\Http\Controllers\BaseController;
 use Botble\Media\Repositories\Interfaces\MediaFileInterface;
@@ -13,6 +17,7 @@ use Illuminate\Http\Request;
 use Botble\Auction\Http\Resources\AuctionResource;
 use Exception;
 use Botble\Auction\Tables\AuctionTable;
+use Botble\Auction\Tables\BidsTable;
 use Botble\Base\Events\CreatedContentEvent;
 use Botble\Base\Events\DeletedContentEvent;
 use Botble\Base\Events\UpdatedContentEvent;
@@ -29,6 +34,7 @@ class AuctionController extends BaseController
      * @var AuctionInterface
      */
     protected $AuctionRepository;
+    protected $BidRepository;
 
     /**
      * AuctionController constructor.
@@ -84,14 +90,13 @@ class AuctionController extends BaseController
         $startDate = $customRequest['start_date'];
         $startDate = str_replace('T', ' ', $startDate).':00';
         $customRequest['start_date'] = $startDate;
-        //echo "<pre>"; print_r( $customRequest['start_date']); exit();
+       
 
         $endDate = $customRequest['end_date'];
         $endDate = str_replace('T', ' ', $endDate).':00';
         $customRequest['end_date'] = $endDate;
-   //echo "<pre>"; print_r( $customRequest['end_date']); exit();
-
-        if ($request->input('avatar_id')) {
+   
+         if ($request->input('avatar_id')) {
 
             $image = app(MediaFileInterface::class)->getFirstBy(['url' => $request->input('avatar_id')]);
 
@@ -239,6 +244,16 @@ class AuctionController extends BaseController
 
         return $formBuilder->create(AssignAuctionForm::class)->renderForm();
     }
+
+
+    public function displayBids(BidsTable $table ){
+        //echo "<pre>safasdf"; exit;
+        page_title()->setTitle(trans('plugins/auction::auction.name'));
+
+        return $table->renderTable();
+}
+
+    
 
 
 }

@@ -14,7 +14,8 @@ use Botble\Base\Enums\BaseStatusEnum;
 use RvMedia;
 
 
-class Auction extends BaseModel
+
+class bid extends BaseModel
 {
     use EnumCastable;
 
@@ -24,24 +25,16 @@ class Auction extends BaseModel
      * @var string
      *
      */
-    protected $table = 'auctions';
+    protected $table = 'bids';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'id',
-        'property_id',
-        'title',
-        'description',
-        //'opening_price',
-        'minimum_selling_price',
-        'start_date',
-        'end_date',
-        'status',
-        'is_featured',
-        //'price',
-        'avatar_id'
+        'auction_id',
+        'user_id',
+        'bid_amount',
+        'status'
 
 
     ];

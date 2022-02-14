@@ -12,6 +12,13 @@ use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\RealEstate\Forms\PropertyForm;
 use Botble\RealEstate\Http\Requests\PropertyRequest;
 use Botble\RealEstate\Repositories\Interfaces\ProjectInterface;
+use Botble\Auction\Models\Auction;
+use SeoHelper;
+use Botble\Auction\Models\Bid;
+use  Botble\RealEstate\Models\Property;
+use Theme;
+use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
+use Botble\Auction\Repositories\Interfaces\AuctionInterface;
 use Botble\RealEstate\Repositories\Interfaces\FeatureInterface;
 use Botble\RealEstate\Repositories\Interfaces\PropertyInterface;
 use Botble\RealEstate\Services\SaveFacilitiesService;
@@ -77,6 +84,8 @@ class PropertyController extends BaseController
      */
     public function create(FormBuilder $formBuilder)
     {
+
+        // echo"here"; exit();
         page_title()->setTitle(trans('plugins/real-estate::property.create'));
 
         return $formBuilder->create(PropertyForm::class)->renderForm();
@@ -96,6 +105,8 @@ class PropertyController extends BaseController
         StorePropertyCategoryService $propertyCategoryService,
         SaveFacilitiesService $saveFacilitiesService
     ) {
+
+        //echo"here"; exit();
         $request->merge([
             'expire_date' => now()->addDays(RealEstateHelper::propertyExpiredDays()),
             'images'      => json_encode(array_filter($request->input('images', []))),
@@ -132,6 +143,8 @@ class PropertyController extends BaseController
      */
     public function edit($id, Request $request, FormBuilder $formBuilder)
     {
+
+        // echo"here"; exit();
         $property = $this->propertyRepository->findOrFail($id, ['features', 'author']);
         page_title()->setTitle(trans('plugins/real-estate::property.edit') . ' "' . $property->name . '"');
 
@@ -156,6 +169,8 @@ class PropertyController extends BaseController
         StorePropertyCategoryService $propertyCategoryService,
         SaveFacilitiesService $saveFacilitiesService
     ) {
+
+        // echo"here"; exit();
         $property = $this->propertyRepository->findOrFail($id);
         $property->fill($request->except(['expire_date']));
 
@@ -188,6 +203,8 @@ class PropertyController extends BaseController
      */
     public function destroy($id, Request $request, BaseHttpResponse $response)
     {
+
+        // echo"heree"; exit();
         try {
             $property = $this->propertyRepository->findOrFail($id);
             $property->features()->detach();
@@ -211,21 +228,55 @@ class PropertyController extends BaseController
      */
     public function deletes(Request $request, BaseHttpResponse $response)
     {
+        // echo"here"; exit();
         $ids = $request->input('ids');
         if (empty($ids)) {
             return $response
                 ->setError()
                 ->setMessage(trans('core/base::notices.no_select'));
+            // }
+
+            foreach ($ids as $id) {
+                $property = $this->propertyRepository->findOrFail($id);
+                $property->features()->detach();
+                $this->propertyRepository->delete($property);
+
+                event(new DeletedContentEvent(PROPERTY_MODULE_SCREEN_NAME, $request, $property));
+            }
+
+            return $response->setMessage(trans('core/base::notices.delete_success_message'));
+       
         }
-
-        foreach ($ids as $id) {
-            $property = $this->propertyRepository->findOrFail($id);
-            $property->features()->detach();
-            $this->propertyRepository->delete($property);
-
-            event(new DeletedContentEvent(PROPERTY_MODULE_SCREEN_NAME, $request, $property));
-        }
-
-        return $response->setMessage(trans('core/base::notices.delete_success_message'));
     }
+
+
+    
+
+
+
+
+
+
+
+
+    
+
+
+
+ 
+
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

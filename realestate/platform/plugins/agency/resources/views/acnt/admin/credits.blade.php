@@ -6,7 +6,7 @@
         <div>
             <div class="comment-log ws-nm">
                 <div class="comment-log-title">
-                    <div class="row">
+                    <div class="row d-flex flex-column">
                         <div class="col-md-6">
                             <label class="bold-light m-xs-b hide-print">{{ __('Transactions') }}</label>
                         </div>

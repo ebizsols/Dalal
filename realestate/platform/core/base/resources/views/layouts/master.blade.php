@@ -39,6 +39,8 @@
     @include('core/media::partials.media')
 @endsection
 
+
 @push('footer')
-    @routes
+    @routes;
 @endpush
+

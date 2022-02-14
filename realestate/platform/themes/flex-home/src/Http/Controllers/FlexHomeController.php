@@ -2,7 +2,9 @@
 
 namespace Theme\FlexHome\Http\Controllers;
 
+use Botble\Auction\Models\Bid;
 use App;
+use  Botble\RealEstate\Models\Property;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Http\Responses\BaseHttpResponse;
 use Botble\Base\Supports\RepositoryHelper;
@@ -12,6 +14,7 @@ use Botble\RealEstate\Enums\ModerationStatusEnum;
 use Botble\RealEstate\Enums\PropertyStatusEnum;
 use Botble\RealEstate\Enums\PropertyTypeEnum;
 use Botble\Auction\Models\Auction;
+
 use Botble\RealEstate\Repositories\Interfaces\AccountInterface;
 use Botble\Auction\Repositories\Interfaces\AuctionInterface;
 
@@ -22,13 +25,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use RealEstateHelper;
 use SeoHelper;
+use Carbon\carbon;
 use Theme;
 use Theme\FlexHome\Http\Resources\AgentHTMLResource;
 use Theme\FlexHome\Http\Resources\PostResource;
 use Theme\FlexHome\Http\Resources\PropertyHTMLResource;
 use Theme\FlexHome\Http\Resources\PropertyResource;
 
-include $_SERVER['DOCUMENT_ROOT'].'/PEBSUpdate/platform/themes/src/Http/Controllers/FlexHomeControllerTrait.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/PEBSUpdate/platform/themes/src/Http/Controllers/FlexHomeControllerTrait.php';
 
 class FlexHomeController extends PublicController
 {
@@ -54,6 +58,7 @@ class FlexHomeController extends PublicController
             abort(404);
         }
 
+
         SeoHelper::setTitle(__('Projects in :city', ['city' => $city->name]));
 
         Theme::breadcrumb()
@@ -62,8 +67,11 @@ class FlexHomeController extends PublicController
 
         do_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, CITY_MODULE_SCREEN_NAME, $city);
 
-        $perPage = (int)$request->input('per_page') ? (int)$request->input('per_page') : (int)theme_option('number_of_projects_per_page',
-            12);
+        $perPage = (int)$request->input('per_page') ? (int)$request->input('per_page') : (int)theme_option(
+            'number_of_projects_per_page',
+            12
+        );
+
 
         $filters = [
             'keyword'     => $request->input('k'),
@@ -122,28 +130,24 @@ class FlexHomeController extends PublicController
         BaseHttpResponse $response
     ) {
         $city = $cityRepository->getFirstBy(compact('slug'));
-
         if (!$city) {
             abort(404);
         }
-
         SeoHelper::setTitle(__('Properties in :city', ['city' => $city->name]));
-
         do_action(BASE_ACTION_PUBLIC_RENDER_SINGLE, CITY_MODULE_SCREEN_NAME, $city);
-
         Theme::breadcrumb()
             ->add(__('Home'), route('public.index'))
             ->add(SeoHelper::getTitle(), route('public.properties-by-city', $city->slug));
-
-        $perPage = (int)$request->input('per_page') ? (int)$request->input('per_page') : (int)theme_option('number_of_properties_per_page',
-            12);
-
+        $perPage = (int)$request->input('per_page') ? (int)$request->input('per_page') : (int)theme_option(
+            'number_of_properties_per_page',
+            12
+        );
         $filters = [
             'keyword'     => $request->input('k'),
             'type'        => $request->input('type'),
             'bedroom'     => $request->input('bedroom'),
             'bathroom'    => $request->input('bathroom'),
-            'floor'       => $request->input('floor'),
+            'floor'      => $request->input('floor'),
             'min_price'   => $request->input('min_price'),
             'max_price'   => $request->input('max_price'),
             'min_square'  => $request->input('min_square'),
@@ -154,7 +158,6 @@ class FlexHomeController extends PublicController
             'location'    => $request->input('location'),
             'sort_by'     => $request->input('sort_by'),
         ];
-
         $params = [
             'paginate' => [
                 'per_page'      => $perPage ?: 12,
@@ -163,9 +166,7 @@ class FlexHomeController extends PublicController
             'order_by' => ['re_properties.created_at' => 'DESC'],
             'with'     => RealEstateHelper::getPropertyRelationsQuery(),
         ];
-
         $properties = $propertyRepository->getProperties($filters, $params);
-
         if ($request->ajax()) {
             if ($request->input('minimal')) {
                 return $response->setData(Theme::partial('search-suggestion', ['items' => $properties]));
@@ -173,7 +174,6 @@ class FlexHomeController extends PublicController
 
             return $response->setData(Theme::partial('real-estate.properties.items', ['properties' => $properties]));
         }
-
         $categories = get_property_categories([
             'indent'     => '↳',
             'conditions' => ['status' => BaseStatusEnum::PUBLISHED],
@@ -190,9 +190,13 @@ class FlexHomeController extends PublicController
      */
     public function ajaxGetProperties(Request $request, BaseHttpResponse $response)
     {
+
+
         if (!$request->ajax()) {
             abort(404);
         }
+
+        // dd("here");
 
         $properties = [];
         $with = RealEstateHelper::getPropertyRelationsQuery();
@@ -296,6 +300,8 @@ class FlexHomeController extends PublicController
      */
     public function ajaxGetPropertiesForMap(Request $request, BaseHttpResponse $response)
     {
+
+        //print_r("properties"); exit;
         $filters = [
             'keyword'     => $request->input('k'),
             'type'        => $request->input('type'),
@@ -503,14 +509,12 @@ class FlexHomeController extends PublicController
     }
 
 
-     /////////////////Auctions///////////////////////////////////////////////////
+    /////////////////Auctions///////////////////////////////////////////////////
+
 
 
     public function getAuctions(Request $request, AuctionInterface $auctionRepository)
     {
-//       $auctionData= Auction::all();
-//        echo "<pre>"; print_r( $auctionData); exit();
-
         $auctions = $auctionRepository->advancedGet([
 
             'paginate'  => [
@@ -520,13 +524,16 @@ class FlexHomeController extends PublicController
 
         ]);
 
-// echo"<pre>"; print_r( $auctions); exit();
+
+        //  $data= Auction::all();
+        //  $auctionDate= $data->end_date;
+        //  echo"<pre>"; print_r($auctionDate); exit();
+
         SeoHelper::setTitle(__('Auctions'));
 
         Theme::breadcrumb()->add(__('Home'), route('public.index'))->add(__('Auctions'), route('public.auctions'));
 
         return Theme::scope('real-estate.auctions', compact('auctions'))->render();
-
     }
 
 
@@ -537,32 +544,76 @@ class FlexHomeController extends PublicController
         Request $request,
         AccountInterface $accountRepository,
         PropertyInterface $propertyRepository,
-        AuctionInterface $auctionRepository)
-     {
-
+        AuctionInterface $auctionRepository
+    ) {
+        //
+        $max_bid = Bid::where('auction_id', $id)->max('bid_amount');
         $auction = $auctionRepository->getFirstBy(['id' => $id]);
- //echo"<pre>" ; print_r( $auction); exit();
+        $currentDate = date('Y-m-d H:i:s');
+        $Date = $auction->end_date;
+        $endDateMili = Carbon::parse($Date)->getPreciseTimestamp(3);
+        $currentDateMili = Carbon::parse($currentDate)->getPreciseTimestamp(3);
+
+        $isAuctionExpire = $endDateMili < $currentDateMili ? true : false;
+
+
+
         if (!$auction) {
             abort(404);
         }
+        /* if()*/
 
 
-//        SeoHelper::setTitle($auction->id);
-//
-//        $auctions = $propertyRepository->advancedGet([
-//            'condition' => [
-//                'id'   => $auction->id,
-//                //'id_type' => Account::class,
-//            ],
-//            'paginate'  => [
-//                'per_page'      => 12,
-//            'current_paged' => (int)$request->input('page'),
-//            ],
-//            'with'      => RealEstateHelper::getPropertyRelationsQuery(),
-//        ]);
 
-        return Theme::scope('real-estate.auction', compact('auction', 'auction'))
+        SeoHelper::setTitle($auction->id);
+
+        $auctions = $propertyRepository->advancedGet([
+
+            'condition' => [
+                'id'   => $auction->id,
+                //'id_type' => Account::class,
+            ],
+            'paginate'  => [
+                'per_page'      => 12,
+                'current_paged' => (int)$request->input('page'),
+            ],
+            'with'      => RealEstateHelper::getPropertyRelationsQuery(),
+        ]);
+
+        $property = Property::find($auction->property_id)->first();
+
+        return Theme::scope('real-estate.auction', compact('auction', 'property', 'max_bid', 'isAuctionExpire'))
             ->render();
     }
 
+
+    public function store_bid(Request $request)
+    {
+        $auctionId = $request->get('auction_id');
+        $userBidAmount = $request->get('bid_amount');
+        $maxBid = Bid::where('auction_id', $auctionId)->max('bid_amount');
+
+        $auctionLastBidData = Bid::where('auction_id', $auctionId)->orderBy('id', 'desc')->first();
+        $lastBidUserId = isset($auctionLastBidData->user_id) ? $auctionLastBidData->user_id : 0;
+        $loginUserId = $request->get('user_id');
+
+        if ($lastBidUserId == $loginUserId) {
+            return back()->with('bidNotInsert', 'You have the last bid, Wait until other user bid');
+        }
+
+
+
+        if ($userBidAmount <= $maxBid) {
+            return back()->with('bidNotInsert', 'Your bid should be higher then current bid');
+        }
+
+        $Bid = new Bid();
+        $Bid->auction_id = $auctionId;
+        $Bid->user_id = $loginUserId;
+        $Bid->bid_amount = $userBidAmount;
+        $Bid->status = 'Active';
+        $Bid->save();
+
+        return back()->with('bidInsertSuccess', 'Data submitted successfully');
+    }
 }

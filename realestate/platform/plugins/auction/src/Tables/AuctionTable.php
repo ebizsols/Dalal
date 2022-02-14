@@ -125,10 +125,35 @@ class AuctionTable extends TableAbstract
             ->editColumn('created_at', function ($item) {
                 return BaseHelper::formatDate($item->created_at);
             })
+            ->addColumn('bids', function ($item) {
+                $id = $item->id;
+                $displayBids = route('auction.displayBids', $id);
+                $opration = '<a href="'.$displayBids.'" class="btn btn-icon btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-original-title="Bid"><i class="fa fa-gavel"></i></a>';
+                return $opration;//$this->getOperations('auction.edit', 'auction.destroy', $item);
+            })
 
             ->addColumn('operations', function ($item) {
+                $id = $item->id;
+                $editRoute = route('auction.edit', $id);
+                $deleteRoute = route('auction.deletes', $id);
+                $displayBids = route('auction.displayBids', $id);
+                $opration = '<ul data-dtr-index="0" class="dtr-details">
+                <li class="text-center" data-dtr-index="10" data-dt-row="0" data-dt-column="10">
+
+                <span class="dtr-data"><div class="table-actions">
+                <a href="'.$editRoute.'" class="btn btn-icon btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-original-title="Edit"><i class="fa fa-edit"></i></a>
+                 <a href="'.$displayBids.'" class="btn btn-icon btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-original-title="Bid"><i class="fa fa-gavel"></i></a>
+                <a href="#" class="btn btn-icon btn-sm btn-danger deleteDialog" data-bs-toggle="tooltip" data-section="'.$deleteRoute.'" role="button" data-bs-original-title="Delete">
+
+                <i class="fa fa-trash"></i>
+                </a>
+                </div>
+                </span>
+                </li>
+                </ul>';
                 return $this->getOperations('auction.edit', 'auction.destroy', $item);
             });
+             
 
 
         return $this->toJson($data);
@@ -208,6 +233,10 @@ class AuctionTable extends TableAbstract
                 'width' => '100px',
             ],
 
+            'bids' => [
+                'title' => trans('Bids'),
+                'width' => '100px',
+            ],
         ];
     }
 

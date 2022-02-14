@@ -14,11 +14,12 @@ Route::group(['namespace' => 'Theme\FlexHome\Http\Controllers', 'middleware' => 
 
         Route::get('agents', 'FlexHomeController@getAgents')->name('public.agents');
         Route::get('agents/{username}', 'FlexHomeController@getAgent')->name('public.agent');
-///////////////////////////////////////////// auction routes///////////////////////////////////////
+        ///////////////////////////////////////////// auction routes///////////////////////////////////////
         Route::get('auctions', 'FlexHomeController@getAuctions')->name('public.auctions');
         Route::get('auction/{id}', 'FlexHomeController@getAuction')->name('public.auction');
-///////////////////////////////////////////// auction routes///////////////////////////////////////
-       
+        Route::post('store_bid', 'FlexHomeController@store_bid')->name('public.bid');
+        ///////////////////////////////////////////// auction routes///////////////////////////////////////
+
         Route::get('wishlist', 'FlexHomeController@getWishlist')->name('public.wishlist');
 
         Route::get('ajax/cities', 'FlexHomeController@ajaxGetCities')->name('public.ajax.cities');
@@ -28,7 +29,7 @@ Route::group(['namespace' => 'Theme\FlexHome\Http\Controllers', 'middleware' => 
 
         Route::get('ajax/agents/featured', 'FlexHomeController@ajaxGetFeaturedAgents')->name('public.ajax.featured-agents');
 
-        include $_SERVER['DOCUMENT_ROOT'].'/PEBSUpdate/platform/themes/routes/CustomRoutePEBS.php';
+        include $_SERVER['DOCUMENT_ROOT'] . '/PEBSUpdate/platform/themes/routes/CustomRoutePEBS.php';
     });
 });
 
@@ -48,7 +49,5 @@ Route::group(['namespace' => 'Theme\FlexHome\Http\Controllers', 'middleware' => 
             'as'   => 'public.single',
             'uses' => 'FlexHomeController@getView',
         ]);
-
     });
-
 });
